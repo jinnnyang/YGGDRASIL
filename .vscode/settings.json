@@ -18,5 +18,11 @@
     "_site/**": true
   },
   "files.insertFinalNewline": true,
-  "markdown.styles": [".vscode/custom-tag-style.css"]
+  "markdown.styles": [
+    ".vscode/custom-tag-style.css"
+  ],
+  "roo-cline.useAgentRules": true,
+  "roo-cline.vsCodeLmModelSelector": {
+    "family": ""
+  }
 }
