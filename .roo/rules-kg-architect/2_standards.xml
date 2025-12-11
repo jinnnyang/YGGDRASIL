@@ -1,0 +1,553 @@
+<naming_and_metadata_standards>
+  <overview>
+    本文件定义知识仓库中所有命名和元数据的标准规范，确保整个仓库的一致性和可维护性。
+  </overview>
+
+  <naming_conventions>
+    <directory_naming>
+      <standard>kebab-case</standard>
+      <description>目录名必须使用 kebab-case（小写字母，单词间用连字符）</description>
+      <rules>
+        <rule>长度：1-3 个英文单词</rule>
+        <rule>必须自解释，让人一眼明白目录用途</rule>
+        <rule>避免晦涩缩写，除非是广泛认可的缩写</rule>
+        <rule>使用英文，保持国际化友好</rule>
+        <rule>特殊目录以下划线开头：_archive, _drafts, _templates</rule>
+      </rules>
+      <examples>
+        <good_examples>
+          <example>ai-ml</example>
+          <example>quant-trading</example>
+          <example>work-gov</example>
+          <example>methodology</example>
+          <example>_archive</example>
+        </good_examples>
+        <bad_examples>
+          <example reason="使用下划线">ai_ml ✗</example>
+          <example reason="使用驼峰命名">quantTrading ✗</example>
+          <example reason="过长">artificial-intelligence-and-machine-learning ✗</example>
+          <example reason="晦涩缩写">chem-eng ✗ (应该用 chemistry 或 chemical-engineering)</example>
+          <example reason="使用中文">人工智能 ✗</example>
+        </bad_examples>
+      </examples>
+    </directory_naming>
+
+    <file_naming>
+      <standard>kebab-case with .md extension</standard>
+      <description>Markdown 文件名必须与 slug 保持一致</description>
+      <rules>
+        <rule>使用 kebab-case</rule>
+        <rule>必须描述性强，反映文档核心内容</rule>
+        <rule>文件名（不含扩展名）必须与 YAML 中的 slug 一致</rule>
+        <rule>避免过长（建议 2-5 个单词）</rule>
+        <rule>特殊文件使用固定名称：index.md, README.md</rule>
+      </rules>
+      <examples>
+        <good_examples>
+          <example>transformer-attention.md</example>
+          <example>bollinger-bands.md</example>
+          <example>writing-guide.md</example>
+          <example>index.md</example>
+        </good_examples>
+        <bad_examples>
+          <example reason="使用下划线">transformer_attention.md ✗</example>
+          <example reason="驼峰命名">TransformerAttention.md ✗</example>
+          <example reason="过长">a-comprehensive-guide-to-transformer-attention-mechanism.md ✗</example>
+          <example reason="不描述性">doc1.md ✗</example>
+        </bad_examples>
+      </examples>
+    </file_naming>
+
+    <slug_naming>
+      <standard>Must match filename without extension</standard>
+      <description>slug 字段必须与文件名（去除 .md）完全一致</description>
+      <rules>
+        <rule>slug 值 = 文件名 - ".md"</rule>
+        <rule>使用 kebab-case</rule>
+        <rule>URL 友好，不包含特殊字符</rule>
+        <rule>全局唯一（在整个仓库中）</rule>
+      </rules>
+      <consistency_check>
+        <code><![CDATA[
+# 一致性验证
+文件名：transformer-attention.md
+YAML slug：transformer-attention  ✓
+
+文件名：lstm-stock-pred.md
+YAML slug：lstm_stock_prediction  ✗ (不一致)
+        ]]></code>
+      </consistency_check>
+    </slug_naming>
+
+    <abbreviation_policy>
+      <description>缩写使用策略，避免歧义</description>
+      <approved_abbreviations>
+        <abbreviation>
+          <abbr>ai</abbr>
+          <full>Artificial Intelligence</full>
+          <rationale>业界通用，无歧义</rationale>
+        </abbreviation>
+        <abbreviation>
+          <abbr>ml</abbr>
+          <full>Machine Learning</full>
+          <rationale>业界通用，无歧义</rationale>
+        </abbreviation>
+        <abbreviation>
+          <abbr>nlp</abbr>
+          <full>Natural Language Processing</full>
+          <rationale>业界通用，无歧义</rationale>
+        </abbreviation>
+        <abbreviation>
+          <abbr>api</abbr>
+          <full>Application Programming Interface</full>
+          <rationale>业界通用，无歧义</rationale>
+        </abbreviation>
+      </approved_abbreviations>
+      <principles>
+        <principle>仅使用广泛认可的缩写</principle>
+        <principle>当不确定时，使用完整词汇</principle>
+        <principle>避免领域特定的缩写（除非该仓库专注该领域）</principle>
+        <principle>避免自创缩写</principle>
+      </principles>
+      <examples>
+        <good>ai-ml（广泛认可）</good>
+        <good>api-design（通用缩写）</good>
+        <bad>chem-eng（应该用 chemistry 或 chemical-engineering）</bad>
+        <bad>gov-doc（应该用 government-documents）</bad>
+      </examples>
+    </abbreviation_policy>
+  </naming_conventions>
+
+  <yaml_frontmatter_standard>
+    <overview>
+      每个 Markdown 文件必须包含 YAML frontmatter，提供结构化元数据
+    </overview>
+
+    <required_fields>
+      <field name="title">
+        <type>string</type>
+        <description>人类可读的完整标题</description>
+        <rules>
+          <rule>必须完整表达文档主题</rule>
+          <rule>使用标题格式（首字母大写）</rule>
+          <rule>避免冗长，一般不超过 10 个词</rule>
+          <rule>可以使用中文（根据内容语言）</rule>
+        </rules>
+        <examples>
+          <good>"Transformer 注意力机制详解"</good>
+          <good>"Bollinger Bands Indicator Guide"</good>
+          <bad>"transformer-attention"（应该人类可读）</bad>
+          <bad>"A Comprehensive and Detailed Guide to Understanding the Transformer Attention Mechanism in Deep Learning"（过长）</bad>
+        </examples>
+      </field>
+
+      <field name="slug">
+        <type>string</type>
+        <description>URL 友好的唯一标识符</description>
+        <rules>
+          <rule>必须与文件名（不含 .md）完全一致</rule>
+          <rule>使用 kebab-case</rule>
+          <rule>全局唯一</rule>
+          <rule>不包含特殊字符</rule>
+        </rules>
+        <examples>
+          <good>"transformer-attention"（对应 transformer-attention.md）</good>
+          <good>"bollinger-bands"（对应 bollinger-bands.md）</good>
+          <bad>"Transformer Attention"（应该用连字符）</bad>
+          <bad>"transformer_attention"（应该用连字符，不是下划线）</bad>
+        </examples>
+      </field>
+
+      <field name="description">
+        <type>string</type>
+        <description>简短描述，用于搜索和索引</description>
+        <rules>
+          <rule>1-2 句话概括文档内容</rule>
+          <rule>适合在搜索结果中显示</rule>
+          <rule>不超过 150 个字符</rule>
+          <rule>聚焦核心价值和用途</rule>
+        </rules>
+        <examples>
+          <good>"深入分析 Transformer 中的多头自注意力机制原理与实现"</good>
+          <good>"布林带指标的计算方法、应用场景和量化策略实现"</good>
+          <bad>"这是一篇关于 Transformer 的文章"（太泛泛）</bad>
+          <bad>"A comprehensive guide covering all aspects of transformer attention mechanisms including multi-head attention, self-attention, and cross-attention with detailed mathematical derivations and code implementations"（过长）</bad>
+        </examples>
+      </field>
+
+      <field name="date">
+        <type>string (ISO 8601 date)</type>
+        <description>文档创建日期</description>
+        <format>YYYY-MM-DD</format>
+        <rules>
+          <rule>必须使用 ISO 8601 格式</rule>
+          <rule>反映文档首次创建时间</rule>
+          <rule>不要修改（即使内容更新）</rule>
+        </rules>
+        <examples>
+          <good>"2024-12-11"</good>
+          <bad>"2024/12/11"（格式错误）</bad>
+          <bad>"Dec 11, 2024"（格式错误）</bad>
+        </examples>
+      </field>
+
+      <field name="categories">
+        <type>array of strings</type>
+        <description>主分类，对应目录层级</description>
+        <rules>
+          <rule>反映文件在目录树中的位置</rule>
+          <rule>从根到叶的路径顺序</rule>
+          <rule>使用目录的实际名称</rule>
+          <rule>2-3 层为宜</rule>
+        </rules>
+        <examples>
+          <good><![CDATA[
+categories:
+  - ai-ml
+  - nlp
+# 对应路径：ai-ml/nlp/transformer-attention.md
+          ]]></good>
+          <good><![CDATA[
+categories:
+  - finance-quant
+  - indicators
+  - volatility
+# 对应路径：finance-quant/indicators/volatility/bollinger-bands.md
+          ]]></good>
+          <bad><![CDATA[
+categories:
+  - machine-learning  # 与目录名不符（目录是 ai-ml）
+          ]]></bad>
+        </examples>
+      </field>
+
+      <field name="tags">
+        <type>array of strings</type>
+        <description>细粒度标签，跨类别标注</description>
+        <rules>
+          <rule>用于跨类别的内容关联</rule>
+          <rule>使用 kebab-case</rule>
+          <rule>3-8 个标签为宜</rule>
+          <rule>避免与 categories 重复</rule>
+        </rules>
+        <examples>
+          <good><![CDATA[
+tags:
+  - transformer
+  - attention-mechanism
+  - deep-learning
+  - pytorch
+          ]]></good>
+          <bad><![CDATA[
+tags:
+  - ai-ml  # 与 categories 重复
+  - NLP    # 格式不统一（应该小写）
+          ]]></bad>
+        </examples>
+      </field>
+    </required_fields>
+
+    <optional_fields>
+      <field name="author">
+        <type>string or array</type>
+        <description>文档作者</description>
+        <usage>单作者用字符串，多作者用数组</usage>
+        <examples>
+          <single>"Your Name"</single>
+          <multiple><![CDATA[
+author:
+  - Alice Wang
+  - Bob Li
+          ]]></multiple>
+        </examples>
+      </field>
+
+      <field name="updated">
+        <type>string (ISO 8601 date)</type>
+        <description>最后更新时间</description>
+        <format>YYYY-MM-DD</format>
+        <usage>当内容有实质性修改时更新</usage>
+        <example>"2024-12-11"</example>
+      </field>
+
+      <field name="status">
+        <type>enum</type>
+        <description>文档状态</description>
+        <values>
+          <value>draft - 草稿，未完成</value>
+          <value>published - 已发布，可用</value>
+          <value>archived - 已归档，过时</value>
+        </values>
+        <example>"published"</example>
+      </field>
+
+      <field name="version">
+        <type>string</type>
+        <description>文档版本号</description>
+        <usage>重要文档追踪版本演进</usage>
+        <format>语义化版本（如 1.0, 2.1）</format>
+        <example>"1.0"</example>
+      </field>
+
+      <field name="is_index">
+        <type>boolean</type>
+        <description>标识是否为 index.md 文件</description>
+        <usage>仅在 index.md 中使用</usage>
+        <example>true</example>
+      </field>
+    </optional_fields>
+
+    <complete_examples>
+      <example name="typical_document">
+        <code><![CDATA[
+---
+title: "Transformer 注意力机制详解"
+slug: "transformer-attention"
+description: "深入分析 Transformer 中的多头自注意力机制原理与实现"
+author: "Your Name"
+date: 2024-12-11
+updated: 2024-12-11
+categories:
+  - ai-ml
+  - nlp
+tags:
+  - transformer
+  - attention-mechanism
+  - deep-learning
+  - pytorch
+status: published
+version: "1.0"
+---
+
+# 文档内容开始...
+        ]]></code>
+      </example>
+
+      <example name="index_file">
+        <code><![CDATA[
+---
+title: "AI & Machine Learning"
+slug: "ai-ml"
+description: "人工智能与机器学习相关知识，包括自然语言处理、量化交易算法等"
+author: "System"
+date: 2024-12-11
+categories:
+  - ai-ml
+is_index: true
+---
+
+# AI & Machine Learning
+
+本目录包含人工智能与机器学习领域的知识文档...
+        ]]></code>
+      </example>
+
+      <example name="minimal_document">
+        <code><![CDATA[
+---
+title: "快速笔记示例"
+slug: "quick-note-example"
+description: "这是一个最小化的 YAML 示例"
+date: 2024-12-11
+categories:
+  - methodology
+tags:
+  - example
+---
+
+# 内容...
+        ]]></code>
+      </example>
+    </complete_examples>
+
+    <validation_checklist>
+      <check>所有必填字段都存在</check>
+      <check>slug 与文件名一致</check>
+      <check>date 格式为 YYYY-MM-DD</check>
+      <check>categories 反映实际目录路径</check>
+      <check>tags 使用 kebab-case</check>
+      <check>description 长度适中（不超过 150 字符）</check>
+      <check>title 人类可读，不是机器标识符</check>
+    </validation_checklist>
+  </yaml_frontmatter_standard>
+
+  <directory_structure_standards>
+    <hierarchy_depth>
+      <recommendation>2 层为主，最多 3 层</recommendation>
+      <rationale>
+        - 过浅（1 层）：分类粗糙，难以组织大量内容
+        - 适中（2-3 层）：平衡分类精度和导航复杂度
+        - 过深（4+ 层）：导航繁琐，维护成本高
+      </rationale>
+      <examples>
+        <good><![CDATA[
+ai-ml/
+├── nlp/                    # 2 层
+│   ├── transformer-attention.md
+│   └── bert-pretrain.md
+└── quant-trading/          # 2 层
+    ├── indicators/         # 3 层（可接受）
+    │   └── bollinger-bands.md
+    └── strategies/
+        └── mean-reversion.md
+        ]]></good>
+        <bad><![CDATA[
+ai-ml/
+└── deep-learning/
+    └── architectures/
+        └── transformers/
+            └── attention/          # 5 层，过深
+                └── multi-head.md
+        ]]></bad>
+      </examples>
+    </hierarchy_depth>
+
+    <index_file_requirement>
+      <rule>每个目录必须包含 index.md</rule>
+      <purpose>
+        - 提供目录概览和导航
+        - 自动生成文档列表
+        - 说明目录定位和包含内容
+      </purpose>
+      <exception>特殊目录（_archive, _drafts）可以省略</exception>
+    </index_file_requirement>
+
+    <special_directories>
+      <directory name="_archive">
+        <purpose>存放过时或归档的内容</purpose>
+        <prefix>下划线前缀，排在普通目录前面</prefix>
+        <organization>可以保持原有分类结构</organization>
+      </directory>
+      <directory name="_drafts">
+        <purpose>存放未完成的草稿</purpose>
+        <prefix>下划线前缀</prefix>
+        <workflow>完成后移至正式目录</workflow>
+      </directory>
+      <directory name="_templates">
+        <purpose>存放文档模板</purpose>
+        <prefix>下划线前缀</prefix>
+        <usage>用于快速创建新文档</usage>
+      </directory>
+    </special_directories>
+  </directory_structure_standards>
+
+  <document_linking_standards>
+    <overview>
+      VSCode/Foam 支持使用双方括号语法创建文档间链接，这些链接会在知识图谱中可视化展示。
+      虽然 Architect 模式不直接创建内容链接，但需要了解这一机制以便维护仓库结构的完整性。
+    </overview>
+
+    <wiki_link_syntax>
+      <standard>[[path/to/document.md]]</standard>
+      <description>使用双方括号创建指向其他文档的链接</description>
+      <format_options>
+        <option name="absolute_path">
+          <syntax>[[path/from/root/document.md]]</syntax>
+          <example>[[ai-ml/nlp/transformer-attention.md]]</example>
+          <when_to_use>跨目录引用，路径明确</when_to_use>
+        </option>
+        <option name="relative_path">
+          <syntax>[[./relative/path/document.md]]</syntax>
+          <example>[[./nlp/bert-pretrain.md]]</example>
+          <when_to_use>同级或子目录引用</when_to_use>
+        </option>
+        <option name="with_alias">
+          <syntax>[[path/to/document.md|Display Text]]</syntax>
+          <example>[[ai-ml/nlp/transformer-attention.md|Transformer 详解]]</example>
+          <when_to_use>自定义显示文本</when_to_use>
+        </option>
+        <option name="heading_link">
+          <syntax>[[document.md#heading]]</syntax>
+          <example>[[transformer-attention.md#多头注意力]]</example>
+          <when_to_use>链接到文档特定章节</when_to_use>
+        </option>
+      </format_options>
+    </wiki_link_syntax>
+
+    <linking_best_practices>
+      <practice>
+        <title>优先使用相对路径</title>
+        <rationale>便于目录移动和重组，减少链接维护成本</rationale>
+        <example>在 ai-ml/nlp/index.md 中引用同级文档：[[./transformer-attention.md]]</example>
+      </practice>
+      <practice>
+        <title>使用别名提高可读性</title>
+        <rationale>让链接文本更符合上下文</rationale>
+        <example>[[../methodology/knowledge-eng/index.md|知识工程方法论]]</example>
+      </practice>
+      <practice>
+        <title>保持链接有效性</title>
+        <rationale>文件移动或重命名时需要更新所有引用</rationale>
+        <note>这是 Architect 模式需要关注的维护任务之一</note>
+      </practice>
+      <practice>
+        <title>建立双向链接</title>
+        <rationale>增强知识图谱的连通性和可发现性</rationale>
+        <example>
+          文档 A 引用文档 B，文档 B 也应在适当位置引用文档 A
+        </example>
+      </practice>
+    </linking_best_practices>
+
+    <graph_visualization>
+      <description>
+        VSCode/Foam 会根据文档间的链接关系自动生成知识图谱，
+        展示文档之间的连接关系，帮助发现知识结构中的模式和关联。
+      </description>
+      <benefits>
+        <benefit>可视化知识网络结构</benefit>
+        <benefit>发现孤立文档（无链接入或出）</benefit>
+        <benefit>识别核心文档（高连接度）</benefit>
+        <benefit>探索相关主题的关联</benefit>
+      </benefits>
+      <architect_role>
+        <responsibility>在结构重组时，检查并更新失效的链接</responsibility>
+        <responsibility>建议添加缺失的关键链接以改善图谱连通性</responsibility>
+        <responsibility>识别过度链接或链接混乱的情况</responsibility>
+      </architect_role>
+    </graph_visualization>
+
+    <link_maintenance>
+      <when_moving_files>
+        <step>识别所有指向该文件的链接（反向链接）</step>
+        <step>更新这些链接指向新路径</step>
+        <step>检查文件内部的链接是否仍然有效</step>
+      </when_moving_files>
+      <when_renaming_files>
+        <step>搜索所有引用旧文件名的链接</step>
+        <step>批量替换为新文件名</step>
+        <step>同步更新 YAML slug 字段</step>
+      </when_renaming_files>
+      <tools>
+        <tool>search_files - 查找所有引用特定文件的链接</tool>
+        <tool>apply_diff - 批量更新链接路径</tool>
+      </tools>
+    </link_maintenance>
+
+    <validation_rules>
+      <rule>链接的目标文件必须存在</rule>
+      <rule>链接路径与实际文件路径一致</rule>
+      <rule>避免循环引用（A→B→C→A）</rule>
+      <rule>index.md 中的文档列表应该使用链接语法</rule>
+    </validation_rules>
+  </document_linking_standards>
+
+  <consistency_enforcement>
+    <automated_checks>
+      <check>扫描所有 .md 文件的 YAML</check>
+      <check>验证 slug 与文件名一致性</check>
+      <check>检查 categories 与实际路径匹配</check>
+      <check>识别命名不规范的文件/目录</check>
+      <check>发现缺少 index.md 的目录</check>
+    </automated_checks>
+
+    <violation_handling>
+      <process>
+        <step>检测到违规时，记录问题</step>
+        <step>向用户报告所有发现的问题</step>
+        <step>提供修复建议</step>
+        <step>征得确认后执行修复</step>
+      </process>
+    </violation_handling>
+  </consistency_enforcement>
+</naming_and_metadata_standards>

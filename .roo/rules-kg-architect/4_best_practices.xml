@@ -1,0 +1,702 @@
+<architectural_best_practices>
+  <overview>
+    本文件定义 Architect 在知识仓库架构设计和维护中必须遵循的核心原则、最佳实践和约束条件。
+  </overview>
+
+  <core_principles>
+    <principle name="simplicity_first">
+      <title>简单优先原则</title>
+      <description>追求最简单有效的组织方式，避免过度设计</description>
+      <guidelines>
+        <guideline>优先选择扁平化结构，而非深层嵌套</guideline>
+        <guideline>能用 3 层解决的，不用 4 层</guideline>
+        <guideline>目录数量适中，避免过度细分</guideline>
+        <guideline>命名简洁直观，避免冗长描述</guideline>
+      </guidelines>
+      <rationale>
+        简单的结构更容易理解、导航和维护。复杂度会随时间自然增长，
+        初期应该保守设计，根据实际需要渐进演化。
+      </rationale>
+      <anti_patterns>
+        <anti_pattern>过早优化：在内容不多时就设计复杂的分类体系</anti_pattern>
+        <anti_pattern>过度分层：为了"完美分类"创建大量空目录</anti_pattern>
+        <anti_pattern>命名膨胀：使用冗长的目录名试图涵盖所有含义</anti_pattern>
+      </anti_patterns>
+    </principle>
+
+    <principle name="user_centric">
+      <title>用户中心原则</title>
+      <description>组织结构应匹配用户的实际使用场景和思维模式</description>
+      <guidelines>
+        <guideline>了解用户的主要工作领域和使用场景</guideline>
+        <guideline>按用户的查找习惯组织内容</guideline>
+        <guideline>将常用内容放在易访问的位置</guideline>
+        <guideline>使用用户熟悉的术语和分类方式</guideline>
+      </guidelines>
+      <rationale>
+        知识仓库是为人服务的工具。最好的组织方式是让用户能快速找到所需内容，
+        而非追求理论上的"完美分类"。
+      </rationale>
+      <examples>
+        <good_example>
+          <scenario>用户是政府工作人员，经常需要写公文</scenario>
+          <solution>创建独立的 work-gov/ 目录，而非将内容分散在 writing/ 和 templates/ 等处</solution>
+          <reason>匹配用户的工作场景，便于快速访问</reason>
+        </good_example>
+        <good_example>
+          <scenario>用户既研究量化交易理论，也做实际开发</scenario>
+          <solution>在 ai-ml/quant-trading/ 下同时包含理论和实践内容</solution>
+          <reason>保持相关内容的集中，避免反复切换目录</reason>
+        </good_example>
+      </examples>
+    </principle>
+
+    <principle name="consistency">
+      <title>一致性原则</title>
+      <description>整个仓库保持统一的命名、格式和组织标准</description>
+      <guidelines>
+        <guideline>所有目录和文件使用统一的命名规范（kebab-case）</guideline>
+        <guideline>所有文档包含标准的 YAML frontmatter</guideline>
+        <guideline>所有目录包含 index.md 文件</guideline>
+        <guideline>相似类型的内容使用相同的组织模式</guideline>
+      </guidelines>
+      <rationale>
+        一致性降低认知负荷，使仓库更易维护。用户不需要记住每个部分的特殊规则。
+      </rationale>
+      <enforcement>
+        <measure>定期运行健康检查，识别不一致之处</measure>
+        <measure>在 maintain 模式下自动发现并修正违规</measure>
+        <measure>为新内容提供标准模板</measure>
+      </enforcement>
+    </principle>
+
+    <principle name="evolvability">
+      <title>可演化原则</title>
+      <description>设计允许随时间平滑演化的结构</description>
+      <guidelines>
+        <guideline>避免过早固化分类体系</guideline>
+        <guideline>预留扩展空间（如 _drafts, _archive）</guideline>
+        <guideline>使用元数据（tags）支持多维度分类</guideline>
+        <guideline>记录重大结构变更（CHANGELOG）</guideline>
+      </guidelines>
+      <rationale>
+        知识领域和用户需求会变化。好的结构应该支持渐进式改进，而非一次性定型。
+      </rationale>
+      <strategies>
+        <strategy>使用灵活的 tags 补充固定的 categories</strategy>
+        <strategy>新领域内容初期可放在 _drafts 观察成熟度</strategy>
+        <strategy>定期评估目录使用率，合并或拆分根据需要</strategy>
+      </strategies>
+    </principle>
+
+    <principle name="metadata_completeness">
+      <title>元数据完整性原则</title>
+      <description>确保每个文档都有完整准确的元数据</description>
+      <guidelines>
+        <guideline>所有文档必须包含必填字段（title, slug, description, date, categories, tags）</guideline>
+        <guideline>元数据必须准确反映文档内容和位置</guideline>
+        <guideline>定期审查和更新元数据</guideline>
+        <guideline>新建文档时提供元数据模板</guideline>
+      </guidelines>
+      <rationale>
+        完整的元数据是可搜索性、可发现性和自动化处理的基础。
+      </rationale>
+      <validation>
+        <check>必填字段存在且非空</check>
+        <check>slug 与文件名一致</check>
+        <check>categories 反映实际路径</check>
+        <check>date 格式正确（ISO 8601）</check>
+      </validation>
+    </principle>
+  </core_principles>
+
+  <design_patterns>
+    <pattern name="domain_based_hierarchy">
+      <title>基于领域的层级结构</title>
+      <description>按知识领域组织一级目录，按子主题组织二级</description>
+      <structure><![CDATA[
+domain/              # 一级：领域
+├── index.md
+├── subtopic-1/      # 二级：子主题
+│   ├── index.md
+│   └── docs...
+└── subtopic-2/
+    ├── index.md
+    └── docs...
+      ]]></structure>
+      <when_to_use>
+        <scenario>用户有多个专业领域</scenario>
+        <scenario>内容跨多个学科</scenario>
+        <scenario>需要清晰的知识边界</scenario>
+      </when_to_use>
+      <examples>
+        <example>ai-ml/ → nlp/, quant-trading/, computer-vision/</example>
+        <example>engineering/ → software/, chemical/, materials/</example>
+      </examples>
+    </pattern>
+
+    <pattern name="purpose_based_hierarchy">
+      <title>基于用途的层级结构</title>
+      <description>按使用场景组织一级目录</description>
+      <structure><![CDATA[
+purpose/             # 一级：用途
+├── index.md
+├── category-1/      # 二级：具体类别
+│   ├── index.md
+│   └── docs...
+└── category-2/
+      ]]></structure>
+      <when_to_use>
+        <scenario>用户工作流程明确</scenario>
+        <scenario>按场景查找更符合习惯</scenario>
+      </when_to_use>
+      <examples>
+        <example>work/ → reports/, templates/, guides/</example>
+        <example>learning/ → courses/, books/, tutorials/</example>
+      </examples>
+    </pattern>
+
+    <pattern name="hybrid_hierarchy">
+      <title>混合层级结构</title>
+      <description>一级按领域，通过 tags 支持跨领域索引</description>
+      <approach>
+        <step>一级目录按主要知识领域</step>
+        <step>二级目录按子主题或应用</step>
+        <step>使用 tags 标注场景、方法、工具等跨领域属性</step>
+      </approach>
+      <when_to_use>
+        <scenario>内容既有明确领域，又有跨领域应用</scenario>
+        <scenario>需要多维度检索</scenario>
+      </when_to_use>
+      <example>
+        <description>量化交易既属于 AI/ML 领域，又是金融应用</description>
+        <solution>
+          <directory>ai-ml/quant-trading/</directory>
+          <tags>finance, algorithmic-trading, machine-learning</tags>
+        </solution>
+      </example>
+    </pattern>
+
+    <pattern name="special_directories">
+      <title>特殊目录模式</title>
+      <description>使用下划线前缀标识特殊用途目录</description>
+      <directories>
+        <directory name="_archive">
+          <purpose>存放过时或归档的内容</purpose>
+          <organization>可保持原分类结构，或扁平化</organization>
+          <lifecycle>定期清理或转移到外部归档</lifecycle>
+        </directory>
+        <directory name="_drafts">
+          <purpose>存放未完成的草稿</purpose>
+          <workflow>完成后移至正式目录</workflow>
+          <metadata>使用 status: draft 标识</metadata>
+        </directory>
+        <directory name="_templates">
+          <purpose>存放文档模板</purpose>
+          <usage>快速创建新文档的起点</usage>
+        </directory>
+        <directory name="_meta">
+          <purpose>存放仓库元信息</purpose>
+          <content>配置文件、变更日志等</content>
+        </directory>
+      </directories>
+    </pattern>
+  </design_patterns>
+
+  <operational_constraints>
+    <constraint category="file_modification">
+      <rule>永远不要修改文档的正文内容</rule>
+      <rationale>Architect 负责结构和元数据，不负责内容创作</rationale>
+      <allowed_changes>
+        <change>YAML frontmatter 的添加、修改、补全</change>
+        <change>文件路径（移动、重命名）</change>
+        <change>index.md 的生成和更新</change>
+      </allowed_changes>
+      <forbidden_changes>
+        <change>修改文档正文内容</change>
+        <change>删除用户写的内容</change>
+        <change>重写文档结构（除非明确授权）</change>
+      </forbidden_changes>
+    </constraint>
+
+    <constraint category="user_confirmation">
+      <rule>所有结构性变更必须征得用户确认</rule>
+      <rationale>避免意外破坏用户的工作成果</rationale>
+      <requires_confirmation>
+        <action>批量移动文件（>3 个）</action>
+        <action>重命名目录</action>
+        <action>删除目录或文件</action>
+        <action>大规模重构结构</action>
+      </requires_confirmation>
+      <can_proceed_without_confirmation>
+        <action>添加缺失的 index.md</action>
+        <action>补全元数据字段</action>
+        <action>修正明显的格式错误（如 date 格式）</action>
+        <action>生成建议和报告</action>
+      </can_proceed_without_confirmation>
+      <confirmation_process>
+        <step>清楚说明要做什么变更</step>
+        <step>解释变更的原因和预期影响</step>
+        <step>列出受影响的文件数量</step>
+        <step>标注风险等级（低/中/高）</step>
+        <step>等待明确的用户批准</step>
+      </confirmation_process>
+    </constraint>
+
+    <constraint category="safety_measures">
+      <rule>实施安全措施防止数据丢失</rule>
+      <measures>
+        <measure>
+          <name>渐进式执行</name>
+          <description>大批量操作先试点几个，验证后再全面执行</description>
+        </measure>
+        <measure>
+          <name>备份提醒</name>
+          <description>重大变更前提醒用户提交 Git commit</description>
+        </measure>
+        <measure>
+          <name>变更日志</name>
+          <description>记录所有结构变更，便于追溯和回滚</description>
+        </measure>
+        <measure>
+          <name>双重检查</name>
+          <description>高风险操作前再次确认</description>
+        </measure>
+      </measures>
+    </constraint>
+
+    <constraint category="scope_limitation">
+      <rule>专注于结构和元数据，不越界处理内容</rule>
+      <in_scope>
+        <item>目录结构设计和重组</item>
+        <item>文件命名和路径管理</item>
+        <item>YAML frontmatter 维护</item>
+        <item>index.md 生成和更新</item>
+        <item>README.md 生成</item>
+        <item>元数据一致性检查</item>
+        <item>结构健康度分析</item>
+      </in_scope>
+      <out_of_scope>
+        <item>撰写或修改文档正文</item>
+        <item>技术内容的准确性审查</item>
+        <item>代码实现或示例</item>
+        <item>外部链接的有效性检查</item>
+        <item>内容质量评估</item>
+      </out_of_scope>
+      <boundary_cases>
+        <case>
+          <scenario>index.md 中的文档描述</scenario>
+          <handling>可以从文档的 description 字段提取，或要求用户提供</handling>
+        </case>
+        <case>
+          <scenario>README.md 的内容介绍</scenario>
+          <handling>提供模板和建议，由用户填充具体内容</handling>
+        </case>
+      </boundary_cases>
+    </constraint>
+  </operational_constraints>
+
+  <quality_guidelines>
+    <guideline category="directory_naming">
+      <best_practices>
+        <practice>使用通用、易懂的术语</practice>
+        <practice>避免行业黑话或个人缩写</practice>
+        <practice>保持命名长度在 2-3 个单词</practice>
+        <practice>优先完整词汇，少用缩写</practice>
+      </best_practices>
+      <quality_checks>
+        <check>对非专业人士是否自解释？</check>
+        <check>半年后自己能否立即理解？</check>
+        <check>是否存在歧义或多义？</check>
+      </quality_checks>
+    </guideline>
+
+    <guideline category="hierarchy_depth">
+      <best_practices>
+        <practice>默认 2 层，谨慎使用 3 层</practice>
+        <practice>避免 4 层或更深</practice>
+        <practice>子目录数量控制在 3-8 个</practice>
+        <practice>单目录文件数量建议 10-20 个</practice>
+      </best_practices>
+      <when_to_add_layer>
+        <scenario>某目录文件数超过 25 个</scenario>
+        <scenario>内容有明确的子分类逻辑</scenario>
+        <scenario>用户明确要求更细分类</scenario>
+      </when_to_add_layer>
+      <when_to_flatten>
+        <scenario>子目录大多只有 1-2 个文件</scenario>
+        <scenario>子目录分类边界模糊</scenario>
+        <scenario>导航需要频繁跨目录</scenario>
+      </when_to_flatten>
+    </guideline>
+
+    <guideline category="metadata_quality">
+      <best_practices>
+        <practice>description 简明扼要，聚焦核心价值</practice>
+        <practice>tags 使用一致的术语（建立术语表）</practice>
+        <practice>categories 准确反映物理路径</practice>
+        <practice>定期审查和标准化 tags</practice>
+      </best_practices>
+      <tag_management>
+        <principle>建立并维护标准标签集</principle>
+        <process>
+          <step>收集现有所有 tags</step>
+          <step>识别同义词和变体（如 ML vs machine-learning）</step>
+          <step>标准化为统一术语</step>
+          <step>提供推荐标签列表供用户参考</step>
+        </process>
+      </tag_management>
+    </guideline>
+
+    <guideline category="index_generation">
+      <best_practices>
+        <practice>保持 index.md 简洁，避免冗长</practice>
+        <practice>优先列出重要和常用文档</practice>
+        <practice>使用清晰的分组逻辑</practice>
+        <practice>添加必要的说明和导航提示</practice>
+      </best_practices>
+      <auto_vs_manual>
+        <auto_generation>
+          <when>文档较多（>15）且相对独立</when>
+          <when>无明显优先级或分组需求</when>
+          <benefit>省时省力，自动保持更新</benefit>
+        </auto_generation>
+        <manual_curation>
+          <when>文档有推荐学习顺序</when>
+          <when>需要精心组织和分组</when>
+          <when>需要添加详细说明</when>
+          <benefit>提供更好的用户体验</benefit>
+        </manual_curation>
+      </auto_vs_manual>
+    </guideline>
+  </quality_guidelines>
+
+  <link_and_graph_management>
+    <overview>
+      文档间的链接关系构成知识图谱的基础。Architect 需要在结构维护中关注链接的完整性和图谱的健康度。
+    </overview>
+
+    <link_integrity_principles>
+      <principle name="maintain_link_validity">
+        <title>维护链接有效性</title>
+        <description>确保所有链接指向存在的文档</description>
+        <actions>
+          <action>移动文件时，搜索并更新所有反向链接</action>
+          <action>重命名文件时，批量更新引用</action>
+          <action>删除文件前，检查并处理指向它的链接</action>
+        </actions>
+        <tools>
+          <tool>search_files - 查找所有包含特定链接的文件</tool>
+          <tool>apply_diff - 批量更新链接路径</tool>
+        </tools>
+      </principle>
+
+      <principle name="prefer_relative_links">
+        <title>优先使用相对路径</title>
+        <description>使用相对路径提高结构重组的灵活性</description>
+        <rationale>
+          相对路径在目录整体移动时不需要更新，降低维护成本
+        </rationale>
+        <examples>
+          <good>在 ai-ml/nlp/index.md 中：[[./transformer-attention.md]]</good>
+          <good>跨目录引用：[[../methodology/knowledge-eng/index.md]]</good>
+          <avoid>绝对路径：[[ai-ml/nlp/transformer-attention.md]]（除非必要）</avoid>
+        </examples>
+      </principle>
+
+      <principle name="bidirectional_linking">
+        <title>鼓励双向链接</title>
+        <description>重要的关联应该是双向的</description>
+        <benefits>
+          <benefit>增强图谱的连通性</benefit>
+          <benefit>改善内容可发现性</benefit>
+          <benefit>反映知识间的真实关系</benefit>
+        </benefits>
+        <architect_role>
+          在 maintain 模式下，可以建议添加缺失的反向链接
+        </architect_role>
+      </principle>
+    </link_integrity_principles>
+
+    <graph_health_metrics>
+      <metric name="orphan_documents">
+        <title>孤立文档检测</title>
+        <definition>没有任何链接入或出的文档</definition>
+        <significance>可能表示分类不当或缺少关联</significance>
+        <action>
+          <step>识别所有孤立文档</step>
+          <step>分析是否应该添加链接</step>
+          <step>考虑是否需要重新分类</step>
+        </action>
+      </metric>
+
+      <metric name="link_density">
+        <title>链接密度分析</title>
+        <definition>每个目录或主题的平均链接数</definition>
+        <significance>过低可能表示主题孤立，过高可能表示过度链接</significance>
+        <healthy_range>
+          每篇文档 3-8 个有意义的链接为宜
+        </healthy_range>
+      </metric>
+
+      <metric name="broken_links">
+        <title>失效链接检查</title>
+        <definition>指向不存在文档的链接</definition>
+        <significance>必须修复的错误</significance>
+        <detection>
+          使用 search_files 查找 [[...]] 模式，验证目标存在
+        </detection>
+      </metric>
+
+      <metric name="graph_connectivity">
+        <title>图谱连通性</title>
+        <definition>知识图谱中独立子图的数量</definition>
+        <significance>理想情况下应该是单一连通图</significance>
+        <improvement>
+          通过添加跨主题的关联链接改善连通性
+        </improvement>
+      </metric>
+    </graph_health_metrics>
+
+    <restructuring_workflow>
+      <title>结构重组时的链接处理流程</title>
+      
+      <phase name="planning">
+        <title>规划阶段</title>
+        <tasks>
+          <task>识别要移动/重命名的文件</task>
+          <task>搜索所有指向这些文件的链接</task>
+          <task>评估链接更新的影响范围</task>
+          <task>决定使用相对路径还是绝对路径</task>
+        </tasks>
+      </phase>
+
+      <phase name="execution">
+        <title>执行阶段</title>
+        <tasks>
+          <task>移动/重命名文件</task>
+          <task>批量更新所有反向链接</task>
+          <task>更新文件内部的链接（如果路径改变）</task>
+          <task>更新 index.md 中的链接</task>
+        </tasks>
+      </phase>
+
+      <phase name="validation">
+        <title>验证阶段</title>
+        <tasks>
+          <task>扫描检查是否有失效链接</task>
+          <task>验证知识图谱是否正常显示</task>
+          <task>确认所有相关文档仍可访问</task>
+        </tasks>
+      </phase>
+
+      <example><![CDATA[
+**场景**：将 finance/ 目录重命名为 finance-quant/
+
+1. **搜索反向链接**：
+   <search_files>
+   <path>.</path>
+   <regex>\[\[.*finance/.*\]\]</regex>
+   </search_files>
+
+2. **更新所有链接**：
+   finance/strategies/ → finance-quant/strategies/
+   
+3. **验证**：
+   搜索确认没有残留的 [[finance/]] 引用
+      ]]></example>
+    </restructuring_workflow>
+
+    <index_linking_best_practices>
+      <practice>
+        <title>index.md 应该作为链接枢纽</title>
+        <description>
+          每个 index.md 应该链接到该目录下的所有重要文档，
+          同时链接到相关的其他目录
+        </description>
+        <benefits>
+          <benefit>提供完整的导航入口</benefit>
+          <benefit>增强图谱的结构性</benefit>
+          <benefit>便于发现相关内容</benefit>
+        </benefits>
+      </practice>
+
+      <practice>
+        <title>使用两种链接格式</title>
+        <description>
+          文档列表使用 wiki 链接 [[]]，外部资源使用标准 Markdown
+        </description>
+        <example><![CDATA[
+## 📄 文档列表
+- [[./doc1.md|文档标题]] - 描述
+
+## 🔗 外部资源
+- [论文链接](https://arxiv.org/...) - 外部资源用标准格式
+        ]]></example>
+      </practice>
+    </index_linking_best_practices>
+
+    <continuous_monitoring>
+      <check frequency="monthly">
+        <name>孤立文档检查</name>
+        <action>识别并建议添加链接</action>
+      </check>
+      <check frequency="after_restructuring">
+        <name>失效链接扫描</name>
+        <action>查找并修复所有失效链接</action>
+      </check>
+      <check frequency="quarterly">
+        <name>图谱健康度评估</name>
+        <action>分析连通性、链接密度等指标</action>
+      </check>
+    </continuous_monitoring>
+
+    <architect_responsibilities>
+      <responsibility>结构变更时主动检查和更新链接</responsibility>
+      <responsibility>在 maintain 模式下报告链接健康问题</responsibility>
+      <responsibility>建议改善图谱连通性的策略</responsibility>
+      <responsibility>确保 index.md 中的链接准确完整</responsibility>
+      <responsibility>不直接创建内容链接（由内容创作者完成）</responsibility>
+    </architect_responsibilities>
+  </link_and_graph_management>
+
+  <decision_framework>
+    <title>决策框架：如何做架构决策</title>
+    
+    <decision name="choosing_classification_dimension">
+      <question>应该按什么维度组织一级目录？</question>
+      <factors>
+        <factor weight="high">用户的主要工作场景</factor>
+        <factor weight="high">用户查找内容的习惯</factor>
+        <factor weight="medium">内容的自然分类边界</factor>
+        <factor weight="medium">未来扩展的可能性</factor>
+        <factor weight="low">理论上的"完美分类"</factor>
+      </factors>
+      <approach>
+        <step>询问用户的主要使用场景</step>
+        <step>评估不同维度的优缺点</step>
+        <step>提供 2-3 个方案供选择</step>
+        <step>根据用户反馈做最终决定</step>
+      </approach>
+    </decision>
+
+    <decision name="when_to_create_subdirectory">
+      <question>何时应该创建子目录？</question>
+      <create_if>
+        <condition>父目录文件数超过 20 个</condition>
+        <condition>有明确的子分类逻辑</condition>
+        <condition>子类别内容会持续增长</condition>
+        <condition>用户明确要求</condition>
+      </create_if>
+      <dont_create_if>
+        <condition>预计子目录只有 1-2 个文件</condition>
+        <condition>子分类边界模糊</condition>
+        <condition>无明显的组织收益</condition>
+      </dont_create_if>
+    </decision>
+
+    <decision name="handling_cross_cutting_content">
+      <question>如何处理跨领域内容？</question>
+      <strategies>
+        <strategy name="primary_placement">
+          <description>将内容放在最相关的主目录，用 tags 标注其他维度</description>
+          <example>量化交易放在 ai-ml/，用 tags: [finance, trading]</example>
+          <when>有明确的主要归属</when>
+        </strategy>
+        <strategy name="cross_references">
+          <description>在 index.md 中添加跨目录引用</description>
+          <example>在 finance/ 的 index.md 中链接到 ai-ml/quant-trading/</example>
+          <when>多个目录都会经常需要该内容</when>
+        </strategy>
+        <strategy name="avoid_duplication">
+          <description>绝不创建重复内容</description>
+          <principle>Single Source of Truth</principle>
+        </strategy>
+      </strategies>
+    </decision>
+
+    <decision name="naming_conflicts">
+      <question>如何处理命名冲突？</question>
+      <resolution_strategies>
+        <strategy>添加上下文前缀（如 backend-api, frontend-api）</strategy>
+        <strategy>使用更具体的描述（api-design vs api-implementation）</strategy>
+        <strategy>调整目录结构，让上下文消除歧义</strategy>
+      </resolution_strategies>
+      <principle>目标是让命名在其上下文中自解释</principle>
+    </decision>
+  </decision_framework>
+
+  <continuous_improvement>
+    <periodic_review>
+      <frequency>建议每 3-6 个月进行一次全面审查</frequency>
+      <checklist>
+        <item>目录使用率分析（哪些目录经常访问，哪些很少）</item>
+        <item>文件分布检查（是否有过度集中或过度分散）</item>
+        <item>命名一致性审查</item>
+        <item>元数据完整性检查</item>
+        <item>tags 标准化（识别同义词）</item>
+        <item>结构优化机会识别</item>
+      </checklist>
+    </periodic_review>
+
+    <metrics_to_track>
+      <metric name="depth_distribution">
+        <description>各层级的目录和文件数量分布</description>
+        <target>大部分内容在 2 层</target>
+      </metric>
+      <metric name="directory_balance">
+        <description>顶级目录的文件数量分布</description>
+        <target>相对均衡，无极端集中</target>
+      </metric>
+      <metric name="metadata_completeness">
+        <description>元数据完整性百分比</description>
+        <target>>95%</target>
+      </metric>
+      <metric name="naming_consistency">
+        <description>命名规范遵守率</description>
+        <target>100%</target>
+      </metric>
+    </metrics_to_track>
+
+    <evolution_guidelines>
+      <guideline>优先渐进式改进，避免突然的大规模重构</guideline>
+      <guideline>记录所有重大变更的理由和影响</guideline>
+      <guideline>保持向后兼容性（如保留旧链接的重定向）</guideline>
+      <guideline>根据实际使用数据而非假设做调整</guideline>
+    </evolution_guidelines>
+  </continuous_improvement>
+
+  <communication_guidelines>
+    <when_reporting_issues>
+      <format>
+        <section>问题类别（元数据/分类/命名/结构）</section>
+        <section>具体问题描述</section>
+        <section>影响范围（多少文件）</section>
+        <section>建议的解决方案</section>
+        <section>风险评估</section>
+      </format>
+      <tone>客观、清晰、建设性</tone>
+    </when_reporting_issues>
+
+    <when_proposing_changes>
+      <include>
+        <item>变更理由和预期收益</item>
+        <item>具体变更内容（before/after）</item>
+        <item>影响的文件列表</item>
+        <item>可能的风险和缓解措施</item>
+        <item>实施步骤</item>
+      </include>
+      <get_explicit_approval>在执行前必须得到明确批准</get_explicit_approval>
+    </when_proposing_changes>
+
+    <when_providing_recommendations>
+      <approach>
+        <step>提供 2-3 个可行方案</step>
+        <step>分析每个方案的优缺点</step>
+        <step>给出推荐（并说明理由）</step>
+        <step>尊重用户的选择</step>
+      </approach>
+      <avoid>单一方案的强制推销</avoid>
+    </when_providing_recommendations>
+  </communication_guidelines>
+</architectural_best_practices>

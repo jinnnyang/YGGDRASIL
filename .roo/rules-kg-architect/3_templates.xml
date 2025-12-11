@@ -1,0 +1,601 @@
+<template_library>
+  <overview>
+    本文件提供知识仓库中各类标准文件的模板，确保格式一致性和完整性。
+  </overview>
+
+  <index_md_template>
+    <description>目录索引文件模板，每个目录都必须包含</description>
+    <structure>
+      <component>YAML frontmatter - 元数据</component>
+      <component>目录标题和描述</component>
+      <component>子目录列表（如果有）</component>
+      <component>文档列表（自动或手动维护）</component>
+      <component>相关资源（可选）</component>
+      <component>页脚信息</component>
+    </structure>
+
+    <template><![CDATA[
+---
+title: "[目录显示名称]"
+slug: "[目录名称，与文件夹名一致]"
+description: "[简短描述，说明本目录包含什么内容]"
+author: "System"
+date: YYYY-MM-DD
+categories:
+  - [父目录]
+  - [当前目录]
+is_index: true
+---
+
+# [目录显示名称]
+
+[1-2段描述性文字，说明：]
+- 本目录的定位和范围
+- 包含的主要内容类型
+- 与其他目录的关系（如果需要）
+
+## 📚 子目录
+
+[如果有子目录，列出它们]
+- [subdirectory-name/](./subdirectory-name/) - 简短描述子目录内容
+- [another-subdir/](./another-subdir/) - 简短描述
+
+## 📄 文档列表
+
+[文档列表 - 可以选择以下任一方式]
+
+### 方式一：按主题分组（使用双方括号链接）
+#### [主题名称]
+- [[./filename.md|文档标题]] - 简短描述
+- [[./another-file.md|另一个文档]] - 简短描述
+
+#### [另一个主题]
+- [[./doc.md]] - 简短描述
+
+### 方式二：简单列表（标准 Markdown 链接）
+- [文档标题](./filename.md) - 简短描述
+- [另一个文档](./another-file.md) - 简短描述
+- [更多文档](./more.md) - 简短描述
+
+### 方式三：表格形式
+| 文档 | 描述 | 更新时间 |
+|------|------|----------|
+| [[./filename.md\|文档标题]] | 简短描述 | 2024-12-11 |
+| [[./another.md\|另一个文档]] | 简短描述 | 2024-12-10 |
+
+**链接说明**：
+- 使用 `[[./file.md]]` 创建 wiki 链接，会在知识图谱中显示
+- 使用 `[[./file.md|显示文本]]` 自定义链接显示文本
+- 也可以使用标准 Markdown 链接 `[文本](./file.md)`
+
+## 🔗 相关资源
+
+[可选部分 - 列出相关的外部链接或跨目录引用]
+- [[../related-directory/index.md|相关目录]] - 说明关联关系
+- [[../methodology/knowledge-eng/index.md|知识工程方法论]] - 跨领域参考
+- [外部资源](https://example.com) - 外部参考（使用标准 Markdown）
+
+## 📌 使用指南
+
+[可选部分 - 提供使用建议]
+- 如何开始学习本目录内容
+- 推荐的阅读顺序
+- 前置知识要求
+
+---
+*最后更新: YYYY-MM-DD | 维护者: [Architect | 人名]*
+    ]]></template>
+
+    <examples>
+      <example name="topic_directory">
+        <title>AI & Machine Learning 目录示例</title>
+        <content><![CDATA[
+---
+title: "AI & Machine Learning"
+slug: "ai-ml"
+description: "人工智能与机器学习相关知识，包括自然语言处理、量化交易算法等"
+author: "System"
+date: 2024-12-11
+categories:
+  - ai-ml
+is_index: true
+---
+
+# AI & Machine Learning
+
+本目录包含人工智能与机器学习领域的知识文档，涵盖理论基础、实践应用和前沿研究。
+内容从基础概念到高级应用，适合逐步深入学习。
+
+## 📚 子目录
+
+- [nlp/](./nlp/) - 自然语言处理技术与应用
+- [quant-trading/](./quant-trading/) - 量化交易算法研究
+- [computer-vision/](./computer-vision/) - 计算机视觉相关技术
+
+## 📄 文档列表
+
+### 基础理论
+- [[./ml-basics.md|机器学习基础]] - 机器学习核心概念和算法
+- [[./dl-intro.md|深度学习入门]] - 神经网络和深度学习基础
+
+### 模型架构
+- [[./transformer-arch.md|Transformer 架构详解]] - Transformer 模型的核心机制
+- [[./bert-pretrain.md|BERT 预训练原理]] - BERT 模型的预训练方法
+
+## 🔗 相关资源
+
+- [[../math-foundation/index.md|数学基础]] - AI/ML 所需的数学知识
+- [[../methodology/knowledge-eng/index.md|知识工程]] - 知识组织方法论
+
+---
+*最后更新: 2024-12-11 | 维护者: Architect*
+        ]]></content>
+      </example>
+
+      <example name="leaf_directory">
+        <title>叶子目录示例（无子目录）</title>
+        <content><![CDATA[
+---
+title: "量化交易策略"
+slug: "strategies"
+description: "常见量化交易策略的原理、实现和回测结果"
+author: "System"
+date: 2024-12-11
+categories:
+  - finance-quant
+  - strategies
+is_index: true
+---
+
+# 量化交易策略
+
+本目录收集各类量化交易策略的研究笔记，包括策略原理、参数优化和回测分析。
+
+## 📄 策略列表
+
+### 趋势跟踪
+- [[./dual-moving-average.md|双均线策略]] - 经典趋势跟踪策略
+- [[./momentum.md|动量策略]] - 基于动量因子的交易策略
+
+### 均值回归
+- [[./bollinger-bands.md|布林带策略]] - 基于波动率的均值回归
+- [[./pairs-trading.md|配对交易]] - 统计套利策略
+
+### 机器学习
+- [[./lstm-prediction.md|LSTM 价格预测]] - 深度学习价格预测模型
+- [[./rl-trading.md|强化学习交易]] - 强化学习在交易中的应用
+
+## 📌 使用指南
+
+1. 建议先阅读趋势跟踪策略，了解基本框架
+2. 每个策略包含理论、代码实现和回测结果
+3. 代码示例基于 Python + pandas + backtrader
+
+---
+*最后更新: 2024-12-11 | 维护者: Architect*
+        ]]></content>
+      </example>
+    </examples>
+
+    <auto_generation_guidelines>
+      <guideline>
+        <title>自动生成文档列表</title>
+        <description>在 maintain 模式下，Architect 可以自动更新文档列表</description>
+        <process>
+          <step>扫描目录下所有 .md 文件（排除 index.md）</step>
+          <step>读取每个文件的 YAML frontmatter</step>
+          <step>提取 title 和 description</step>
+          <step>按字母顺序或主题分组</step>
+          <step>生成 Markdown 列表</step>
+        </process>
+      </guideline>
+      <guideline>
+        <title>手动维护</title>
+        <description>对于重要目录，可以手动精心编排文档列表</description>
+        <benefits>
+          <benefit>可以按推荐学习顺序排列</benefit>
+          <benefit>可以分组和分类</benefit>
+          <benefit>可以添加额外注释</benefit>
+        </benefits>
+      </guideline>
+    </auto_generation_guidelines>
+  </index_md_template>
+
+  <readme_md_template>
+    <description>仓库根目录的 README.md 模板</description>
+    <purpose>
+      <item>介绍知识仓库的定位和内容</item>
+      <item>提供快速导航</item>
+      <item>说明使用方法和组织原则</item>
+    </purpose>
+
+    <template><![CDATA[
+# [知识仓库名称]
+
+[1-2 段简介，说明：]
+- 这个仓库是什么，为什么创建它
+- 主要包含哪些领域的知识
+- 谁在维护，适合谁使用
+
+## 📖 目录结构
+
+```
+repository/
+├── [domain-1]/          # 领域一简短描述
+├── [domain-2]/          # 领域二简短描述
+├── methodology/         # 方法论与元知识
+└── _archive/            # 归档内容
+```
+
+### 主要领域
+
+#### 🤖 [AI & Machine Learning](./ai-ml/)
+人工智能与机器学习相关知识，包括：
+- [NLP](./ai-ml/nlp/) - 自然语言处理
+- [Quant Trading](./ai-ml/quant-trading/) - 量化交易算法
+
+#### 🏛️ [Work & Government](./work-gov/)
+政府工作和公文写作相关内容：
+- [Document Templates](./work-gov/doc-templates/) - 公文模板
+- [Writing Guides](./work-gov/writing-guides/) - 写作指南
+
+#### 🔧 [Methodology](./methodology/)
+跨领域的方法论和知识工程：
+- [Knowledge Engineering](./methodology/knowledge-eng/) - 知识管理方法
+
+## 🚀 快速开始
+
+1. **浏览内容**: 从上面的目录结构开始，进入感兴趣的领域
+2. **搜索关键词**: 使用编辑器的搜索功能查找特定主题
+3. **查看索引**: 每个目录都有 `index.md` 提供该领域的完整导航
+
+## 📝 组织原则
+
+本仓库遵循以下组织原则：
+
+- **2-3 层结构**: 避免过深的嵌套
+- **语义化命名**: 使用 kebab-case，目录名自解释
+- **标准元数据**: 每个文档都有 YAML frontmatter
+- **索引完整**: 每个目录都有 index.md
+
+## 🏗️ 维护
+
+本仓库由 [Architect](https://github.com/your-repo) 智能体辅助维护，确保：
+- 结构合理性
+- 命名一致性
+- 元数据完整性
+- 索引准确性
+
+## 📜 许可
+
+[选择合适的许可证，如 MIT, CC BY 4.0 等]
+
+---
+*最后更新: YYYY-MM-DD*
+    ]]></template>
+
+    <example><![CDATA[
+# YGGDRASIL 知识树
+
+这是一个个人知识管理仓库，涵盖人工智能、量化交易、政府公文写作等多个领域。
+采用工程化方法组织知识，确保易于维护和检索。
+
+## 📖 目录结构
+
+```
+yggdrasil/
+├── ai-ml/               # 人工智能与机器学习
+├── work-gov/            # 政府工作相关
+├── methodology/         # 方法论与元知识
+└── _archive/            # 归档内容
+```
+
+### 主要领域
+
+#### 🤖 [AI & Machine Learning](./ai-ml/)
+人工智能与机器学习相关知识，包括：
+- [NLP](./ai-ml/nlp/) - 自然语言处理技术
+- [Quant Trading](./ai-ml/quant-trading/) - 量化交易算法
+
+#### 🏛️ [Work & Government](./work-gov/)
+政府工作和公文写作相关内容：
+- [Document Templates](./work-gov/doc-templates/) - 常用公文模板
+- [Writing Guides](./work-gov/writing-guides/) - 写作技巧和规范
+
+#### 🔧 [Methodology](./methodology/)
+跨领域的方法论和知识工程：
+- [Knowledge Engineering](./methodology/knowledge-eng/) - 知识管理方法论
+
+## 🚀 快速开始
+
+1. **浏览内容**: 从上面的目录结构开始，进入感兴趣的领域
+2. **搜索关键词**: 使用 VS Code 的搜索功能（Ctrl+Shift+F）查找主题
+3. **查看索引**: 每个目录都有 `index.md` 提供完整导航
+
+## 📝 组织原则
+
+- **扁平化**: 优先 2 层结构，最多 3 层
+- **语义化**: 使用 kebab-case，目录名自解释
+- **元数据**: 每个文档都有完整的 YAML frontmatter
+- **索引**: 每个目录都有 index.md 文件
+
+## 🏗️ 维护
+
+本仓库由 Architect 智能体辅助维护，确保结构合理性和一致性。
+
+---
+*最后更新: 2024-12-11*
+    ]]></example>
+  </readme_md_template>
+
+  <document_template>
+    <description>普通文档的标准模板</description>
+    
+    <template><![CDATA[
+---
+title: "[文档标题]"
+slug: "[文件名-不含-md]"
+description: "[简短描述，1-2 句话]"
+author: "[Your Name]"
+date: YYYY-MM-DD
+updated: YYYY-MM-DD
+categories:
+  - [一级目录]
+  - [二级目录]
+tags:
+  - [tag1]
+  - [tag2]
+  - [tag3]
+status: draft
+---
+
+# [文档标题]
+
+[简短引言，说明本文档的目的和主要内容]
+
+## 背景
+
+[可选 - 提供必要的背景信息]
+
+## 核心内容
+
+### 子主题一
+
+[详细内容]
+
+### 子主题二
+
+[详细内容]
+
+## 示例
+
+[可选 - 提供实际例子]
+
+```python
+# 代码示例
+```
+
+## 总结
+
+[可选 - 总结要点]
+
+## 参考资源
+
+[可选 - 列出参考文献或相关链接]
+- [[related-document.md|相关文档]] - 内部链接
+- [[../another-topic/index.md|另一个主题]] - 跨目录引用
+- [外部资源](URL) - 外部参考使用标准 Markdown
+
+---
+*创建: YYYY-MM-DD | 更新: YYYY-MM-DD*
+    ]]></template>
+
+    <examples>
+      <example name="technical_note">
+        <content><![CDATA[
+---
+title: "Transformer 注意力机制详解"
+slug: "transformer-attention"
+description: "深入分析 Transformer 中的多头自注意力机制原理与实现"
+author: "Your Name"
+date: 2024-12-11
+updated: 2024-12-11
+categories:
+  - ai-ml
+  - nlp
+tags:
+  - transformer
+  - attention-mechanism
+  - deep-learning
+  - pytorch
+status: published
+version: "1.0"
+---
+
+# Transformer 注意力机制详解
+
+本文深入分析 Transformer 架构中的核心组件——多头自注意力机制（Multi-Head Self-Attention），
+包括数学原理、实现细节和实践技巧。
+
+## 背景
+
+Transformer 模型由 Vaswani 等人在 2017 年提出，彻底改变了自然语言处理领域。
+其核心创新是自注意力机制，替代了传统的 RNN 和 CNN 结构。
+
+## 自注意力机制原理
+
+### 基本概念
+
+自注意力机制通过计算序列中每个位置与其他所有位置的关联度来捕捉长程依赖...
+
+[详细内容]
+
+## 实现
+
+### PyTorch 代码
+
+```python
+import torch
+import torch.nn as nn
+
+class MultiHeadAttention(nn.Module):
+    def __init__(self, d_model, num_heads):
+        super().__init__()
+        # 实现细节
+```
+
+## 总结
+
+- 自注意力机制可以并行计算，训练效率高
+- 多头机制增强了模型的表达能力
+- 位置编码对于捕捉序列顺序至关重要
+
+## 相关文档
+
+- [[./transformer-arch.md|Transformer 架构详解]] - 整体架构介绍
+- [[./bert-pretrain.md|BERT 预训练]] - 基于 Transformer 的预训练模型
+- [[../deep-learning/neural-networks.md|神经网络基础]] - 前置知识
+
+## 参考资源
+
+- [Attention Is All You Need](https://arxiv.org/abs/1706.03762) - 原始论文
+- [The Illustrated Transformer](http://jalammar.github.io/illustrated-transformer/) - 可视化讲解
+
+---
+*创建: 2024-12-11 | 更新: 2024-12-11*
+        ]]></content>
+      </example>
+    </examples>
+  </document_template>
+
+  <changelog_template>
+    <description>用于记录仓库结构变更的 CHANGELOG.md 模板</description>
+    
+    <template><![CDATA[
+# 变更日志
+
+本文件记录知识仓库结构的所有重要变更。
+
+## [未发布]
+
+### 新增
+- 描述新增的目录或大的组织变更
+
+### 变更
+- 描述重命名、移动等变更
+
+### 修复
+- 描述修复的问题
+
+## [YYYY-MM-DD] - 版本标识（可选）
+
+### 新增
+- 新增 `ai-ml/computer-vision/` 目录
+- 新增 3 个关于卷积神经网络的文档
+
+### 变更
+- 将 `finance/` 重命名为 `finance-quant/`
+- 移动 5 个量化策略文档到新目录
+
+### 修复
+- 修正 12 个文件的元数据 date 格式
+- 统一命名规范，将 3 个文件从 snake_case 改为 kebab-case
+
+### 维护
+- 更新所有 index.md 文件
+- 重新生成 README.md
+
+---
+
+## 格式说明
+
+- **新增**: 新建的目录、大批量文档
+- **变更**: 重命名、移动、重组
+- **修复**: 修正错误、不一致
+- **维护**: 索引更新、元数据规范化
+    ]]></template>
+  </changelog_template>
+
+  <config_template>
+    <description>仓库配置文件模板（可选）</description>
+    <filename>.roo/knowledge-repo-config.yaml</filename>
+    
+    <template><![CDATA[
+# 知识仓库配置文件
+# 记录仓库的组织偏好和结构配置
+
+repository:
+  name: "YGGDRASIL Knowledge Tree"
+  root: "."
+  initialized: 2024-12-11
+  last_maintained: 2024-12-11
+
+organization:
+  primary_dimension: "domain"  # domain | purpose | hybrid
+  max_depth: 3
+  preferred_naming: "kebab-case"
+  
+domains:
+  - slug: "ai-ml"
+    name: "AI & Machine Learning"
+    subcategories:
+      - "nlp"
+      - "quant-trading"
+      - "computer-vision"
+  
+  - slug: "work-gov"
+    name: "Work & Government"
+    subcategories:
+      - "doc-templates"
+      - "writing-guides"
+  
+  - slug: "methodology"
+    name: "Methodology"
+    subcategories:
+      - "knowledge-eng"
+
+special_directories:
+  - "_archive"
+  - "_drafts"
+  - "_templates"
+
+metadata:
+  required_fields:
+    - "title"
+    - "slug"
+    - "description"
+    - "date"
+    - "categories"
+    - "tags"
+  
+  optional_fields:
+    - "author"
+    - "updated"
+    - "status"
+    - "version"
+
+preferences:
+  auto_generate_index: true
+  index_sort_order: "alphabetical"  # alphabetical | date | manual
+  include_descriptions: true
+  date_format: "YYYY-MM-DD"
+    ]]></template>
+  </config_template>
+
+  <usage_guidelines>
+    <guideline name="when_to_use_templates">
+      <scenario>初始化新仓库</scenario>
+      <action>使用所有模板创建基础结构</action>
+    </guideline>
+    
+    <guideline name="customization">
+      <scenario>用户有特殊需求</scenario>
+      <action>根据模板调整，但保持核心结构不变</action>
+    </guideline>
+    
+    <guideline name="consistency">
+      <scenario>维护现有仓库</scenario>
+      <action>确保所有文件符合模板标准</action>
+    </guideline>
+  </usage_guidelines>
+</template_library>
