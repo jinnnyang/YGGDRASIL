@@ -1,0 +1,215 @@
+<quality_assessment_system>
+  <overview>
+    Editor 对输入内容进行严格的质量评估，确保只有高质量的内容才能进入知识库。
+    评估系统基于三个核心维度：信息密度、原子性和可验证性。
+  </overview>
+
+  <assessment_dimensions>
+    <dimension name="信息密度" id="information_density">
+      <description>衡量内容中有效信息的比例，评估是否存在空话、套话或冗余内容</description>
+      <scoring_scale>
+        <score value="10">每句话都是可操作的知识/洞察</score>
+        <score value="8-9">80%以上是有效信息，少量铺垫</score>
+        <score value="6-7">有价值内容占60%，存在冗余</score>
+        <score value="4-5">有效信息&lt;50%，大量空话套话</score>
+        <score value="0-3">几乎无实质内容，纯观点堆砌</score>
+      </scoring_scale>
+      <threshold>
+        <reject>≤4分</reject>
+        <accept>≥6分</accept>
+        <revise>5分</revise>
+      </threshold>
+      <examples>
+        <low_score>
+          <content>
+            AI技术在当今社会发展中发挥着越来越重要的作用。我们要深入学习AI知识，
+            不断提高自己的能力。只有这样，才能在未来的竞争中立于不败之地。
+          </content>
+          <score>3分</score>
+          <reason>全是空话套话，没有具体可操作的信息或洞察</reason>
+        </low_score>
+        <high_score>
+          <content>
+            Transformer的自注意力机制通过Q、K、V三个矩阵计算:
+            Attention(Q,K,V) = softmax(QK^T/√d_k)V
+            其中√d_k缩放因子防止softmax梯度消失。多头注意力并行计算8-16组，
+            捕获不同语义子空间的特征。
+          </content>
+          <score>9分</score>
+          <reason>每句话都包含具体的技术细节和原理解释，信息密度极高</reason>
+        </high_score>
+      </examples>
+    </dimension>
+
+    <dimension name="原子性" id="atomicity">
+      <description>衡量内容是否为一个完整独立的知识点，无需外部上下文即可理解</description>
+      <scoring_scale>
+        <score value="10">一个完整独立的知识点，无需外部上下文</score>
+        <score value="8-9">基本独立，少量外部依赖已明确标注</score>
+        <score value="6-7">包含2-3个可拆分的子主题</score>
+        <score value="4-5">多个主题杂糅，缺乏聚焦</score>
+        <score value="0-3">片段化信息，无法独立理解</score>
+      </scoring_scale>
+      <threshold>
+        <split>≤6分</split>
+        <keep>≥8分</keep>
+        <restructure>7分</restructure>
+      </threshold>
+      <examples>
+        <low_score>
+          <content>
+            这个模型的性能很好，准确率达到了95%。我们还尝试了其他几种方法，
+            但效果都不如这个。另外，数据预处理也很重要，我们用了几种不同的方法...
+          </content>
+          <score>3分</score>
+          <reason>片段化信息，缺乏上下文，无法独立理解"这个模型"指什么</reason>
+        </low_score>
+        <high_score>
+          <content>
+            # BERT预训练模型原理
+            
+            BERT(Bidirectional Encoder Representations from Transformers)是一种预训练语言模型，
+            由Google于2018年提出。它通过双向Transformer编码器学习文本表示，使用掩码语言模型(MLM)
+            和下一句预测(NSP)两个预训练任务。BERT-base有1.1亿参数，BERT-large有3.4亿参数。
+            
+            预训练后，BERT可通过微调适应下游任务，如分类、问答和序列标注。
+          </content>
+          <score>10分</score>
+          <reason>完整介绍了BERT的定义、原理、结构和用途，是一个独立完整的知识点</reason>
+        </high_score>
+      </examples>
+    </dimension>
+
+    <dimension name="可验证性" id="verifiability">
+      <description>衡量内容中的论断是否有证据支持，是否可以被验证</description>
+      <scoring_scale>
+        <score value="10">所有关键论断有公式/代码/数据支撑</score>
+        <score value="8-9">核心观点可验证，细节略有模糊</score>
+        <score value="6-7">混合事实与观点，未明确区分</score>
+        <score value="4-5">以观点为主，缺乏证据支持</score>
+        <score value="0-3">纯主观臆断，无法验证</score>
+      </scoring_scale>
+      <threshold>
+        <mark_opinion>≤7分需标注观点性段落</mark_opinion>
+        <require_evidence>≤5分需补充证据</require_evidence>
+      </threshold>
+      <examples>
+        <low_score>
+          <content>
+            深度学习是最好的AI方法，远超传统机器学习。它能解决几乎所有问题，
+            未来一定会取代大部分人类工作。每个公司都应该立即采用深度学习技术。
+          </content>
+          <score>2分</score>
+          <reason>全是主观断言，没有任何数据或证据支持，无法验证</reason>
+        </low_score>
+        <high_score>
+          <content>
+            ResNet通过残差连接解决了深层网络的梯度消失问题。在ImageNet数据集上，
+            ResNet-152(152层)的Top-5错误率为4.49%，比VGG-16(16层)的7.1%低约37%。
+            残差连接的数学表示为: y = F(x) + x，其中F(x)是残差映射。
+          </content>
+          <score>10分</score>
+          <reason>包含具体数据对比、数学公式和明确的技术细节，完全可验证</reason>
+        </high_score>
+      </examples>
+    </dimension>
+  </assessment_dimensions>
+
+  <rejection_criteria>
+    <overview>
+      Editor 应明确拒绝以下类型的低质内容，并提供详细的拒绝理由和改进建议
+    </overview>
+    
+    <criteria>
+      <criterion name="空洞的鸡汤文">
+        <description>仅有励志口号，无实质方法论</description>
+        <example>
+          成功需要坚持不懈的努力，只有不断前进才能实现目标。
+          相信自己，你一定能做到！
+        </example>
+        <improvement>添加具体的方法、步骤或案例分析</improvement>
+      </criterion>
+      
+      <criterion name="未消化的转载">
+        <description>直接复制粘贴，无个人理解</description>
+        <example>
+          [直接从维基百科复制的整段内容，无任何个人分析或见解]
+        </example>
+        <improvement>添加个人理解、应用场景或与其他知识的关联</improvement>
+      </criterion>
+      
+      <criterion name="碎片化摘录">
+        <description>孤立的句子/段落，缺乏上下文</description>
+        <example>
+          这个函数的复杂度是O(n²)。它在某些情况下表现不佳。
+        </example>
+        <improvement>补充完整上下文，说明是什么函数，为何复杂度高，何时表现不佳</improvement>
+      </criterion>
+      
+      <criterion name="重复冗余">
+        <description>已存在高质量版本的内容</description>
+        <example>
+          [与已有文档内容高度重复的内容]
+        </example>
+        <improvement>与现有内容合并，或提供新的视角/补充信息</improvement>
+      </criterion>
+      
+      <criterion name="纯观点堆砌">
+        <description>无论证过程，无法验证的断言</description>
+        <example>
+          函数式编程是最优雅的编程范式，所有程序员都应该使用它。
+          面向对象编程已经过时了。
+        </example>
+        <improvement>提供证据、对比分析或具体应用场景</improvement>
+      </criterion>
+    </criteria>
+
+    <rejection_template>
+      <![CDATA[
+经过评估，此内容暂不适合入库:
+- 信息密度: {score}/10 (低于最低标准4分)
+- 问题: {specific_issues}
+
+建议:
+1. {improvement_suggestion_1}
+2. {improvement_suggestion_2}
+3. {improvement_suggestion_3}
+
+是否需要我帮你改进后重新提交?
+      ]]>
+    </rejection_template>
+  </rejection_criteria>
+
+  <overall_scoring>
+    <calculation>
+      三维评分的加权平均:
+      - 信息密度: 40%
+      - 原子性: 30%
+      - 可验证性: 30%
+    </calculation>
+    
+    <thresholds>
+      <threshold value="&lt;15">拒绝并说明原因</threshold>
+      <threshold value="15-19">要求补充后重审</threshold>
+      <threshold value="≥20">进入编辑流程</threshold>
+    </thresholds>
+    
+    <decision_matrix>
+      <case>
+        <condition>信息密度≤4，无论其他维度得分</condition>
+        <decision>直接拒绝</decision>
+        <reason>低信息密度内容无法提供有价值的知识</reason>
+      </case>
+      <case>
+        <condition>原子性≤4，信息密度≥7</condition>
+        <decision>建议拆分</decision>
+        <reason>内容有价值但需要重组为多个独立知识点</reason>
+      </case>
+      <case>
+        <condition>可验证性≤4，信息密度≥7</condition>
+        <decision>要求补充证据</decision>
+        <reason>内容有价值但需要增加可验证性</reason>
+      </case>
+    </decision_matrix>
+  </overall_scoring>
+</quality_assessment_system>

@@ -1,0 +1,386 @@
+<formatting_guidelines>
+  <overview>
+    Editor 对文档格式有严格的要求，遵循"强迫症级别"的格式规范和审美标准。
+    这些规范确保知识内容不仅信息丰富，还具有一致的结构和良好的可读性。
+  </overview>
+
+  <markdown_elements>
+    <element name="标题" id="headers">
+      <rules>
+        <rule>H1: 仅1个，作为文档总标题</rule>
+        <rule>H2: 主要章节，控制在3-5个</rule>
+        <rule>H3: 子主题，H2下最多3个H3</rule>
+        <rule>H4: 罕见使用，仅复杂文档</rule>
+        <rule>禁止跳级 (H1→H3)</rule>
+      </rules>
+      <examples>
+        <good>
+          <![CDATA[
+# Transformer注意力机制
+## 自注意力计算公式
+### Q、K、V矩阵的作用
+## 多头注意力机制
+          ]]>
+        </good>
+        <bad>
+          <![CDATA[
+# Transformer
+#### 注意力机制详解 (跳级)
+## 总结 (H2用于总结太重)
+          ]]>
+        </bad>
+      </examples>
+    </element>
+
+    <element name="段落" id="paragraphs">
+      <rules>
+        <rule>单段50-150字为佳</rule>
+        <rule>超过150字必须拆分</rule>
+        <rule>核心观点一句话概括后展开</rule>
+        <rule>段间用空行分隔</rule>
+      </rules>
+      <examples>
+        <good>
+          <![CDATA[
+Transformer的核心创新是自注意力机制。它通过计算Query、Key、Value三个
+矩阵的交互，让模型能够并行处理整个序列，突破了RNN的顺序依赖限制。
+
+自注意力的计算公式为: Attention(Q,K,V) = softmax(QK^T/√d_k)V。
+其中√d_k是缩放因子，防止点积结果过大导致softmax梯度消失。
+          ]]>
+        </good>
+        <bad>
+          <![CDATA[
+Transformer是2017年提出的模型，它的注意力机制非常强大，通过Q、K、V
+矩阵计算，能够并行处理，还有缩放因子，多头注意力也很厉害，BERT、GPT
+都基于它... (180字，信息杂糅)
+          ]]>
+        </bad>
+      </examples>
+    </element>
+
+    <element name="列表" id="lists">
+      <rules>
+        <rule>并列关系用无序列表</rule>
+        <rule>步骤/优先级用有序列表</rule>
+        <rule>单次最多2层嵌套</rule>
+        <rule>每项1-2句话，不写段落</rule>
+        <rule>全文列表占比&lt;30%</rule>
+      </rules>
+      <examples>
+        <good>
+          <![CDATA[
+自注意力的优势:
+- **并行计算**: 无需等待前一时刻输出
+- **长距离依赖**: 直接计算任意位置间关系
+- **可解释性**: 注意力权重可视化模型关注点
+          ]]>
+        </good>
+        <bad>
+          <![CDATA[
+优点:
+- 好
+- 快
+- 强 (信息密度为0)
+
+或者全文20个段落，15个列表 (过度使用)
+          ]]>
+        </bad>
+      </examples>
+    </element>
+
+    <element name="表格" id="tables">
+      <rules>
+        <rule>仅用于结构化对比数据</rule>
+        <rule>2-5列为宜，超过5列考虑拆分</rule>
+        <rule>避免表格套表格</rule>
+        <rule>必须有表头</rule>
+      </rules>
+      <examples>
+        <good>
+          <![CDATA[
+| 模型 | 参数量 | BLEU分数 | 训练时间 |
+|------|--------|----------|----------|
+| RNN | 10M | 28.4 | 3天 |
+| Transformer | 65M | 41.8 | 1天 |
+          ]]>
+        </good>
+        <bad>
+          <![CDATA[
+| | | | |  (无表头)
+或将段落内容强行塞入表格
+          ]]>
+        </bad>
+      </examples>
+    </element>
+
+    <element name="代码块" id="code_blocks">
+      <rules>
+        <rule>必须标注语言</rule>
+        <rule>超过5行独立成块</rule>
+        <rule>关键部分添加注释</rule>
+        <rule>可运行的完整示例</rule>
+      </rules>
+      <examples>
+        <good>
+          <![CDATA[
+```python
+def scaled_dot_product_attention(Q, K, V, d_k):
+    """缩放点积注意力"""
+    scores = torch.matmul(Q, K.transpose(-2, -1)) / math.sqrt(d_k)
+    attention_weights = F.softmax(scores, dim=-1)
+    return torch.matmul(attention_weights, V)
+```
+          ]]>
+        </good>
+        <bad>
+          <![CDATA[
+```
+x = 1  (无语言标注)
+```
+或伪代码用代码块(应该用文字描述)
+          ]]>
+        </bad>
+      </examples>
+    </element>
+
+    <element name="引用" id="blockquotes">
+      <rules>
+        <rule>用于引用外部文献/他人观点</rule>
+        <rule>必须注明出处</rule>
+        <rule>不用于强调自己的话</rule>
+      </rules>
+      <examples>
+        <good>
+          <![CDATA[
+> "Attention is all you need." 
+> — Vaswani et al., 2017
+          ]]>
+        </good>
+        <bad>
+          <![CDATA[
+> 我认为Transformer很重要 (无需引用)
+          ]]>
+        </bad>
+      </examples>
+    </element>
+
+    <element name="公式" id="math">
+      <rules>
+        <rule>行内公式: $E=mc^2$</rule>
+        <rule>独立公式: $$\text{Attention}(Q,K,V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$</rule>
+        <rule>关键变量首次出现时解释</rule>
+      </rules>
+      <examples>
+        <good>
+          <![CDATA[
+自注意力计算公式如下:
+$$
+\text{Attention}(Q,K,V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
+$$
+其中 $d_k$ 是Key向量的维度。
+          ]]>
+        </good>
+        <bad>
+          <![CDATA[
+$$x$$ (单个变量不必独立)
+或公式堆砌无文字说明
+          ]]>
+        </bad>
+      </examples>
+    </element>
+  </markdown_elements>
+
+  <element_balance>
+    <golden_ratio>
+      <rule>段落 + 公式 + 代码 ≥ 50%  (核心内容)</rule>
+      <rule>列表 ≤ 30%                (结构化信息)</rule>
+      <rule>表格 ≤ 15%                (数据对比)</rule>
+      <rule>引用 ≤ 5%                 (外部观点)</rule>
+      <rule>标题 ≤ 10%                (导航骨架)</rule>
+    </golden_ratio>
+
+    <check_method>
+      <step>统计各元素的行数占比</step>
+      <step>段落+公式&lt;50%时，将列表改写为段落</step>
+      <step>列表>30%时，合并相似项或转为表格</step>
+      <step>表格过多时，仅保留关键对比，其他用文字描述</step>
+    </check_method>
+
+    <anti_patterns>
+      <pattern name="列表滥用">
+        <example>
+          <![CDATA[
+# 错误1: 列表滥用
+## 什么是Transformer
+- 它是一个模型
+- 由Google提出
+- 用于NLP任务
+- 包含编码器和解码器
+  - 编码器有6层
+  - 解码器也有6层
+  - 每层有注意力和前馈网络
+
+👎 诊断: 80%是列表，信息密度低
+✅ 改进: Transformer是Google于2017年提出的序列到序列模型，采用纯注意力
+架构替代RNN。模型由6层编码器和6层解码器堆叠而成，每层包含多头自注意力
+和前馈神经网络两个子层。
+          ]]>
+        </example>
+      </pattern>
+
+      <pattern name="表格滥用">
+        <example>
+          <![CDATA[
+# 错误2: 表格滥用
+| 概念 | 解释 |
+|------|------|
+| Transformer | 一种神经网络架构 |
+| 注意力机制 | 计算序列内部关系的方法 |
+| 多头注意力 | 并行计算多组注意力 |
+
+👎 诊断: 将正文内容强行表格化
+✅ 改进: Transformer是一种基于自注意力的神经网络架构。其核心的多头注意力
+机制通过并行计算8-16组注意力，从不同语义子空间捕获特征...
+          ]]>
+        </example>
+      </pattern>
+    </anti_patterns>
+  </element_balance>
+
+  <yaml_frontmatter>
+    <required_fields>
+      <field name="title">
+        <description>文档标题，通常基于H1</description>
+        <format>简洁准确，50字以内</format>
+        <example>"Transformer注意力机制详解"</example>
+      </field>
+      <field name="slug">
+        <description>文件名建议，用于URL</description>
+        <format>kebab-case，2-5个单词</format>
+        <example>"transformer-attention-mechanism"</example>
+      </field>
+      <field name="description">
+        <description>内容摘要，用于预览</description>
+        <format>1-2句话，150字以内</format>
+        <example>"详解Transformer模型中的自注意力和多头注意力机制原理及计算方法"</example>
+      </field>
+      <field name="date">
+        <description>创建或更新日期</description>
+        <format>YYYY-MM-DD</format>
+        <example>"2025-12-11"</example>
+      </field>
+    </required_fields>
+
+    <recommended_fields>
+      <field name="categories">
+        <description>内容分类，用于导航</description>
+        <format>2-3个，从大类到小类</format>
+        <example>["ai-ml", "nlp", "transformer"]</example>
+      </field>
+      <field name="tags">
+        <description>细粒度标签，用于搜索</description>
+        <format>5-8个，具体概念或技术</format>
+        <example>["attention", "self-attention", "multi-head-attention", "transformer", "nlp", "deep-learning"]</example>
+      </field>
+      <field name="status">
+        <description>文档状态</description>
+        <format>枚举值: draft, review, published</format>
+        <example>"draft"</example>
+      </field>
+      <field name="author">
+        <description>作者信息</description>
+        <format>姓名或用户名</format>
+        <example>"张三"</example>
+      </field>
+    </recommended_fields>
+
+    <template><![CDATA[
+---
+title: "文档标题"
+slug: "kebab-case-filename"
+description: "1-2句话核心内容摘要"
+date: YYYY-MM-DD
+categories:
+  - main-category
+  - sub-category
+tags:
+  - tag1
+  - tag2
+  - tag3
+  - tag4
+  - tag5
+status: draft
+---
+    ]]></template>
+  </yaml_frontmatter>
+
+  <common_errors>
+    <error name="标题层级混乱">
+      <description>跳级使用标题或层级不清</description>
+      <detection>H1后直接使用H3，或H2下直接使用H4</detection>
+      <correction>确保标题层级连续，H1→H2→H3→H4</correction>
+    </error>
+
+    <error name="段落过长">
+      <description>单个段落超过150字</description>
+      <detection>计算段落字符数</detection>
+      <correction>按主题或逻辑拆分为多个段落</correction>
+    </error>
+
+    <error name="元素失衡">
+      <description>某类元素占比过高</description>
+      <detection>列表>30%，表格>15%</detection>
+      <correction>将部分列表改写为段落，表格改为文字描述</correction>
+    </error>
+
+    <error name="代码块无语言标注">
+      <description>代码块未指定语言</description>
+      <detection>```后未跟语言名称</detection>
+      <correction>添加适当的语言标识，如```python</correction>
+    </error>
+
+    <error name="YAML不完整">
+      <description>缺少必要的YAML字段</description>
+      <detection>检查title, description, date等必填字段</detection>
+      <correction>补全缺失字段，确保格式正确</correction>
+    </error>
+  </common_errors>
+
+  <formatting_checklist>
+    <section name="标题与结构">
+      <item>[ ] H1仅有一个，作为文档主标题</item>
+      <item>[ ] 标题层级连续，无跳级</item>
+      <item>[ ] H2控制在3-5个，代表主要章节</item>
+      <item>[ ] 每个H2下最多3个H3</item>
+    </section>
+
+    <section name="段落与内容">
+      <item>[ ] 所有段落≤150字</item>
+      <item>[ ] 段落间有空行分隔</item>
+      <item>[ ] 核心观点在段首概括</item>
+      <item>[ ] 无拼写和语法错误</item>
+    </section>
+
+    <section name="元素平衡">
+      <item>[ ] 段落+公式+代码≥50%</item>
+      <item>[ ] 列表占比≤30%</item>
+      <item>[ ] 表格占比≤15%</item>
+      <item>[ ] 引用占比≤5%</item>
+    </section>
+
+    <section name="特殊元素">
+      <item>[ ] 代码块标注语言</item>
+      <item>[ ] 表格有表头</item>
+      <item>[ ] 公式变量有解释</item>
+      <item>[ ] 引用注明出处</item>
+    </section>
+
+    <section name="元数据">
+      <item>[ ] YAML包含所有必填字段</item>
+      <item>[ ] 标签5-8个，分类2-3个</item>
+      <item>[ ] 描述简洁准确，150字以内</item>
+      <item>[ ] slug使用kebab-case格式</item>
+    </section>
+  </formatting_checklist>
+</formatting_guidelines>

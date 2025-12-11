@@ -1,0 +1,255 @@
+<knowledge_linking_strategy>
+  <overview>
+    知识链接是构建连接的知识网络的关键。Editor 负责识别文档中的关键实体，
+    创建适当的链接，并建议反向链接，从而形成双向连接的知识图谱。
+  </overview>
+
+  <entity_identification>
+    <required_entities>
+      <entity_type name="技术概念" priority="high">
+        <description>首次出现的技术术语和概念</description>
+        <examples>
+          <example>[[transformer-architecture.md|Transformer]]</example>
+          <example>[[self-attention.md|自注意力机制]]</example>
+        </examples>
+      </entity_type>
+      
+      <entity_type name="算法/模型" priority="high">
+        <description>特定的算法、模型或技术实现</description>
+        <examples>
+          <example>[[bert-model.md|BERT]]</example>
+          <example>[[gradient-descent.md|梯度下降]]</example>
+        </examples>
+      </entity_type>
+      
+      <entity_type name="方法论" priority="medium">
+        <description>系统化的方法和流程</description>
+        <examples>
+          <example>[[knowledge-engineering.md|知识工程]]</example>
+          <example>[[agile-development.md|敏捷开发]]</example>
+        </examples>
+      </entity_type>
+      
+      <entity_type name="工具/框架" priority="medium">
+        <description>有详细介绍的工具和框架</description>
+        <examples>
+          <example>[[pytorch-basics.md|PyTorch]]</example>
+          <example>[[vscode-setup.md|VSCode]]</example>
+        </examples>
+      </entity_type>
+      
+      <entity_type name="领域术语" priority="medium">
+        <description>非通用词汇的专业术语</description>
+        <examples>
+          <example>[[attention-mechanism.md|注意力机制]]</example>
+          <example>[[backpropagation.md|反向传播]]</example>
+        </examples>
+      </entity_type>
+    </required_entities>
+
+    <excluded_entities>
+      <entity_type name="通用概念">
+        <description>过于宽泛的概念</description>
+        <examples>
+          <example>机器学习</example>
+          <example>深度学习</example>
+          <example>人工智能</example>
+        </examples>
+        <reason>过于宽泛，不适合作为具体链接</reason>
+      </entity_type>
+      
+      <entity_type name="常识名词">
+        <description>无需解释的基础概念</description>
+        <examples>
+          <example>计算机</example>
+          <example>算法</example>
+          <example>数据</example>
+        </examples>
+        <reason>基础常识，无需专门解释</reason>
+      </entity_type>
+      
+      <entity_type name="动词/形容词">
+        <description>非实体的词汇</description>
+        <examples>
+          <example>优化</example>
+          <example>提升</example>
+          <example>重要</example>
+        </examples>
+        <reason>非实体，不适合作为知识链接</reason>
+      </entity_type>
+      
+      <entity_type name="高频词">
+        <description>同文档内重复出现的实体</description>
+        <examples>
+          <example>第二次及以后出现的同一实体</example>
+        </examples>
+        <reason>同文档内仅链接一次，避免过度链接</reason>
+      </entity_type>
+    </excluded_entities>
+  </entity_identification>
+
+  <link_creation_standards>
+    <format>
+      <standard_syntax>
+        <description>Wiki风格的双括号链接</description>
+        <format>[[相对路径/文件名.md|显示文本]]</format>
+        <examples>
+          <example>同级目录: [[transformer-arch.md|Transformer架构]]</example>
+          <example>上级目录: [[../deep-learning/cnn.md|CNN]]</example>
+          <example>下级目录: [[nlp/bert.md|BERT模型]]</example>
+        </examples>
+      </standard_syntax>
+      
+      <display_text_rules>
+        <rule>使用中文时: [[file.md|中文名称]]</rule>
+        <rule>使用英文缩写时: [[file.md|NLP]]</rule>
+        <rule>保持原文时: [[file.md]] (自动显示标题)</rule>
+      </display_text_rules>
+    </format>
+
+    <density_control>
+      <rules>
+        <rule>每200字最多3个链接</rule>
+        <rule>避免连续句子都是链接</rule>
+        <rule>关键概念首次出现时链接</rule>
+        <rule>同一实体在一篇文档中仅链接1次</rule>
+      </rules>
+      <examples>
+        <good>
+          <![CDATA[
+[[transformer.md|Transformer]]通过自注意力机制处理序列。与RNN不同,
+它能并行计算所有位置的表示。多头注意力让模型从多个角度理解输入,
+这种设计在[[bert.md|BERT]]等预训练模型中得到广泛应用。
+
+(200字,2个链接,密度适中)
+          ]]>
+        </good>
+        <bad>
+          <![CDATA[
+[[transformer.md|Transformer]]使用[[attention.md|注意力]]机制,
+包括[[multi-head.md|多头注意力]]和[[ffn.md|前馈网络]]...
+
+(50字,4个链接,过度打断阅读)
+          ]]>
+        </bad>
+      </examples>
+    </density_control>
+  </link_creation_standards>
+
+  <backlink_maintenance>
+    <description>
+      Editor 负责建议反向链接，实际执行由 Architect 完成。
+      这确保了知识网络的双向连接性。
+    </description>
+    <process>
+      <step>在新文档A中链接到已存在的文档B</step>
+      <step>Editor提出反向链接建议</step>
+      <step>Architect执行反向链接更新</step>
+    </process>
+    <template>
+      <![CDATA[
+---
+文档A: transformer-attention.md
+已创建指向: 
+- [[self-attention.md]]
+- [[multi-head-attention.md]]
+
+建议Architect更新反向链接:
+- 在 self-attention.md 末尾添加:
+  ## 相关文档
+  - [[transformer-attention.md]] - Transformer中的注意力应用
+  
+- 在 multi-head-attention.md 末尾添加:
+  ## 相关文档
+  - [[transformer-attention.md]] - 多头注意力在Transformer中的实现
+---
+      ]]>
+    </template>
+  </backlink_maintenance>
+
+  <link_verification>
+    <process>
+      <step>检查链接目标是否存在</step>
+      <step>验证链接文本是否准确描述目标</step>
+      <step>确认链接密度是否适中</step>
+    </process>
+    <handling_nonexistent_links>
+      <strategy name="确认存在">
+        <description>仅链接确认存在的文档</description>
+        <process>
+          <step>使用search_files工具搜索目标文档</step>
+          <step>仅在确认存在时创建链接</step>
+        </process>
+      </strategy>
+      <strategy name="创建占位符">
+        <description>为重要概念创建占位符链接</description>
+        <process>
+          <step>识别核心概念但发现文档不存在</step>
+          <step>创建链接并建议Architect创建占位文档</step>
+          <template>
+            <![CDATA[
+建议创建以下文档:
+- [[attention-mechanism.md]] - 关于注意力机制的文档
+  建议内容: 注意力机制的基本原理、数学表示和应用场景
+            ]]>
+          </template>
+        </process>
+      </strategy>
+    </handling_nonexistent_links>
+  </link_verification>
+
+  <knowledge_graph_integration>
+    <description>
+      通过系统性链接策略，逐步构建完整的知识图谱，使知识点之间形成网络而非孤岛。
+    </description>
+    <benefits>
+      <benefit>提高知识发现性，用户可以通过链接探索相关概念</benefit>
+      <benefit>建立概念间的层次和关联，形成结构化知识</benefit>
+      <benefit>促进知识的整合和系统化理解</benefit>
+    </benefits>
+    <visualization>
+      <description>
+        随着链接网络的扩展，可以通过图谱可视化工具展示知识间的关联，
+        帮助识别知识空白和核心概念。
+      </description>
+    </visualization>
+  </knowledge_graph_integration>
+
+  <common_linking_patterns>
+    <pattern name="定义链接">
+      <description>链接到概念的定义或详细解释</description>
+      <example>
+        <![CDATA[
+[[transformer.md|Transformer]]是一种基于自注意力机制的神经网络架构。
+        ]]>
+      </example>
+    </pattern>
+    
+    <pattern name="组成部分链接">
+      <description>链接到整体的组成部分</description>
+      <example>
+        <![CDATA[
+Transformer由[[encoder.md|编码器]]和[[decoder.md|解码器]]组成。
+        ]]>
+      </example>
+    </pattern>
+    
+    <pattern name="应用场景链接">
+      <description>链接到概念的应用场景</description>
+      <example>
+        <![CDATA[
+BERT在[[named-entity-recognition.md|命名实体识别]]任务中表现出色。
+        ]]>
+      </example>
+    </pattern>
+    
+    <pattern name="比较链接">
+      <description>链接到可比较的概念</description>
+      <example>
+        <![CDATA[
+与[[rnn.md|RNN]]不同，Transformer可以并行处理序列。
+        ]]>
+      </example>
+    </pattern>
+  </common_linking_patterns>
+</knowledge_linking_strategy>
