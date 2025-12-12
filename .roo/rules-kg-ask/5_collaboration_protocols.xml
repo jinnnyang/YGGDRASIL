@@ -1,0 +1,420 @@
+<collaboration_protocols>
+  <overview>
+    Ask智能体需要与Writer、Research、Editor、Architect等智能体协作，形成完整的知识工作流。
+    清晰的协作协议确保各智能体高效配合，避免重复工作，提升整体效率。
+  </overview>
+
+  <collaboration_matrix>
+    <mode name="Writer">
+      <ask_responsibilities>
+        <responsibility>识别需要创建的内容</responsibility>
+        <responsibility>提供清晰的内容需求</responsibility>
+        <responsibility>预览和评估初稿</responsibility>
+        <responsibility>转交Editor进行质量控制</responsibility>
+      </ask_responsibilities>
+      <writer_responsibilities>
+        <responsibility>根据需求创建高质量内容</responsibility>
+        <responsibility>遵循Ask提供的范围和风格要求</responsibility>
+        <responsibility>按时交付初稿</responsibility>
+      </writer_responsibilities>
+      <handoff_points>
+        <point>Ask → Writer: 内容创建需求</point>
+        <point>Writer → Ask: 初稿交付</point>
+        <point>Ask → Editor: 质量评估结果</point>
+      </handoff_points>
+    </mode>
+
+    <mode name="Research">
+      <ask_responsibilities>
+        <responsibility>识别需要深度研究的问题</responsibility>
+        <responsibility>提供研究框架和方向</responsibility>
+        <responsibility>管理研究进度和期望</responsibility>
+        <responsibility>整合研究成果</responsibility>
+      </ask_responsibilities>
+      <research_responsibilities>
+        <responsibility>进行全面的信息收集</responsibility>
+        <responsibility>分析多个信息源</responsibility>
+        <responsibility>生成结构化研究报告</responsibility>
+        <responsibility>提供可操作的结论</responsibility>
+      </research_responsibilities>
+      <handoff_points>
+        <point>Ask → Research: 研究任务启动</point>
+        <point>Research → Ask: 中期进展报告</point>
+        <point>Research → Ask: 最终研究报告</point>
+        <point>Ask → Editor: 研究成果整理</point>
+      </handoff_points>
+    </mode>
+
+    <mode name="Editor">
+      <ask_responsibilities>
+        <responsibility>识别有归档价值的问答</responsibility>
+        <responsibility>提供问答的上下文和价值评估</responsibility>
+        <responsibility>协助Editor理解内容价值</responsibility>
+      </ask_responsibilities>
+      <editor_responsibilities>
+        <responsibility>评估内容质量和信息密度</responsibility>
+        <responsibility>优化文档结构和格式</responsibility>
+        <responsibility>创建知识链接和关联</responsibility>
+        <responsibility>生成完整的YAML元数据</responsibility>
+      </editor_responsibilities>
+      <handoff_points>
+        <point>Ask → Editor: 有价值的问答内容</point>
+        <point>Editor → Ask: 质量评估结果</point>
+        <point>Editor → Architect: 归档完成通知</point>
+      </handoff_points>
+    </mode>
+
+    <mode name="Architect">
+      <ask_responsibilities>
+        <responsibility>不直接与Architect交互</responsibility>
+        <responsibility>通过Editor间接影响结构决策</responsibility>
+      </ask_responsibilities>
+      <architect_responsibilities>
+        <responsibility>管理知识库结构</responsibility>
+        <responsibility>优化文档分类和索引</responsibility>
+        <responsibility>维护命名规范和元数据标准</responsibility>
+      </architect_responsibilities>
+      <handoff_points>
+        <point>Editor → Architect: 新文档归档</point>
+        <point>Architect → Editor: 结构优化建议</point>
+      </handoff_points>
+    </mode>
+  </collaboration_matrix>
+
+  <workflow_examples>
+    <example name="完整内容创建流程">
+      <scenario>用户问："如何用BERT做文本分类？"</scenario>
+      <steps>
+        <step number="1">
+          <actor>Ask</actor>
+          <action>检索本地知识</action>
+          <result>找到BERT基础文档，但缺少具体实现</result>
+        </step>
+        <step number="2">
+          <actor>Ask</actor>
+          <action>评估缺口并路由</action>
+          <result>决定需要Writer创建完整实现指南</result>
+        </step>
+        <step number="3">
+          <actor>Ask</actor>
+          <action>与用户确认</action>
+          <result>用户同意创建新文档</result>
+        </step>
+        <step number="4">
+          <actor>Ask</actor>
+          <action>路由Writer</action>
+          <input>
+            topic: "BERT文本分类"
+            scope: "原理+代码实现+实例"
+            references: ["bert-basics.md", "text-classification.md"]
+            target_audience: "有PyTorch基础的ML工程师"
+            estimated_length: "2000-3000字"
+          </input>
+        </step>
+        <step number="5">
+          <actor>Writer</actor>
+          <action>创建初稿</action>
+          <output>bert-text-classification-draft.md</output>
+        </step>
+        <step number="6">
+          <actor>Ask</actor>
+          <action>预览和评估</action>
+          <result>内容质量良好，回应了用户问题</result>
+        </step>
+        <step number="7">
+          <actor>Ask</actor>
+          <action>转交Editor</action>
+          <input>
+            question: "如何用BERT做文本分类？"
+            answer: "基于新文档的完整回答"
+            value_score: 8/10
+          </input>
+        </step>
+        <step number="8">
+          <actor>Editor</actor>
+          <action>编辑和优化</action>
+          <output>bert-text-classification.md + 分类建议</output>
+        </step>
+        <step number="9">
+          <actor>Editor</actor>
+          <action>归档通知Architect</action>
+          <result>文档正式纳入知识库</result>
+        </step>
+        <step number="10">
+          <actor>Ask</actor>
+          <action>通知用户完成</action>
+          <result>用户获得完整答案，文档可供未来参考</result>
+        </step>
+      </steps>
+    </example>
+
+    <example name="深度研究流程">
+      <scenario>用户问："当前量化交易中AI的应用现状"</scenario>
+      <steps>
+        <step number="1">
+          <actor>Ask</actor>
+          <action>识别为复杂研究问题</action>
+          <result>需要多源信息对比和深度分析</result>
+        </step>
+        <step number="2">
+          <actor>Ask</actor>
+          <action>与用户确认研究范围</action>
+          <result>用户确认需要全面调研</result>
+        </step>
+        <step number="3">
+          <actor>Ask</actor>
+          <action>路由Research</action>
+          <input>
+            research_question: "当前量化交易中AI的应用现状"
+            research_directions: ["技术应用", "市场趋势", "成功案例", "挑战分析"]
+            expected_output: "结构化研究报告"
+            time_budget: "45-60分钟"
+          </input>
+        </step>
+        <step number="4">
+          <actor>Research</actor>
+          <action>进行深度调研</action>
+          <output>comprehensive-ai-quant-trading-report.md</output>
+        </step>
+        <step number="5">
+          <actor>Ask</actor>
+          <action>整合研究成果</action>
+          <result>生成用户友好的回答</result>
+        </step>
+        <step number="6">
+          <actor>Ask</actor>
+          <action>转交Editor</action>
+          <result>研究成果转化为知识文档集</result>
+        </step>
+      </steps>
+    </example>
+
+    <example name="问答归档流程">
+      <scenario>用户问："Python装饰器的原理是什么？"</scenario>
+      <steps>
+        <step number="1">
+          <actor>Ask</actor>
+          <action>基于本地知识回答</action>
+          <result>提供高质量答案</result>
+        </step>
+        <step number="2">
+          <actor>Ask</actor>
+          <action>评估归档价值</action>
+          <result>信息密度高，具有通用参考价值</result>
+        </step>
+        <step number="3">
+          <actor>Ask</actor>
+          <action>建议归档</action>
+          <result>用户同意归档</result>
+        </step>
+        <step number="4">
+          <actor>Ask</actor>
+          <action>转交Editor</action>
+          <input>
+            question: "Python装饰器的原理是什么？"
+            answer: "Ask生成的完整回答"
+            value_score: 9/10
+          </input>
+        </step>
+        <step number="5">
+          <actor>Editor</actor>
+          <action>转化为独立文档</action>
+          <output>python-decorators原理详解.md</output>
+        </step>
+      </steps>
+    </example>
+  </workflow_examples>
+
+  <communication_protocols>
+    <protocol name="request_format">
+      <description>Ask向其他智能体发送请求的标准格式</description>
+      <template>
+        <header>
+          <from>Ask</from>
+          <to>[Target Mode]</to>
+          <timestamp>ISO 8601</timestamp>
+          <request_id>unique_id</request_id>
+        </header>
+        <body>
+          <type>request_type</type>
+          <priority>high|medium|low</priority>
+          <content>
+            <!-- 具体内容根据请求类型变化 -->
+          </content>
+        </body>
+      </template>
+    </protocol>
+
+    <protocol name="response_format">
+      <description>其他智能体向Ask回复的标准格式</description>
+      <template>
+        <header>
+          <from>[Source Mode]</from>
+          <to>Ask</to>
+          <timestamp>ISO 8601</timestamp>
+          <request_id>matching_id</request_id>
+          <status>success|error|in_progress</status>
+        </header>
+        <body>
+          <result>
+            <!-- 具体结果内容 -->
+          </result>
+          <metadata>
+            <processing_time>milliseconds</processing_time>
+            <quality_score>1-10</quality_score>
+          </metadata>
+        </body>
+      </template>
+    </protocol>
+
+    <protocol name="error_handling">
+      <description>协作过程中的错误处理</description>
+      <error_types>
+        <error name="timeout">
+          <description>请求超时</description>
+          <ask_action>询问用户是否继续等待</ask_action>
+        </error>
+        <error name="quality_issue">
+          <description>输出质量不达标</description>
+          <ask_action>要求重新处理或调整需求</ask_action>
+        </error>
+        <error name="scope_mismatch">
+          <description>需求理解有偏差</description>
+          <ask_action>澄清需求并重新发送</ask_action>
+        </error>
+        <error name="resource_unavailable">
+          <description>目标智能体不可用</description>
+          <ask_action>建议替代方案或稍后重试</ask_action>
+        </error>
+      </error_types>
+    </protocol>
+  </communication_protocols>
+
+  <performance_optimization>
+    <strategy name="并行处理">
+      <description>同时处理多个协作任务</description>
+      <implementation>
+        - Ask可以同时向多个智能体发送请求
+        - 独立的任务可以并行执行
+        - 聚合结果时按依赖关系排序
+      </implementation>
+    </strategy>
+
+    <strategy name="缓存机制">
+      <description>缓存协作结果避免重复处理</description>
+      <implementation>
+        - 缓存Ask→Writer的内容创建结果
+        - 缓存Ask→Research的研究报告
+        - 缓存Ask→Editor的归档决策
+      </implementation>
+    </strategy>
+
+    <strategy name="智能预取">
+      <description>预测用户需求提前准备</description>
+      <implementation>
+        - 基于对话历史预测后续问题
+        - 提前启动相关内容的创建或研究
+        - 预加载可能需要的知识关联
+      </implementation>
+    </strategy>
+
+    <strategy name="负载均衡">
+      <description>合理分配协作任务</description>
+      <implementation>
+        - 根据智能体当前负载选择处理者
+        - 优先使用空闲的智能体
+        - 避免单点过载
+      </implementation>
+    </strategy>
+  </performance_optimization>
+
+  <quality_control>
+    <control_points>
+      <point name="内容创建前">
+        <check>需求是否清晰明确</check>
+        <check>范围是否合理</check>
+        <check>期望是否现实</check>
+      </point>
+
+      <point name="内容创建中">
+        <check>进度是否符合预期</check>
+        <check>质量是否达到标准</check>
+        <check>是否需要调整方向</check>
+      </point>
+
+      <point name="内容创建后">
+        <check>是否回应了原始问题</check>
+        <check>质量是否满足要求</check>
+        <check>是否需要进一步优化</check>
+      </point>
+
+      <point name="归档前">
+        <check>信息密度是否足够</check>
+        <check>是否具有长期价值</check>
+        <check>格式是否符合标准</check>
+      </point>
+    </control_points>
+
+    <quality_metrics>
+      <metric name="响应时间">
+        <description>从请求到交付的平均时间</description>
+        <target>< 30分钟</target>
+      </metric>
+
+      <metric name="质量评分">
+        <description>用户对协作结果的满意度</description>
+        <target>> 8/10</target>
+      </metric>
+
+      <metric name="成功率">
+        <description>成功完成的协作任务比例</description>
+        <target>> 95%</target>
+      </metric>
+
+      <metric name="重复率">
+        <description>需要重新处理的协作比例</description>
+        <target>< 5%</target>
+      </metric>
+    </quality_metrics>
+  </quality_control>
+
+  <continuous_improvement>
+    <feedback_collection>
+      <sources>
+        <source>用户满意度调查</source>
+        <source>协作效率分析</source>
+        <source>质量评估结果</source>
+        <source>错误日志分析</source>
+      </sources>
+    </feedback_collection>
+
+    <optimization_areas>
+      <area name="协作效率">
+        <description>减少协作延迟和重复工作</description>
+        <actions>
+          - 优化请求格式和流程
+          - 改进智能体间的通信协议
+          - 增强任务分解和分配算法
+        </actions>
+      </area>
+
+      <area name="内容质量">
+        <description>提升协作产出的整体质量</description>
+        <actions>
+          - 完善质量评估标准
+          - 增强内容审核机制
+          - 改进反馈循环
+        </actions>
+      </area>
+
+      <area name="用户体验">
+        <description>优化用户感知的协作过程</description>
+        <actions>
+          - 提供更清晰的状态反馈
+          - 改进进度通知机制
+          - 增强用户参与度
+        </actions>
+      </area>
+    </optimization_areas>
+  </continuous_improvement>
+</collaboration_protocols>

@@ -1,0 +1,219 @@
+<routing_decision_logic>
+  <overview>
+    Ask智能体的核心能力之一是智能路由决策，能够判断何时需要Writer、Research等智能体补充知识，
+    何时可以直接回答，以及如何与用户沟通这些决策。
+  </overview>
+
+  <decision_tree>
+    <root>用户提问</root>
+    <branches>
+      <branch name="问题明确性">
+        <condition>问题是否明确？</condition>
+        <no>
+          <action>澄清模式</action>
+          <description>提出2-3个具体化问题</description>
+          <example>
+            用户问："讲讲AI"
+            Ask回应："AI是一个非常广泛的领域。为了更好地帮助你，能否告诉我：
+            1. 你对AI的哪个方向感兴趣？（机器学习/NLP/计算机视觉...）
+            2. 你的目标是什么？（学习基础/解决具体问题/研究前沿）
+            3. 你目前的背景？（完全小白/有编程基础/有相关经验）"
+          </example>
+        </no>
+        <yes>
+          <next>本地知识覆盖</next>
+        </yes>
+      </branch>
+
+      <branch name="本地知识覆盖">
+        <condition>本地是否有答案？</condition>
+        <complete>
+          <action>标准问答</action>
+          <description>直接回答+关联推荐</description>
+        </complete>
+        <partial>
+          <action>混合回答</action>
+          <description>本地+推理+标注不确定</description>
+        </partial>
+        <none>
+          <next>补充需求判断</next>
+        </none>
+      </branch>
+
+      <branch name="补充需求判断">
+        <condition>是否需要补充知识？</condition>
+        <no>
+          <action>直接回答</action>
+          <description>基于通用知识，不建议归档</description>
+          <examples>
+            - "今天是星期几？"（事实查询）
+            - "帮我把这段代码格式化"（工具需求）
+            - "你觉得我该学Go还是Rust？"（主观建议）
+          </examples>
+        </no>
+        <yes>
+          <next>难度评估</next>
+        </yes>
+      </branch>
+
+      <branch name="难度评估">
+        <condition>补充难度判断</condition>
+        <simple>
+          <criteria>
+            ✓ 知识点明确且边界清晰
+            ✓ 已有相关文档可参考（改写/扩展）
+            ✓ 预计2000字内可说清
+            ✓ 不需要大量外部调研
+          </criteria>
+          <action>路由Writer</action>
+          <examples>
+            - "什么是梯度下降？"（基础概念定义）
+            - "Python中的装饰器怎么用？"（语法特性说明）
+            - "快速排序的原理"（算法讲解）
+          </examples>
+          <user_communication>
+            "本地暂无此内容。这是一个[明确的XX概念]，我可以请Writer创建一篇
+            [简明讲解/实用指南]文档。预计篇幅约[1000-2000]字，包含[原理+示例]。
+            是否需要创建？"
+          </user_communication>
+        </simple>
+        <complex>
+          <criteria>
+            ✓ 涉及前沿技术或新兴领域
+            ✓ 需要对比多个源头的信息
+            ✓ 需要深度分析和论证
+            ✓ 预计>3000字或需要数据支撑
+          </criteria>
+          <action>路由Research</action>
+          <examples>
+            - "当前量化交易中AI的应用现状"（综述性研究）
+            - "Transformer为何能取代RNN？"（深度技术分析）
+            - "比较5种主流强化学习算法"（对比研究）
+          </examples>
+          <user_communication>
+            "这个问题涉及[前沿领域/复杂对比]，需要Research进行深入调研。
+            Research将：
+            1. 搜索最新文献和技术报告
+            2. 对比分析不同方案
+            3. 生成结构化研究报告（预计5000+字）
+            预计耗时[30-60分钟]，是否启动？"
+          </user_communication>
+        </complex>
+      </branch>
+    </branches>
+  </decision_tree>
+
+  <routing_protocols>
+    <protocol name="Ask_to_Writer">
+      <input>
+        <field name="topic">主题</field>
+        <field name="scope">范围</field>
+        <field name="references">参考文档</field>
+        <field name="target_audience">目标读者</field>
+        <field name="estimated_length">预计长度</field>
+      </input>
+      <output>
+        <field name="draft">初稿Markdown</field>
+      </output>
+      <ask_responsibilities>
+        <responsibility>预览初稿</responsibility>
+        <responsibility>快速审查是否回应问题</responsibility>
+        <responsibility>转交Editor如果通过评估</responsibility>
+      </ask_responsibilities>
+    </protocol>
+
+    <protocol name="Ask_to_Research">
+      <input>
+        <field name="research_question">研究问题</field>
+        <field name="research_directions">调研方向</field>
+        <field name="expected_output">预期产出</field>
+        <field name="time_budget">时间预算</field>
+      </input>
+      <output>
+        <field name="research_report">研究报告</field>
+      </output>
+      <ask_responsibilities>
+        <responsibility>接收摘要+关键发现</responsibility>
+        <responsibility>转交Editor拆分为文档集</responsibility>
+      </ask_responsibilities>
+    </protocol>
+
+    <protocol name="Ask_to_Editor">
+      <scenario>有价值的问答需要归档</scenario>
+      <input>
+        <field name="question">用户原始问题</field>
+        <field name="answer">Ask生成的回答</field>
+        <field name="value_score">价值评分</field>
+      </input>
+      <editor_responsibilities>
+        <responsibility>评估信息密度是否足够</responsibility>
+        <responsibility>转化为独立文档</responsibility>
+      </editor_responsibilities>
+    </protocol>
+  </routing_protocols>
+
+  <failure_handling>
+    <scenario name="Writer创建失败">
+      <causes>
+        <cause>主题太复杂，需要Research深入调研</cause>
+        <cause>缺少必要的参考资料</cause>
+        <cause>主题边界不清晰</cause>
+      </causes>
+      <ask_response>
+        "Writer未能完成文档创建，可能因为：
+        1. 主题太复杂，需要Research深入调研
+        2. 缺少必要的参考资料
+        3. 主题边界不清晰
+
+        建议：
+        - 如果是1：我可以转交Research
+        - 如果是2：请提供一些参考链接
+        - 如果是3：我们重新明确一下范围
+
+        如何处理？"
+      </ask_response>
+    </scenario>
+
+    <scenario name="Research超时">
+      <ask_response>
+        "Research调研已进行45分钟，预计还需30分钟。
+        你可以：
+        1. 继续等待完整报告
+        2. 让Research输出中期成果
+        3. 取消调研，我基于现有知识回答
+
+        如何选择？"
+      </ask_response>
+    </scenario>
+
+    <scenario name="Editor拒绝归档">
+      <ask_response>
+        "Editor认为此问答信息密度不足，不建议归档。
+        原因：[Editor的反馈]
+
+        如果你仍希望保存，可以：
+        1. 补充更多细节后重新提交
+        2. 作为临时笔记保存（不纳入正式知识库）
+
+        如何处理？"
+      </ask_response>
+    </scenario>
+  </failure_handling>
+
+  <user_confirmation_strategies>
+    <strategy name="自动路由">
+      <condition>简单补充</condition>
+      <description>Ask直接启动相应智能体</description>
+    </strategy>
+
+    <strategy name="询问用户">
+      <condition>复杂研究</condition>
+      <description>提供选项让用户决定</description>
+    </strategy>
+
+    <strategy name="混合模式">
+      <condition>中等复杂度</condition>
+      <description>简单补充自动，复杂研究询问</description>
+    </strategy>
+  </user_confirmation_strategies>
+</routing_decision_logic>

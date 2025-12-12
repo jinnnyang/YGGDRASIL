@@ -1,0 +1,409 @@
+<tool_usage_strategy>
+  <overview>
+    Ask智能体需要充分利用MCP工具和本地文件系统来高效完成任务。
+    合理的工具使用策略能够显著提升问答质量和用户体验。
+  </overview>
+
+  <tool_priority_matrix>
+    <priority level="P0" name="文件系统工具">
+      <description>必备工具，Ask的核心能力</description>
+      <tools>
+        <tool name="list_files">
+          <purpose>了解知识库结构</purpose>
+          <usage>每次会话开始时快速浏览目录结构</usage>
+          <parameters>
+            <param name="path">知识库根目录</param>
+            <param name="recursive">true（首次）或false（快速浏览）</param>
+          </parameters>
+        </tool>
+
+        <tool name="read_file">
+          <purpose>获取文档内容</purpose>
+          <usage>读取相关文档的YAML和正文内容</usage>
+          <parameters>
+            <param name="path">具体文档路径</param>
+          </parameters>
+          <best_practice>批量读取相关文档（最多5个）</best_practice>
+        </tool>
+
+        <tool name="search_files">
+          <purpose>关键词检索</purpose>
+          <usage>根据问题关键词搜索相关文档</usage>
+          <parameters>
+            <param name="path">知识库目录</param>
+            <param name="regex">关键词模式</param>
+            <param name="file_pattern">*.md（默认）</param>
+          </parameters>
+          <best_practice>使用多种关键词组合搜索</best_practice>
+        </tool>
+      </tools>
+    </priority>
+
+    <priority level="P1" name="知识图谱工具">
+      <description>增强工具，如果可用的话</description>
+      <tools>
+        <tool name="use_mcp_tool">
+          <server_name>memory</server_name>
+          <tool_name>search_nodes</tool_name>
+          <purpose>快速获取实体关系</purpose>
+          <usage>查询知识图谱中的相关实体</usage>
+        </tool>
+
+        <tool name="use_mcp_tool">
+          <server_name>memory</server_name>
+          <tool_name>read_graph</tool_name>
+          <purpose>获取完整知识图谱</purpose>
+          <usage>构建知识关联网络</usage>
+        </tool>
+      </tools>
+    </priority>
+
+    <priority level="P2" name="外部搜索工具">
+      <description>补充工具，知识缺口时使用</description>
+      <tools>
+        <tool name="use_mcp_tool">
+          <server_name>tavily</server_name>
+          <tool_name>tavily-search</tool_name>
+          <purpose>Web搜索最新信息</purpose>
+          <usage>当本地知识不足时搜索外部资源</usage>
+          <parameters>
+            <param name="query">搜索关键词</param>
+            <param name="search_depth">basic或advanced</param>
+            <param name="max_results">5-10</param>
+          </parameters>
+        </tool>
+
+        <tool name="use_mcp_tool">
+          <server_name>tavily</server_name>
+          <tool_name>tavily-extract</tool_name>
+          <purpose>提取网页内容</purpose>
+          <usage>获取搜索结果的详细内容</usage>
+        </tool>
+      </tools>
+    </priority>
+
+    <priority level="P3" name="专业工具">
+      <description>特定任务的辅助工具</description>
+      <tools>
+        <tool name="execute_command">
+          <purpose>执行系统命令</purpose>
+          <usage>文件操作、格式转换等</usage>
+        </tool>
+
+        <tool name="use_mcp_tool">
+          <server_name>tavily</server_name>
+          <tool_name>tavily-map</tool_name>
+          <purpose>网站结构分析</purpose>
+          <usage>分析外部资源的组织结构</usage>
+        </tool>
+      </tools>
+    </priority>
+  </tool_priority_matrix>
+
+  <tool_combination_strategies>
+    <strategy name="概念查询">
+      <description>用户询问某个概念的定义或原理</description>
+      <tool_sequence>
+        <step>search_files - 搜索概念关键词</step>
+        <step>read_file - 读取匹配文档</step>
+        <step>use_mcp_tool(memory) - 查询知识图谱关联</step>
+        <step>search_files - 搜索相关概念</step>
+      </tool_sequence>
+      <example>
+        用户："什么是Transformer?"
+        Ask工具使用：
+        1. search_files("transformer")
+        2. read_file("transformer-arch.md")
+        3. use_mcp_tool("memory", "search_nodes", "Transformer")
+        4. search_files("attention")
+      </example>
+    </strategy>
+
+    <strategy name="对比查询">
+      <description>用户比较两个概念或技术</description>
+      <tool_sequence>
+        <step>search_files - 分别搜索A和B</step>
+        <step>read_file - 读取两个文档</step>
+        <step>use_mcp_tool(memory) - 查询共同关联</step>
+        <step>search_files - 搜索对比相关文档</step>
+      </tool_sequence>
+      <example>
+        用户："RNN和Transformer有什么区别?"
+        Ask工具使用：
+        1. search_files("rnn") 和 search_files("transformer")
+        2. read_file("rnn-basics.md", "transformer-arch.md")
+        3. use_mcp_tool("memory", "search_nodes", "sequence-modeling")
+        4. search_files("rnn-vs-transformer")
+      </example>
+    </strategy>
+
+    <strategy name="实现查询">
+      <description>用户询问如何实现某个功能</description>
+      <tool_sequence>
+        <step>search_files - 搜索实现相关文档</step>
+        <step>read_file - 读取代码示例</step>
+        <step>search_files - 搜索相关技术栈</step>
+        <step>use_mcp_tool(tavily) - 搜索开源实现（如果需要）</step>
+      </tool_sequence>
+      <example>
+        用户："如何用PyTorch实现Transformer?"
+        Ask工具使用：
+        1. search_files("pytorch", "transformer", "implementation")
+        2. read_file("transformer-pytorch-impl.md")
+        3. search_files("attention", "encoder-decoder")
+        4. use_mcp_tool("tavily", "github transformer pytorch")
+      </example>
+    </strategy>
+
+    <strategy name="探索查询">
+      <description>用户要求推荐学习路径或相关内容</description>
+      <tool_sequence>
+        <step>list_files - 了解知识库结构</step>
+        <step>search_files - 搜索主题相关文档</step>
+        <step>use_mcp_tool(memory) - 构建知识图谱</step>
+        <step>read_file - 读取关键文档</step>
+      </tool_sequence>
+      <example>
+        用户："推荐机器学习学习路径"
+        Ask工具使用：
+        1. list_files("ai-ml/")
+        2. search_files("machine-learning", "learning-path")
+        3. use_mcp_tool("memory", "read_graph")
+        4. read_file("ml-fundamentals.md", "ml-algorithms.md")
+      </example>
+    </strategy>
+  </tool_combination_strategies>
+
+  <tool_failure_handling>
+    <failure_scenarios>
+      <scenario name="文件读取失败">
+        <symptoms>
+          - read_file返回错误
+          - 文件不存在或权限不足
+        </symptoms>
+        <handling_strategy>
+          <step>检查文件路径是否正确</step>
+          <step>尝试读取备份或历史版本</step>
+          <step>使用search_files重新定位文件</step>
+          <step>告知用户文档可能损坏，建议通知Architect</step>
+        </handling_strategy>
+        <example_response>
+          "抱歉，文档[[transformer-arch.md]]可能已损坏或移动。
+          我已尝试其他方式查找相关内容，但未能成功。
+          建议通知知识库管理员检查文档状态。"
+        </example_response>
+      </scenario>
+
+      <scenario name="搜索无结果">
+        <symptoms>
+          - search_files返回空结果
+          - 关键词匹配失败
+        </symptoms>
+        <handling_strategy>
+          <step>尝试同义词搜索</step>
+          <step>拆分关键词进行多次搜索</step>
+          <step>扩大搜索范围（父目录）</step>
+          <step>诚实告知未找到相关内容</step>
+        </handling_strategy>
+        <example_response>
+          "我在知识库中未找到直接相关的内容。
+          我尝试了多种关键词组合，但都没有匹配到相关文档。
+          这可能意味着：
+          1. 该主题尚未被记录
+          2. 使用了不同的术语描述
+          3. 内容在其他目录下
+
+          需要我创建相关文档或进行外部搜索吗？"
+        </example_response>
+      </scenario>
+
+      <scenario name="知识图谱不可用">
+        <symptoms>
+          - use_mcp_tool返回错误
+          - memory服务器不可用
+        </symptoms>
+        <handling_strategy>
+          <step>回退到文件系统遍历</step>
+          <step>手动解析[[]]链接</step>
+          <step>使用search_files查找关联文档</step>
+          <step>提示用户知识图谱服务不可用</step>
+        </handling_strategy>
+        <example_response>
+          "知识图谱服务暂时不可用，我将使用传统方式为您查找相关内容。
+          查询速度可能会慢一些，但仍然可以找到相关信息。"
+        </example_response>
+      </scenario>
+
+      <scenario name="外部搜索超时">
+        <symptoms>
+          - use_mcp_tool(tavily)超时
+          - 网络连接问题
+        </symptoms>
+        <handling_strategy>
+          <step>设置合理超时时间（10-30秒）</step>
+          <step>超时后放弃外部搜索</step>
+          <step>基于本地知识回答</step>
+          <step>建议用户稍后重试或手动搜索</step>
+        </handling_strategy>
+        <example_response>
+          "外部搜索超时了，我基于本地知识为您回答。
+          如果需要最新的信息，建议您稍后重试或直接访问相关网站。
+          我可以基于现有知识提供基础解答。"
+        </example_response>
+      </scenario>
+    </failure_scenarios>
+  </tool_failure_handling>
+
+  <performance_optimization>
+    <optimization_techniques>
+      <technique name="批量操作">
+        <description>一次性读取多个相关文件</description>
+        <implementation>
+          - read_file最多支持5个文件
+          - 合理分组相关文档
+          - 避免重复的文件读取
+        </implementation>
+        <benefit>减少工具调用次数，提升响应速度</benefit>
+      </technique>
+
+      <technique name="智能缓存">
+        <description>缓存频繁访问的文档内容</description>
+        <implementation>
+          - 缓存目录结构信息
+          - 缓存常用文档内容
+          - 缓存搜索结果
+        </implementation>
+        <benefit>避免重复的I/O操作</benefit>
+      </technique>
+
+      <technique name="并行搜索">
+        <description>同时进行多个搜索任务</description>
+        <implementation>
+          - 关键词变体搜索
+          - 不同目录并行搜索
+          - 异步处理搜索结果
+        </implementation>
+        <benefit>提高搜索效率和覆盖率</benefit>
+      </technique>
+
+      <technique name="增量加载">
+        <description>按需加载文档内容</description>
+        <implementation>
+          - 先读取YAML元数据
+          - 根据需要读取正文
+          - 延迟加载大文档
+        </implementation>
+        <benefit>减少内存使用，提升响应速度</benefit>
+      </technique>
+    </optimization_techniques>
+  </performance_optimization>
+
+  <tool_usage_best_practices>
+    <practice name="搜索策略">
+      <description>提高搜索效率和准确性</description>
+      <guidelines>
+        <guideline>使用多种关键词组合</guideline>
+        <guideline>结合精确匹配和模糊匹配</guideline>
+        <guideline>利用文件路径信息</guideline>
+        <guideline>考虑同义词和相关术语</guideline>
+      </guidelines>
+    </practice>
+
+    <practice name="文件读取">
+      <description>高效获取文档内容</description>
+      <guidelines>
+        <guideline>批量读取相关文档</guideline>
+        <guideline>优先读取文档开头和关键章节</guideline>
+        <guideline>检查文档的更新时间</guideline>
+        <guideline>注意文档的YAML元数据</guideline>
+      </guidelines>
+    </practice>
+
+    <practice name="错误处理">
+      <description>优雅处理工具失败</description>
+      <guidelines>
+        <guideline>提供有意义的错误信息</guideline>
+        <guideline>提供替代解决方案</guideline>
+        <guideline>记录失败原因用于改进</guideline>
+        <guideline>不影响其他工具的正常使用</guideline>
+      </guidelines>
+    </practice>
+
+    <practice name="性能监控">
+      <description>监控工具使用效率</description>
+      <metrics>
+        <metric>工具调用次数</metric>
+        <metric>平均响应时间</metric>
+        <metric>搜索命中率</metric>
+        <metric>用户满意度</metric>
+      </metrics>
+    </practice>
+  </tool_usage_best_practices>
+
+  <tool_integration_workflow>
+    <workflow name="标准问答流程">
+      <steps>
+        <step number="1">
+          <action>理解用户问题</action>
+          <tools>无（纯分析）</tools>
+          <output>问题类型、关键词、期望深度</output>
+        </step>
+        <step number="2">
+          <action>本地知识检索</action>
+          <tools>search_files, list_files</tools>
+          <output>相关文档列表</output>
+        </step>
+        <step number="3">
+          <action>内容获取</action>
+          <tools>read_file</tools>
+          <output>文档内容</output>
+        </step>
+        <step number="4">
+          <action>知识关联发现</action>
+          <tools>use_mcp_tool(memory), search_files</tools>
+          <output>关联文档和知识网络</output>
+        </step>
+        <step number="5">
+          <action>答案合成</action>
+          <tools>无（纯分析）</tools>
+          <output>结构化回答</output>
+        </step>
+        <step number="6">
+          <action>外部补充（如果需要）</action>
+          <tools>use_mcp_tool(tavily)</tools>
+          <output>最新信息或补充内容</output>
+        </step>
+      </steps>
+    </workflow>
+
+    <workflow name="探索发现流程">
+      <steps>
+        <step number="1">
+          <action>主题识别</action>
+          <tools>无（纯分析）</tools>
+          <output>核心主题和探索目标</output>
+        </step>
+        <step number="2">
+          <action>知识库结构分析</action>
+          <tools>list_files</tools>
+          <output>目录结构和分类</output>
+        </step>
+        <step number="3">
+          <action>主题相关文档搜索</action>
+          <tools>search_files</tools>
+          <output>相关文档集合</output>
+        </step>
+        <step number="4">
+          <action>知识图谱构建</action>
+          <tools>use_mcp_tool(memory)</tools>
+          <output>知识关联网络</output>
+        </step>
+        <step number="5">
+          <action>学习路径规划</action>
+          <tools>read_file, 无（分析）</tools>
+          <output>推荐学习顺序</output>
+        </step>
+      </steps>
+    </workflow>
+  </tool_integration_workflow>
+</tool_usage_strategy>

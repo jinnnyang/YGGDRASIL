@@ -1,0 +1,264 @@
+<knowledge_association_discovery>
+  <overview>
+    Ask智能体的核心能力之一是发现和展示知识间的关联关系，帮助用户构建完整的知识网络。
+    通过多层次的关联发现，让用户不仅得到答案，更能理解知识的前因后果、横向对比和纵向延伸。
+  </overview>
+
+  <association_types>
+    <type name="前置依赖">
+      <description>A必须先于B学习</description>
+      <example>理解Transformer前需要了解注意力机制</example>
+      <identifier>在学习B之前，建议先了解[[A]]</identifier>
+      <priority>1</priority>
+    </type>
+
+    <type name="相关概念">
+      <description>A和B在同一领域，互为补充</description>
+      <example>CNN和RNN都是序列处理模型</example>
+      <identifier>与此相关的还有[[A]][[B]]</identifier>
+      <priority>2</priority>
+    </type>
+
+    <type name="对比项">
+      <description>A和B解决相同问题但方法不同</description>
+      <example>RNN vs Transformer</example>
+      <identifier>对比[[A]]，本方法的优势在于...</identifier>
+      <priority>3</priority>
+    </type>
+
+    <type name="演进关系">
+      <description>B是A的改进/继承</description>
+      <example>BERT基于Transformer</example>
+      <identifier>[[B]]是在[[A]]基础上发展而来</identifier>
+      <priority>2</priority>
+    </type>
+
+    <type name="应用场景">
+      <description>A是理论，B是应用</description>
+      <example>注意力机制 → 机器翻译</example>
+      <identifier>[[A]]在[[B]]中的应用包括...</identifier>
+      <priority>4</priority>
+    </type>
+
+    <type name="工具链">
+      <description>A和B在工作流中配合使用</description>
+      <example>PyTorch + Transformer模型</example>
+      <identifier>通常与[[A]]配合使用</identifier>
+      <priority>4</priority>
+    </type>
+
+    <type name="交叉领域">
+      <description>A领域的知识应用到B领域</description>
+      <example>注意力机制(NLP) → 计算机视觉</example>
+      <identifier>[[A]]领域的类似概念是[[B]]</identifier>
+      <priority>5</priority>
+    </type>
+  </association_types>
+
+  <discovery_algorithm>
+    <input>
+      <parameter name="user_question">用户问题Q</parameter>
+      <parameter name="matched_documents">匹配到的文档D</parameter>
+    </input>
+
+    <steps>
+      <step name="直接关联">
+        <description>解析当前文档的YAML字段和内部链接</description>
+        <actions>
+          <action>解析D的YAML字段：categories、tags</action>
+          <action>解析D的内部链接：所有[[]]链接指向的文档</action>
+        </actions>
+        <output>一度关联列表</output>
+      </step>
+
+      <step name="反向关联">
+        <description>搜索所有链接到当前文档的文档</description>
+        <actions>
+          <action>搜索所有链接到D的文档</action>
+          <action>分析链接上下文：
+            - "基于[[D]]..." → D是前置依赖
+            - "与[[D]]不同..." → D是对比项
+            - "[[D]]的应用..." → D是理论，当前是应用
+          </action>
+        </actions>
+        <output>被引用关系列表</output>
+      </step>
+
+      <step name="语义关联">
+        <description>基于概念相似度发现隐藏关联</description>
+        <actions>
+          <action>提取D的核心概念（标题+H2标题）</action>
+          <action>在知识库中搜索这些概念</action>
+          <action>计算相似度：
+            - 标题相似 > 0.7：高度相关
+            - 标签重叠 > 3个：主题相关
+            - 正文关键词重叠 > 20%：内容相关
+          </action>
+        </actions>
+        <output>隐藏关联列表</output>
+      </step>
+
+      <step name="路径分析">
+        <description>构建学习路径和应用路径</description>
+        <actions>
+          <action>构建从"入门"到D的学习路径</action>
+          <action>构建从D到"应用"的实践路径</action>
+        </actions>
+        <output>知识路径图</output>
+      </step>
+
+      <step name="关联排序">
+        <description>按优先级排序关联</description>
+        <priority_rules>
+          <rule>P1：前置依赖（必须先学）</rule>
+          <rule>P2：直接引用（强相关）</rule>
+          <rule>P3：同类对比（横向扩展）</rule>
+          <rule>P4：应用场景（纵向延伸）</rule>
+        </priority_rules>
+        <output>排序后的关联列表</output>
+      </step>
+    </steps>
+  </discovery_algorithm>
+
+  <presentation_templates>
+    <template name="标准关联展示">
+      <![CDATA[
+## 相关知识
+### 前置基础 (必须先了解)
+- [[attention-mechanism.md]] - 注意力机制原理
+- [[neural-network-basics.md]] - 神经网络基础
+
+### 相关概念 (扩展阅读)
+- [[bert-model.md]] - BERT模型 (基于Transformer的预训练模型)
+- [[gpt-architecture.md]] - GPT架构 (另一种Transformer应用)
+
+### 对比学习
+- [[rnn-vs-transformer.md]] - RNN与Transformer的详细对比
+- [[cnn-sequence-modeling.md]] - CNN在序列建模中的应用
+
+### 实践应用
+- [[transformer-implementation.md]] - PyTorch实现Transformer
+- [[machine-translation.md]] - 机器翻译中的应用
+
+## 学习路径建议
+如果你是**初学者**，建议按以下顺序学习：
+1. [[neural-network-basics.md]] - 打好基础
+2. [[attention-mechanism.md]] - 理解核心概念
+3. 当前文档 - 深入Transformer
+4. [[bert-model.md]] - 了解实际应用
+
+## 后续建议
+- 如需代码实现：查看[[transformer-implementation.md]]
+- 如需理论证明：参考[[attention-is-all-you-need-paper.md]]
+- 如有疑问：随时提问，我会继续协助
+      ]]>
+    </template>
+
+    <template name="知识地图可视化">
+      <description>使用Mermaid图展示知识网络</description>
+      <example>
+        <![CDATA[
+```mermaid
+graph TD
+    A[神经网络基础] --> B[注意力机制]
+    B --> C[Transformer架构]
+    C --> D[BERT模型]
+    C --> E[GPT架构]
+    C --> F[机器翻译]
+    
+    G[RNN] --> C
+    H[CNN] --> C
+    
+    I[序列建模] --> G
+    I --> C
+    
+    J[自然语言处理] --> D
+    J --> E
+    J --> F
+```
+        ]]>
+      </example>
+    </template>
+
+    <template name="学习路径推荐">
+      <description>为不同水平用户推荐学习路径</description>
+      <levels>
+        <level name="初学者路径">
+          <steps>
+            <step>基础概念理解</step>
+            <step>核心原理掌握</step>
+            <step>实际应用体验</step>
+            <step>深入扩展学习</step>
+          </steps>
+        </level>
+        <level name="进阶者路径">
+          <steps>
+            <step>快速回顾基础</step>
+            <step>深入技术细节</step>
+            <step>对比分析理解</step>
+            <step>实践项目应用</step>
+          </steps>
+        </level>
+        <level name="专家路径">
+          <steps>
+            <step>前沿技术追踪</step>
+            <step>深度原理研究</step>
+            <step>创新应用探索</step>
+            <step>知识体系构建</step>
+          </steps>
+        </level>
+      </levels>
+    </template>
+  </presentation_templates>
+
+  <quality_criteria>
+    <criterion name="关联准确性">
+      <description>所有关联都应有文档支撑</description>
+      <check>检查关联是否真实存在</check>
+    </criterion>
+
+    <criterion name="关联完整性">
+      <description>覆盖主要关联类型</description>
+      <check>前置、相关、对比、应用等</check>
+    </criterion>
+
+    <criterion name="关联有用性">
+      <description>关联对用户有实际价值</description>
+      <check>避免无意义的关联</check>
+    </criterion>
+
+    <criterion name="关联层次性">
+      <description>按优先级和逻辑顺序组织</description>
+      <check>前置依赖优先于扩展内容</check>
+    </criterion>
+  </quality_criteria>
+
+  <performance_optimization>
+    <strategy name="缓存机制">
+      <description>缓存已发现的关联关系</description>
+      <implementation>
+        - 文档间关联缓存
+        - 相似度计算结果缓存
+        - 学习路径推荐缓存
+      </implementation>
+    </strategy>
+
+    <strategy name="增量更新">
+      <description>新文档添加时更新关联</description>
+      <implementation>
+        - 解析新文档的YAML和链接
+        - 更新相关文档的反向关联
+        - 重新计算相似度
+      </implementation>
+    </strategy>
+
+    <strategy name="并行处理">
+      <description>同时处理多个关联发现任务</description>
+      <implementation>
+        - 直接关联和反向关联并行
+        - 语义关联批量处理
+        - 路径分析异步计算
+      </implementation>
+    </strategy>
+  </performance_optimization>
+</knowledge_association_discovery>
