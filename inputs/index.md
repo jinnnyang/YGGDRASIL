@@ -1,11 +1,10 @@
 ---
 title: "待处理文档"
 slug: "inputs"
-description: "存放待处理的文档和文档树，包括需要整理、分类或进一步处理的资料"
+desjcription: "存放待处理的文档和文档树，包括需要整理、分类或进一步处理的资料"
 author: "System"
 date: 2025-12-12
-categories:
-  - inputs
+categories: ["inputs"]
 is_index: true
 ---
 
