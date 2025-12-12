@@ -1,0 +1,506 @@
+<kg_writer_error_handling>
+  <overview>
+    KG-Writer的错误处理和恢复策略指南，涵盖各种可能出现的错误情况、
+    解决方案和预防措施，确保Writer能够稳定可靠地完成任务。
+  </overview>
+
+  <error_categories>
+    <category name="input_related_errors">
+      <description>输入相关错误</description>
+      <errors>
+        <error name="unclear_requirements">
+          <description>需求不明确</description>
+          <symptoms>
+            <symptom>主题边界模糊</symptom>
+            <symptom>深度要求不明确</symptom>
+            <symptom>目标读者不明确</symptom>
+            <symptom>期望输出格式不明确</symptom>
+          </symptoms>
+          <causes>
+            <cause>用户表达不够清晰</cause>
+            <cause>缺少上下文信息</cause>
+            <cause>假设了不存在的知识</cause>
+          </causes>
+          <solutions>
+            <solution>主动询问澄清问题</solution>
+            <solution>提供多个选项让用户选择</solution>
+            <solution>基于常见需求做合理假设</solution>
+          </solutions>
+          <prevention>
+            <prevention>建立标准的需求确认流程</prevention>
+            <prevention>准备常见问题的澄清模板</prevention>
+          </prevention>
+          <example>
+            <situation>用户要求"写个关于AI的文档"</situation>
+            <response>关于AI的文档比较宽泛，能否具体说明：
+            1. 是AI基础概念还是特定技术？
+            2. 目标读者是初学者还是专业人士？
+            3. 希望侧重理论还是实践应用？
+            4. 大概多长的篇幅合适？</response>
+          </example>
+        </error>
+
+        <error name="conflicting_information">
+          <description>信息来源冲突</description>
+          <symptoms>
+            <symptom>不同来源给出相反信息</symptom>
+            <symptom>数据或定义不一致</symptom>
+            <symptom>技术细节有争议</symptom>
+          </symptoms>
+          <causes>
+            <cause>技术快速发展导致信息过时</cause>
+            <cause>不同实现方式的差异</cause>
+            <cause>学术观点的分歧</cause>
+          </causes>
+          <solutions>
+            <solution>优先采用官方和权威来源</solution>
+            <solution>标注信息的时效性</solution>
+            <solution>说明不同观点的存在</solution>
+            <solution>使用【存疑】标签标记冲突信息</solution>
+          </solutions>
+          <prevention>
+            <prevention>建立来源可信度评估标准</prevention>
+            <prevention>定期更新和验证信息</prevention>
+          </prevention>
+          <example>
+            <situation>关于Transformer层数，不同论文给出不同数据</situation>
+            <response>关于Transformer的层数，我查到不同资料有不同说法：
+            - 原始论文：编码器6层，解码器6层
+            - BERT-base：12层
+            - GPT-3：96层
+            【存疑】具体层数可能因模型而异，建议以具体模型为准</response>
+          </example>
+        </error>
+
+        <error name="insufficient_information">
+          <description>信息不足</description>
+          <symptoms>
+            <symptom>缺少关键背景知识</symptom>
+            <symptom>无法找到相关资料</symptom>
+            <symptom>用户提供的材料不完整</symptom>
+          </symptoms>
+          <causes>
+            <cause>主题过于前沿或专业</cause>
+            <cause>搜索策略不当</cause>
+            <cause>用户材料确实有限</cause>
+          </causes>
+          <solutions>
+            <solution>扩大搜索范围和关键词</solution>
+            <solution>尝试不同的信息来源</solution>
+            <solution>请求用户提供更多材料</solution>
+            <solution>基于现有信息做合理推断</solution>
+          </solutions>
+          <prevention>
+            <prevention>建立多层次的信息搜索策略</prevention>
+            <prevention>维护常用信息源列表</prevention>
+          </prevention>
+        </error>
+      </errors>
+    </category>
+
+    <category name="content_generation_errors">
+      <description>内容生成错误</description>
+      <errors>
+        <error name="authenticity_violation">
+          <description>真实性违规</description>
+          <symptoms>
+            <symptom>编造不存在的事实</symptom>
+            <symptom>过度推断超出证据支持</symptom>
+            <symptom>混淆事实和观点</symptom>
+          </symptoms>
+          <causes>
+            <cause>时间压力下急于完成</cause>
+            <cause>过度自信导致疏忽</cause>
+            <cause>理解偏差</cause>
+          </causes>
+          <solutions>
+            <solution>立即停止并纠正错误内容</solution>
+            <solution>重新验证相关事实</solution>
+            <solution>添加适当的置信度标注</solution>
+            <solution>向用户道歉并说明纠正措施</solution>
+          </solutions>
+          <prevention>
+            <prevention>建立严格的事实核查流程</prevention>
+            <prevention>使用不确定性标注系统</prevention>
+            <prevention>定期进行自我审查</prevention>
+          </prevention>
+          <severity>high</severity>
+          <example>
+            <situation>错误地声称某个技术是2024年发明的</situation>
+            <correction>抱歉，我之前的表述有误。经过查证，该技术实际上是2017年提出的。我已更新文档并标注了正确的时间信息。</correction>
+          </example>
+        </error>
+
+        <error name="quality_below_standard">
+          <description>质量低于标准</description>
+          <symptoms>
+            <symptom>信息密度不足</symptom>
+            <symptom>结构混乱</symptom>
+            <symptom>缺少必要元素</symptom>
+            <symptom>可读性差</symptom>
+          </symptoms>
+          <causes>
+            <cause>时间管理不当</cause>
+            <cause>标准理解偏差</cause>
+            <cause>技能不足</cause>
+          </causes>
+          <solutions>
+            <solution>重新评估和改写内容</solution>
+            <solution>补充缺失的元素</solution>
+            <solution>重新组织结构</solution>
+            <solution>寻求Editor的反馈</solution>
+          </solutions>
+          <prevention>
+            <prevention>使用质量检查清单</prevention>
+            <prevention>定期与Editor沟通标准</prevention>
+          </prevention>
+        </error>
+
+        <error name="scope_creep">
+          <description>范围蔓延</description>
+          <symptoms>
+            <symptom>文档长度远超预期</symptom>
+            <symptom>包含过多无关内容</symptom>
+            <symptom>偏离核心主题</symptom>
+          </symptoms>
+          <causes>
+            <cause>对主题理解过于宽泛</cause>
+            <cause>无法拒绝添加内容的诱惑</cause>
+            <cause>缺少明确的边界控制</cause>
+          </causes>
+          <solutions>
+            <solution>重新定义文档范围</solution>
+            <solution>删除偏离主题的内容</solution>
+            <solution>将扩展内容另建文档</solution>
+            <solution>与用户确认范围调整</solution>
+          </solutions>
+          <prevention>
+            <prevention>在开始前明确定义范围</prevention>
+            <prevention>定期检查是否偏离主题</prevention>
+          </prevention>
+        </error>
+      </errors>
+    </category>
+
+    <category name="collaboration_errors">
+      <description>协作错误</description>
+      <errors>
+        <error name="handoff_failure">
+          <description>交接失败</description>
+          <symptoms>
+            <symptom>Editor拒绝接收文档</symptom>
+            <symptom>交接包不完整</symptom>
+            <symptom>沟通不畅导致误解</symptom>
+          </symptoms>
+          <causes>
+            <cause>交接包格式不正确</cause>
+            <cause>质量不满足要求</cause>
+            <cause>沟通方式不当</cause>
+          </causes>
+          <solutions>
+            <solution>按照标准格式重新整理交接包</solution>
+            <solution>根据反馈进行针对性改进</solution>
+            <solution>主动与Editor沟通问题</solution>
+          </solutions>
+          <prevention>
+            <prevention>使用标准交接模板</prevention>
+            <prevention>在交接前进行自我检查</prevention>
+          </prevention>
+        </error>
+
+        <error name="user_dissatisfaction">
+          <description>用户不满意</description>
+          <symptoms>
+            <symptom>用户要求重新修改</symptom>
+            <symptom>反馈负面或批评</symptom>
+            <symptom>拒绝确认完成</symptom>
+          </symptoms>
+          <causes>
+            <cause>理解偏差</cause>
+            <cause>期望不匹配</cause>
+            <cause>质量确实不足</cause>
+          </causes>
+          <solutions>
+            <solution>主动询问具体问题</solution>
+            <solution>根据反馈进行调整</solution>
+            <solution>必要时重新开始</solution>
+            <solution>学习经验避免重复</solution>
+          </solutions>
+          <prevention>
+            <prevention>在关键节点确认用户期望</prevention>
+            <prevention>提供多个选项供选择</prevention>
+          </prevention>
+        </error>
+      </errors>
+    </category>
+
+    <category name="technical_errors">
+      <description>技术错误</description>
+      <errors>
+        <error name="tool_failure">
+          <description>工具故障</description>
+          <symptoms>
+            <symptom>搜索工具无响应</symptom>
+            <symptom>文件读取失败</symptom>
+            <symptom>网络连接问题</symptom>
+          </symptoms>
+          <causes>
+            <cause>系统故障</cause>
+            <cause>网络问题</cause>
+            <cause>工具限制</cause>
+          </causes>
+          <solutions>
+            <solution>尝试替代工具</solution>
+            <solution>使用已有知识继续工作</solution>
+            <solution>稍后重试</solution>
+            <solution>报告技术问题</solution>
+          </solutions>
+          <prevention>
+            <prevention>准备备用工具和方案</prevention>
+            <prevention>建立离线工作能力</prevention>
+          </prevention>
+        </error>
+
+        <error name="format_error">
+          <description>格式错误</description>
+          <symptoms>
+            <symptom>Markdown格式不正确</symptom>
+            <symptom>YAML语法错误</symptom>
+            <symptom>XML结构问题</symptom>
+          </symptoms>
+          <causes>
+            <cause>格式规范不熟悉</cause>
+            <cause>复制粘贴错误</cause>
+            <cause>工具生成问题</cause>
+          </causes>
+          <solutions>
+            <solution>使用格式验证工具</solution>
+            <solution>参考标准模板</solution>
+            <solution>手动检查和修正</solution>
+          </solutions>
+          <prevention>
+            <prevention>使用格式检查工具</prevention>
+            <prevention>建立格式规范文档</prevention>
+          </prevention>
+        </error>
+      </errors>
+    </category>
+  </error_categories>
+
+  <recovery_strategies>
+    <strategy name="immediate_correction">
+      <description>立即纠正策略</description>
+      <when_to_use>发现明显错误时</when_to_use>
+      <steps>
+        <step>停止当前工作</step>
+        <step>识别错误类型和影响范围</step>
+        <step>立即纠正错误内容</step>
+        <step>通知相关人员</step>
+        <step>记录错误和解决方案</step>
+      </steps>
+      <example>
+        <error>发现技术事实错误</error>
+        <action>立即停止，纠正错误，重新验证相关信息</action>
+      </example>
+    </strategy>
+
+    <strategy name="graceful_degradation">
+      <description>优雅降级策略</description>
+      <when_to_use>工具故障或信息不足时</when_to_use>
+      <steps>
+        <step>评估可用资源</step>
+        <step>调整工作方法</step>
+        <step>降低质量标准（临时）</step>
+        <step>继续完成任务</step>
+        <step>记录降级情况</step>
+      </steps>
+      <example>
+        <situation>无法访问外部搜索工具</situation>
+        <action>使用已有知识完成基础版本，标注需要后续补充的内容</action>
+      </example>
+    </strategy>
+
+    <strategy name="escalation">
+      <description>升级策略</description>
+      <when_to_use>超出Writer能力范围时</when_to_use>
+      <steps>
+        <step>评估问题复杂度</step>
+        <step>确定合适的升级目标</step>
+        <step>准备详细的问题描述</step>
+        <step>请求支援</step>
+        <step>配合解决问题</step>
+      </steps>
+      <escalation_targets>
+        <target>Research模式 - 需要深度调研</target>
+        <target>Editor模式 - 需要质量改进</target>
+        <target>用户 - 需要澄清需求</target>
+      </escalation_targets>
+      <example>
+        <situation>用户要求撰写量子计算在AI中的应用</situation>
+        <action>此主题需要深度调研，建议升级到Research模式</action>
+      </example>
+    </strategy>
+
+    <strategy name="iterative_improvement">
+      <description>迭代改进策略</description>
+      <when_to_use>质量不达标但可以改进时</when_to_use>
+      <steps>
+        <step>接收反馈</step>
+        <step>分析问题根源</step>
+        <step>制定改进计划</step>
+        <step>实施改进</step>
+        <step>验证改进效果</step>
+      </steps>
+      <example>
+        <feedback>Editor反馈信息密度不足</feedback>
+        <action>分析原因：缺少实际应用案例 → 补充案例 → 重新提交</action>
+      </example>
+    </strategy>
+  </recovery_strategies>
+
+  <prevention_measures>
+    <measure name="quality_gates">
+      <description>质量门控</description>
+      <gates>
+        <gate name="input_validation">
+          <check>需求是否明确</check>
+          <check>范围是否合理</check>
+          <check>资源是否充足</check>
+        </gate>
+        <gate name="progress_checkpoints">
+          <check>结构设计完成后</check>
+          <check>内容撰写50%时</check>
+          <check>初稿完成时</check>
+          <check>交接前</check>
+        </gate>
+        <gate name="final_review">
+          <check>真实性验证</check>
+          <check>完整性检查</check>
+          <check>格式规范检查</check>
+          <check>用户确认</check>
+        </gate>
+      </gates>
+    </measure>
+
+    <measure name="standardization">
+      <description>标准化</description>
+      <standards>
+        <standard>文档模板标准化</standard>
+        <standard>交接包格式标准化</standard>
+        <standard>质量检查清单标准化</standard>
+        <standard>沟通模板标准化</standard>
+      </standards>
+    </measure>
+
+    <measure name="continuous_learning">
+      <description>持续学习</description>
+      <practices>
+        <practice>记录错误和解决方案</practice>
+        <practice>定期更新知识库</practice>
+        <practice>学习新的最佳实践</practice>
+        <practice>与Editor保持沟通</practice>
+      </practices>
+    </measure>
+  </prevention_measures>
+
+  <error_response_templates>
+    <template name="user_clarification_request">
+      <description>用户澄清请求模板</description>
+      <format>
+        关于[主题]，我需要确认几个问题以便更好地完成文档：
+
+        1. [具体问题1]
+        2. [具体问题2]
+        3. [具体问题3]
+
+        这些信息将帮助我创建更符合你期望的文档。
+      </format>
+    </template>
+
+    <template name="information_conflict_handling">
+      <description>信息冲突处理模板</description>
+      <format>
+        关于[具体信息]，我查到不同来源有不同说法：
+        - 来源A：[说法1]
+        - 来源B：[说法2]
+
+        【存疑】建议以[最权威来源]为准，或提供更多资料帮助确认。
+      </format>
+    </template>
+
+    <template name="quality_improvement_request">
+      <description>质量改进请求模板</description>
+      <format>
+        我注意到以下问题需要改进：
+        1. [问题1]
+        2. [问题2]
+
+        我将进行以下调整：
+        1. [改进措施1]
+        2. [改进措施2]
+
+        预计[时间]后完成改进。
+      </format>
+    </template>
+
+    <template name="escalation_request">
+      <description>升级请求模板</description>
+      <format>
+        此任务涉及[具体领域]，需要深入调研。
+
+        建议：
+        - 升级到Research模式进行系统调研
+        - 或提供更多参考资料
+
+        理由：[详细说明复杂性]
+      </format>
+    </template>
+
+    <template name="error_correction">
+      <description>错误纠正模板</description>
+      <format>
+        抱歉，我在之前的[具体内容]中有错误。
+
+        错误内容：[错误描述]
+        正确内容：[正确信息]
+        原因：[错误原因]
+
+        我已更新文档并加强了事实核查流程。
+      </format>
+    </template>
+  </error_response_templates>
+
+  <monitoring_and_alerts>
+    <monitoring_points>
+      <point name="quality_metrics">
+        <metric>真实性违规次数</metric>
+        <metric>用户满意度评分</metric>
+        <metric>Editor接收率</metric>
+        <metric>平均完成时间</metric>
+      </point>
+      <point name="error_patterns">
+        <pattern>常见错误类型统计</pattern>
+        <pattern>错误发生频率分析</pattern>
+        <pattern>错误恢复成功率</pattern>
+      </point>
+    </monitoring_points>
+
+    <alert_conditions>
+      <condition>连续3次质量不达标</condition>
+      <condition>真实性违规发生</condition>
+      <condition>用户严重不满</condition>
+      <condition>无法完成核心任务</condition>
+    </alert_conditions>
+
+    <response_protocols>
+      <protocol name="quality_alert">
+        <trigger>质量指标异常</trigger>
+        <action>立即审查工作流程，调整方法</action>
+      </protocol>
+      <protocol name="authenticity_alert">
+        <trigger>真实性违规</trigger>
+        <action>暂停工作，加强核查流程</action>
+      </protocol>
+    </response_protocols>
+  </monitoring_and_alerts>
+</kg_writer_error_handling>

@@ -1,0 +1,485 @@
+<kg_writer_tool_usage>
+  <overview>
+    KG-Writer的工具使用指南，详细说明如何使用各种工具来确保
+    文档质量、验证事实、查找资料，以及工具使用的最佳实践。
+  </overview>
+
+  <tool_priorities>
+    <priority level="1">
+      <tool>search_files</tool>
+      <when>查找相关现有文档和知识库内容</when>
+      <why>避免重复创建，利用已有知识，建立关联</why>
+      <usage_pattern>
+        <step>搜索相关主题的现有文档</step>
+        <step>查找相似概念的解释</step>
+        <step>发现可以引用的内容</step>
+      </usage_pattern>
+    </priority>
+
+    <priority level="2">
+      <tool>read_file</tool>
+      <when>获取完整上下文和详细内容</when>
+      <why>理解现有实现的细节，确保一致性</why>
+      <usage_pattern>
+        <step>读取相关文档的完整内容</step>
+        <step>分析代码实现的具体细节</step>
+        <step>理解项目的整体架构</step>
+      </usage_pattern>
+    </priority>
+
+    <priority level="3">
+      <tool>use_mcp_tool (tavily-search)</tool>
+      <when>查证事实、获取权威定义</when>
+      <why>确保信息准确性，获取最新资料</why>
+      <usage_pattern>
+        <step>搜索官方文档和权威来源</step>
+        <step>验证技术概念的准确性</step>
+        <step>获取最新的发展动态</step>
+      </usage_pattern>
+    </priority>
+
+    <priority level="4">
+      <tool>use_mcp_tool (tavily-extract)</tool>
+      <when>提取网页详细内容</when>
+      <why>获取深度信息，补充文档内容</why>
+      <usage_pattern>
+        <step>提取技术博客的详细内容</step>
+        <step>获取官方文档的完整信息</step>
+        <step>收集案例和示例</step>
+      </usage_pattern>
+    </priority>
+
+    <priority level="5">
+      <tool>use_mcp_tool (memory)</tool>
+      <when>管理知识图谱和关联</when>
+      <why>建立知识连接，便于后续查找</why>
+      <usage_pattern>
+        <step>创建实体和关系</step>
+        <step>建立概念间的关联</step>
+        <step>记录重要的知识点</step>
+      </usage_pattern>
+    </priority>
+  </tool_priorities>
+
+  <tool_specific_guidance>
+    <tool name="search_files">
+      <best_practices>
+        <practice>使用语义化搜索而非关键词搜索</practice>
+        <practice>结合多个相关术语提高搜索准确性</practice>
+        <practice>搜索时包含相关领域和子领域</practice>
+        <practice>注意文件类型限制，优先搜索.md文件</practice>
+      </best_practices>
+      <search_strategies>
+        <strategy name="concept_search">
+          <description>搜索特定概念和定义</description>
+          <pattern>概念名称 + "定义" + "原理"</pattern>
+          <example>transformer attention mechanism definition原理</example>
+        </strategy>
+        <strategy name="implementation_search">
+          <description>搜索代码实现和示例</description>
+          <pattern>技术名称 + "代码" + "实现" + "示例"</pattern>
+          <example>self attention python code implementation example</example>
+        </strategy>
+        <strategy name="comparison_search">
+          <description>搜索对比分析内容</description>
+          <pattern>概念A + "vs" + 概念B + "对比" + "区别"</pattern>
+          <example>RNN vs Transformer comparison difference</example>
+        </strategy>
+        <strategy name="application_search">
+          <description>搜索应用场景和案例</description>
+          <pattern>技术名称 + "应用" + "场景" + "案例"</pattern>
+          <example>transformer application use case example</example>
+        </strategy>
+      </search_strategies>
+      <common_patterns>
+        <pattern>*.md - 搜索所有Markdown文件</pattern>
+        <pattern>ai-ml/* - 搜索AI/ML相关内容</pattern>
+        <pattern>finance-quant/* - 搜索量化金融内容</pattern>
+        <pattern>math-foundation/* - 搜索数学基础内容</pattern>
+      </common_patterns>
+    </tool>
+
+    <tool name="read_file">
+      <best_practices>
+        <practice>批量读取相关文件以获得完整上下文</practice>
+        <practice>优先读取索引文件了解整体结构</practice>
+        <practice>注意文件的层次结构和依赖关系</practice>
+        <practice>记录重要的引用和链接</practice>
+      </best_practices>
+      <reading_strategies>
+        <strategy name="structural_reading">
+          <description>结构化阅读，理解文档架构</description>
+          <steps>
+            <step>先读index.md了解目录结构</step>
+            <step>扫描标题了解内容组织</step>
+            <step>重点阅读相关章节</step>
+            <step>查看引用和链接</step>
+          </steps>
+        </strategy>
+        <strategy name="content_focused_reading">
+          <description>内容聚焦阅读，提取关键信息</description>
+          <steps>
+            <step>识别与当前主题直接相关的内容</step>
+            <step>提取定义、原理、示例</step>
+            <step>记录可以引用的观点</step>
+            <step>发现需要补充的内容</step>
+          </steps>
+        </strategy>
+        <strategy name="comparative_reading">
+          <description>对比阅读，发现差异和联系</description>
+          <steps>
+            <step>对比不同文档对同一概念的解释</step>
+            <step>识别表述的差异和共同点</step>
+            <step>发现可以整合的内容</step>
+            <step>确定最权威的表述</step>
+          </steps>
+        </strategy>
+      </reading_strategies>
+    </tool>
+
+    <tool name="tavily_search">
+      <best_practices>
+        <practice>使用精确的搜索查询获得最佳结果</practice>
+        <practice>结合basic和advanced搜索深度</practice>
+        <practice>设置合适的max_results数量(5-10)</practice>
+        <practice>使用include_raw_content获取完整内容</practice>
+      </best_practices>
+      <search_scenarios>
+        <scenario name="fact_verification">
+          <description>事实核查场景</description>
+          <query_pattern>技术名称 + "官方文档" + "定义"</query>
+          <parameters>
+            <param name="search_depth">basic</param>
+            <param name="max_results">5</param>
+            <param name="include_raw_content">true</param>
+          </parameters>
+          <example>
+            <query>transformer attention mechanism official documentation definition</query>
+            <purpose>验证注意力机制的定义</purpose>
+          </example>
+        </scenario>
+        <scenario name="latest_information">
+          <description>获取最新信息</description>
+          <query_pattern>技术名称 + "最新" + "发展" + "2024"</query>
+          <parameters>
+            <param name="search_depth">advanced</param>
+            <param name="max_results">8</param>
+            <param name="time_range">y</param>
+          </parameters>
+          <example>
+            <query>transformer architecture latest developments 2024</query>
+            <purpose>了解Transformer的最新发展</purpose>
+          </example>
+        </scenario>
+        <scenario name="comparative_analysis">
+          <description>对比分析信息收集</description>
+          <query_pattern>概念A + "vs" + 概念B + "对比" + "优缺点"</query>
+          <parameters>
+            <param name="search_depth">advanced</param>
+            <param name="max_results">10</param>
+            <param name="include_raw_content">true</param>
+          </parameters>
+          <example>
+            <query>RNN vs Transformer comparison advantages disadvantages</query>
+            <purpose>收集RNN和Transformer的对比信息</purpose>
+          </example>
+        </scenario>
+        <scenario name="practical_examples">
+          <description>实践示例收集</description>
+          <query_pattern>技术名称 + "代码示例" + "实现" + "教程"</query>
+          <parameters>
+            <param name="search_depth">basic</param>
+            <param name="max_results">6</param>
+            <param name="include_raw_content">true</param>
+          </parameters>
+          <example>
+            <query>self attention mechanism code example implementation tutorial</query>
+            <purpose>找到自注意力机制的代码示例</purpose>
+          </example>
+        </scenario>
+      </search_scenarios>
+    </tool>
+
+    <tool name="tavily_extract">
+      <best_practices>
+        <practice>只提取真正需要的内容</practice>
+        <practice>使用advanced模式获取更完整信息</practice>
+        <practice>注意内容的版权和使用限制</practice>
+        <practice>提取后进行适当的改写和整合</practice>
+      </best_practices>
+      <extraction_strategies>
+        <strategy name="selective_extraction">
+          <description>选择性提取关键信息</description>
+          <focus>
+            <item>核心定义和概念</item>
+            <item>关键公式和算法</item>
+            <item>重要代码片段</item>
+            <item>典型应用案例</item>
+          </focus>
+        </strategy>
+        <strategy name="comprehensive_extraction">
+          <description>全面提取完整内容</description>
+          <use_case>需要深度理解某个主题时</use_case>
+          <focus>
+            <item>完整的技术解释</item>
+            <item>详细的实现步骤</item>
+            <item>完整的代码示例</item>
+            <item>相关的背景信息</item>
+          </focus>
+        </strategy>
+      </extraction_strategies>
+    </tool>
+
+    <tool name="memory">
+      <best_practices>
+        <practice>为实体使用清晰、描述性的名称</practice>
+        <practice>建立有意义的关联关系</practice>
+        <practice>定期更新和清理知识图谱</practice>
+        <practice>使用一致的命名约定</practice>
+      </best_practices>
+      <knowledge_management>
+        <entity_creation>
+          <pattern>技术名称 + 文档类型</pattern>
+          <examples>
+            <example>Transformer架构文档</example>
+            <example>注意力机制原理</example>
+            <example>自注意力实现</example>
+          </examples>
+        </entity_creation>
+        <relation_creation>
+          <pattern>实体A + 关系类型 + 实体B</pattern>
+          <examples>
+            <example>Transformer包含自注意力机制</example>
+            <example>自注意力实现于Transformer</example>
+            <example>注意力机制优于RNN</example>
+          </examples>
+        </relation_creation>
+      </knowledge_management>
+    </tool>
+  </tool_specific_guidance>
+
+  <verification_workflows>
+    <workflow name="fact_verification">
+      <description>事实核查工作流</description>
+      <steps>
+        <step number="1">
+          <action>识别需要验证的事实</action>
+          <tool>manual</tool>
+          <description>标记所有需要查证的信息点</description>
+        </step>
+        <step number="2">
+          <action>搜索权威来源</action>
+          <tool>tavily_search</tool>
+          <description>查找官方文档、论文、权威技术网站</description>
+        </step>
+        <step number="3">
+          <action>提取详细信息</action>
+          <tool>tavily_extract</tool>
+          <description>获取原始来源的完整内容</description>
+        </step>
+        <step number="4">
+          <action>交叉验证</action>
+          <tool>manual</tool>
+          <description>对比多个来源的一致性</description>
+        </step>
+        <step number="5">
+          <action>标注置信度</action>
+          <tool>manual</tool>
+          <description>使用【确认】【推测】【待确认】等标签</description>
+        </step>
+      </steps>
+    </workflow>
+
+    <workflow name="code_validation">
+      <description>代码验证工作流</description>
+      <steps>
+        <step number="1">
+          <action>搜索现有实现</action>
+          <tool>search_files</tool>
+          <description>查找项目中已有的相关代码</description>
+        </step>
+        <step number="2">
+          <action>查找官方示例</action>
+          <tool>tavily_search</tool>
+          <description>搜索官方文档和权威示例</description>
+        </step>
+        <step number="3">
+          <action>分析代码逻辑</action>
+          <tool>manual</tool>
+          <description>检查算法的正确性和完整性</description>
+        </step>
+        <step number="4">
+          <action>验证可运行性</action>
+          <tool>manual</tool>
+          <description>确保代码语法正确且逻辑清晰</description>
+        </step>
+        <step number="5">
+          <action>添加注释说明</action>
+          <tool>manual</tool>
+          <description>为关键部分添加解释性注释</description>
+        </step>
+      </steps>
+    </workflow>
+
+    <workflow name="content_completeness">
+      <description>内容完整性检查工作流</description>
+      <steps>
+        <step number="1">
+          <action>对比文档模板</action>
+          <tool>manual</tool>
+          <description>检查是否包含模板要求的所有部分</description>
+        </step>
+        <step number="2">
+          <action>搜索相关补充</action>
+          <tool>search_files</tool>
+          <description>查找可以补充的内容</description>
+        </step>
+        <step number="3">
+          <action>识别知识缺口</action>
+          <tool>manual</tool>
+          <description>标记缺失的重要信息</description>
+        </step>
+        <step number="4">
+          <action>补充必要内容</action>
+          <tool>multiple</tool>
+          <description>使用各种工具补充缺失内容</description>
+        </step>
+        <step number="5">
+          <action>最终完整性验证</action>
+          <tool>manual</tool>
+          <description>确保所有关键维度都已覆盖</description>
+        </step>
+      </steps>
+    </workflow>
+  </verification_workflows>
+
+  <tool_combination_patterns>
+    <pattern name="research_verify_write">
+      <description>研究-验证-写作模式</description>
+      <sequence>
+        <step>使用tavily_search收集资料</step>
+        <step>使用tavily_extract获取详细内容</step>
+        <step>使用search_files查找本地相关文档</step>
+        <step>使用read_file获取上下文</step>
+        <step>综合信息进行写作</step>
+      </sequence>
+      <use_case>需要深入了解某个技术主题时</use_case>
+    </pattern>
+
+    <pattern name="local_integrate_external">
+      <description>本地-整合-外部模式</description>
+      <sequence>
+        <step>使用search_files查找现有相关文档</step>
+        <step>使用read_file深入了解现有内容</step>
+        <step>使用tavily_search查找外部补充资料</step>
+        <step>整合内外部信息</step>
+        <step>创建新的综合性文档</step>
+      </sequence>
+      <use_case>扩展或更新现有文档时</use_case>
+    </pattern>
+
+    <pattern name="validate_existing_content">
+      <description>验证现有内容模式</description>
+      <sequence>
+        <step>使用search_files找到相关文档</step>
+        <step>使用read_file读取具体内容</step>
+        <step>使用tavily_search验证关键信息</step>
+        <step>使用tavily_extract获取权威来源</step>
+        <step>更新和修正文档内容</step>
+      </sequence>
+      <use_case>验证和更新现有文档时</use_case>
+    </pattern>
+  </tool_combination_patterns>
+
+  <common_issues_solutions>
+    <issue name="search_results_irrelevant">
+      <description>搜索结果不相关</description>
+      <causes>
+        <cause>搜索关键词过于宽泛</cause>
+        <cause>使用了不准确的术语</cause>
+        <cause>搜索范围设置不当</cause>
+      </causes>
+      <solutions>
+        <solution>使用更具体和精确的关键词</solution>
+        <solution>尝试同义词和相关术语</solution>
+        <solution>调整搜索范围和文件类型</solution>
+        <solution>使用语义化搜索而非关键词搜索</solution>
+      </solutions>
+    </issue>
+
+    <issue name="information_conflict">
+      <description>信息来源冲突</description>
+      <causes>
+        <cause>不同来源的信息不一致</cause>
+        <cause>技术快速发展导致信息过时</cause>
+        <cause>不同实现方式的差异</cause>
+      </causes>
+      <solutions>
+        <solution>优先采用官方和权威来源</solution>
+        <solution>标注信息的时效性</solution>
+        <solution>说明不同实现方式的差异</solution>
+        <solution>使用【存疑】标签标记冲突信息</solution>
+      </solutions>
+    </issue>
+
+    <issue name="insufficient_examples">
+      <description>代码示例不足</description>
+      <causes>
+        <cause>搜索范围不够广泛</cause>
+        <cause>没有找到合适的示例</cause>
+        <cause>现有示例过于复杂</cause>
+      </causes>
+      <solutions>
+        <solution>扩大搜索范围，包括GitHub等平台</solution>
+        <solution>搜索官方文档和教程</solution>
+        <solution>创建简化的示例</solution>
+        <solution>组合多个示例形成完整案例</solution>
+      </solutions>
+    </issue>
+
+    <issue name="content_too_technical">
+      <description>内容过于技术化</description>
+      <causes>
+        <cause>直接复制了学术论文内容</cause>
+        <cause>使用了过多专业术语</cause>
+        <cause>缺少通俗解释</cause>
+      </causes>
+      <solutions>
+        <solution>用通俗语言重述技术概念</solution>
+        <solution>添加类比和实例</solution>
+        <solution>解释专业术语</solution>
+        <solution>分层次从简单到复杂</solution>
+      </solutions>
+    </issue>
+  </common_issues_solutions>
+
+  <tool_performance_tips>
+    <tip name="batch_operations">
+      <description>批量操作提高效率</description>
+      <practice>同时读取多个相关文件</practice>
+      <practice>批量搜索多个相关主题</practice>
+      <practice>一次性提取多个URL的内容</practice>
+    </tip>
+
+    <tip name="caching_strategy">
+      <description>缓存策略减少重复</description>
+      <practice>记录已搜索的关键词和结果</practice>
+      <practice>保存重要的提取内容</practice>
+      <practice>建立个人知识库</practice>
+    </tip>
+
+    <tip name="quality_over_quantity">
+      <description>质量优于数量</description>
+      <practice>专注获取高质量来源</practice>
+      <practice>深度分析而非广度搜索</practice>
+      <practice>验证信息的准确性</practice>
+    </tip>
+
+    <tip name="systematic_approach">
+      <description>系统性方法</description>
+      <practice>制定搜索和验证计划</practice>
+      <practice>按优先级使用工具</practice>
+      <practice>建立标准的工作流程</practice>
+    </tip>
+  </tool_performance_tips>
+</kg_writer_tool_usage>

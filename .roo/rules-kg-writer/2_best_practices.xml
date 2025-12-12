@@ -1,0 +1,488 @@
+<kg_writer_best_practices>
+  <overview>
+    KG-Writer的最佳实践指南，涵盖真实性守护、完整性保障、文档模板使用、
+    元素平衡控制等核心原则，确保产出的知识文档质量。
+  </overview>
+
+  <authenticity_principles>
+    <principle name="uncertainty_not_written">
+      <description>不确定不写原则</description>
+      <rule>任何不能100%确定的事实，不能当作既定事实写入</rule>
+      <handling>
+        <method>使用工具查证</method>
+        <method>标注不确定性:"根据[来源]，可能是..."</method>
+        <method>询问用户:"关于[X]，我查到两种说法..."</method>
+      </handling>
+      <examples>
+        <good>标准BERT-base使用12层编码器【来源:BERT论文】</good>
+        <bad>Transformer有12层编码器(如果不确定)</bad>
+      </examples>
+    </principle>
+
+    <principle name="source_traceable">
+      <description>来源可追溯原则</description>
+      <rule>所有非常识性信息必须有明确来源</rule>
+      <annotation_methods>
+        <method>行内标注:"根据PyTorch官方文档..."</method>
+        <method>文末引用:"## 参考资源"</method>
+        <method>工具来源:"【Web搜索】【本地文档】"</method>
+      </annotation_methods>
+      <example>Transformer由Vaswani等人于2017年提出【论文: Attention is All You Need】</example>
+    </principle>
+
+    <principle name="fact_opinion_separation">
+      <description>事实与观点分离原则</description>
+      <rule>明确区分客观事实和主观观点</rule>
+      <annotation_methods>
+        <method>事实:直接陈述</method>
+        <method>观点:"普遍认为..."、"业界倾向于..."</method>
+        <method>个人观点:"【分析】..."、"【建议】..."</method>
+      </annotation_methods>
+      <examples>
+        <fact>Transformer的计算复杂度是O(n²)</fact>
+        <opinion>在实际应用中，Transformer通常比RNN更高效【业界共识】</opinion>
+      </examples>
+    </principle>
+
+    <principle name="multi_source_verification">
+      <description>多源验证原则</description>
+      <rule>关键信息应从2个以上独立来源验证</rule>
+      <verification_process>
+        <step>查找官方文档/论文</step>
+        <step>对比多个技术博客/教程</step>
+        <step>如果矛盾，标注并采用最权威来源</step>
+      </verification_process>
+      <example>BERT使用WordPiece分词【论文原文】，与BPE类似但有细微差异【多源确认】</example>
+    </principle>
+
+    <principle name="honest_labeling">
+      <description>诚实标注原则</description>
+      <rule>不隐藏不确定性和知识边界</rule>
+      <label_vocabulary>
+        <label>【确认】- 100%确定</label>
+        <label>【推测】- 基于逻辑推理但未验证</label>
+        <label>【待确认】- 需要用户或工具验证</label>
+        <label>【存疑】- 发现矛盾信息</label>
+      </label_vocabulary>
+      <example>多头注意力通常使用8或16个头【确认】，更多头数可能导致过拟合【推测，需实验验证】</example>
+    </principle>
+  </authenticity_principles>
+
+  <document_templates>
+    <template name="concept_explanation">
+      <description>概念说明型文档模板</description>
+      <structure>
+        <section name="定义与背景">
+          <content>核心定义(1-2句)、提出背景/历史(可选)、为什么需要这个概念</content>
+        </section>
+        <section name="核心原理">
+          <subsection name="基本原理">段落阐述</subsection>
+          <subsection name="关键机制">公式/算法/流程</subsection>
+        </section>
+        <section name="示例说明">
+          <subsection name="简单示例">可运行的代码</subsection>
+          <subsection name="实际应用">真实场景</subsection>
+        </section>
+        <section name="对比分析">
+          <content>与相似概念的对比表格</content>
+        </section>
+        <section name="使用注意">
+          <content>适用场景、不适用场景、常见误区</content>
+        </section>
+        <section name="参考资源">
+          <content>相关文档链接、外部资源</content>
+        </section>
+      </structure>
+      <element_targets>
+        <target>段落: 55%</target>
+        <target>代码/公式: 25%</target>
+        <target>表格: 10%</target>
+        <target>列表: 10%</target>
+      </element_targets>
+    </template>
+
+    <template name="operation_guide">
+      <description>操作指南型文档模板</description>
+      <structure>
+        <section name="前置准备">
+          <content>需要的知识/工具、环境配置</content>
+        </section>
+        <section name="步骤详解">
+          <subsection name="第一步: [步骤名]">段落说明 + 代码示例 + 关键点提醒</subsection>
+          <subsection name="第二步: [步骤名]">同上</subsection>
+        </section>
+        <section name="完整示例">
+          <content>完整可运行代码</content>
+        </section>
+        <section name="常见问题">
+          <subsection name="问题1: [描述]">原因 + 解决</subsection>
+        </section>
+        <section name="最佳实践">
+          <content>建议1、建议2</content>
+        </section>
+        <section name="参考资源">
+          <content>相关链接</content>
+        </section>
+      </structure>
+      <element_targets>
+        <target>段落: 50%</target>
+        <target>代码: 35%</target>
+        <target>列表: 15%</target>
+      </element_targets>
+    </template>
+
+    <template name="comparative_analysis">
+      <description>对比分析型文档模板</description>
+      <structure>
+        <section name="概述">
+          <content>A的核心特点、B的核心特点、对比的必要性</content>
+        </section>
+        <section name="详细对比">
+          <subsection name="维度1: [如性能]">[A的表现] + [B的表现] + [对比总结]</subsection>
+          <subsection name="维度2: [如易用性]">同上</subsection>
+        </section>
+        <section name="综合对比表">
+          <content>结构化对比表格</content>
+        </section>
+        <section name="选择建议">
+          <subsection name="何时选择A">场景1、场景2</subsection>
+          <subsection name="何时选择B">场景1、场景2</subsection>
+        </section>
+        <section name="实际案例">
+          <content>A和B在真实项目中的应用对比</content>
+        </section>
+        <section name="参考资源">
+          <content>相关链接</content>
+        </section>
+      </structure>
+      <element_targets>
+        <target>段落: 60%</target>
+        <target>表格: 20%</target>
+        <target>列表: 15%</target>
+        <target>代码: 5%</target>
+      </element_targets>
+    </template>
+
+    <template name="principle_explanation">
+      <description>原理解释型文档模板</description>
+      <structure>
+        <section name="背景问题">
+          <content>要解决什么问题?传统方法的局限</content>
+        </section>
+        <section name="核心思想">
+          <content>用通俗语言解释核心idea</content>
+        </section>
+        <section name="数学原理">
+          <subsection name="公式推导">关键公式</subsection>
+          <subsection name="推导过程">步骤1、步骤2</subsection>
+        </section>
+        <section name="算法实现">
+          <content>伪代码或实际代码</content>
+        </section>
+        <section name="可视化说明">
+          <content>Mermaid图或描述性说明</content>
+        </section>
+        <section name="实验验证">
+          <content>理论预测、实际结果、分析</content>
+        </section>
+        <section name="参考资源">
+          <content>相关链接</content>
+        </section>
+      </structure>
+      <element_targets>
+        <target>段落: 45%</target>
+        <target>公式: 25%</target>
+        <target>代码: 20%</target>
+        <target>图表: 10%</target>
+      </element_targets>
+    </template>
+  </document_templates>
+
+  <element_usage_rules>
+    <element name="paragraphs">
+      <rules>
+        <rule>每段50-150字</rule>
+        <rule>一段一个中心思想</rule>
+        <rule>避免超长段落和单句段落</rule>
+        <rule>段间用空行分隔</rule>
+      </rules>
+      <good_example>
+        Transformer的自注意力机制是其核心创新。它通过计算序列中每个位置与所有位置的关系,实现了全局信息的并行获取。
+
+        自注意力的计算过程分为三步:首先生成Query、Key、Value三个矩阵,然后计算注意力权重,最后加权求和得到输出。
+      </good_example>
+      <bad_example>
+        Transformer很重要,它的自注意力机制很强大,能并行计算,还能捕获长距离依赖,比RNN快,BERT和GPT都用它,应用很广泛...(信息堆砌)
+      </bad_example>
+    </element>
+
+    <element name="code_blocks">
+      <rules>
+        <rule>必须标注语言</rule>
+        <rule>代码可运行或逻辑清晰</rule>
+        <rule>关键部分添加注释</rule>
+        <rule>避免过长代码(>50行考虑拆分)</rule>
+      </rules>
+      <good_example>
+        ```python
+        def self_attention(Q, K, V, d_k):
+            """自注意力计算"""
+            # 1. 计算注意力分数
+            scores = torch.matmul(Q, K.transpose(-2, -1)) / math.sqrt(d_k)
+            
+            # 2. Softmax归一化
+            attention_weights = F.softmax(scores, dim=-1)
+            
+            # 3. 加权求和
+            return torch.matmul(attention_weights, V)
+        ```
+      </good_example>
+      <bad_example>
+        ```
+        x = f(y)  # 无语言标注,变量无意义
+        ```
+      </bad_example>
+    </element>
+
+    <element name="formulas">
+      <rules>
+        <rule>行内公式用$...$</rule>
+        <rule>独立公式用$$...$$</rule>
+        <rule>变量首次出现时解释</rule>
+        <rule>复杂公式配文字说明</rule>
+      </rules>
+      <good_example>
+        自注意力的核心公式为:
+        $$
+        \text{Attention}(Q,K,V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
+        $$
+        其中$d_k$是Key向量的维度,作为缩放因子防止点积过大。
+      </good_example>
+      <bad_example>
+        $$a=b+c$$ $$d=e*f$$ (连续公式无说明)
+      </bad_example>
+    </element>
+
+    <element name="lists">
+      <rules>
+        <rule>并列关系用无序列表</rule>
+        <rule>有序关系用数字列表</rule>
+        <rule>每项1-2句,不写长段落</rule>
+        <rule>全文列表占比<30%</rule>
+      </rules>
+      <good_example>
+        Transformer的优势:
+        - **并行计算**: 无需等待前一时刻,所有位置同时处理
+        - **长距离依赖**: 直接计算任意两点关系,无梯度消失问题
+        - **可解释性**: 注意力权重可视化,了解模型关注点
+      </good_example>
+      <bad_example>
+        - 好 (无实质信息)
+        或 20个并列列表项 (过度使用)
+      </bad_example>
+    </element>
+
+    <element name="tables">
+      <rules>
+        <rule>仅用于结构化对比</rule>
+        <rule>2-5列为宜</rule>
+        <rule>必须有表头</rule>
+        <rule>全文表格占比<15%</rule>
+      </rules>
+      <good_example>
+        | 模型 | 复杂度 | 并行性 | 长距离依赖 |
+        |------|--------|--------|------------|
+        | RNN | O(n) | 否 | 弱 |
+        | Transformer | O(n²) | 是 | 强 |
+      </good_example>
+      <bad_example>
+        | | | | | (无表头)
+        或 将段落内容强塞入表格
+      </bad_example>
+    </element>
+
+    <element name="blockquotes">
+      <rules>
+        <rule>仅用于引用外部观点</rule>
+        <rule>必须注明出处</rule>
+        <rule>全文引用占比<5%</rule>
+        <rule>不用于强调自己的话</rule>
+      </rules>
+      <good_example>
+        > "Attention is all you need."  
+        > — Vaswani et al., NIPS 2017
+      </good_example>
+      <bad_example>
+        > 我认为Transformer很重要 (无需引用自己的话)
+      </bad_example>
+    </element>
+
+    <element name="mermaid_diagrams">
+      <rules>
+        <rule>用于流程、架构、关系图</rule>
+        <rule>保持简洁,不超过15个节点</rule>
+        <rule>配文字说明</rule>
+        <rule>复杂图考虑拆分</rule>
+      </rules>
+      <good_example>
+        ```mermaid
+        graph LR
+            Input[输入序列] --> Embed[词嵌入]
+            Embed --> Attention[自注意力]
+            Attention --> FFN[前馈网络]
+            FFN --> Output[输出]
+        ```
+        上图展示了Transformer编码器的基本流程。
+      </good_example>
+      <bad_example>
+        巨大复杂的流程图,节点50+,无法阅读
+      </bad_example>
+    </element>
+  </element_usage_rules>
+
+  <quality_checklist>
+    <category name="before_writing">
+      <items>
+        <item>理解需求:主题、深度、目标读者</item>
+        <item>评估难度:简单/中等/复杂</item>
+        <item>确定文档类型:概念/指南/对比/原理</item>
+        <item>收集必要素材:本地搜索+Web搜索</item>
+      </items>
+    </category>
+
+    <category name="during_writing">
+      <items>
+        <item>遵循真实性原则:不确定不写,先查证</item>
+        <item>保持元素平衡:段落≥50%,代码/公式≥20%</item>
+        <item>标注不确定性:【确认】【推测】【待确认】</item>
+        <item>逐章节完成:先段落后代码,保持连贯</item>
+      </items>
+    </category>
+
+    <category name="before_handoff">
+      <items>
+        <item>真实性检查:事实有来源?代码可运行?</item>
+        <item>完整性检查:定义/原理/示例齐全?</item>
+        <item>结构检查:标题层级正确?元素占比平衡?</item>
+        <item>可读性检查:术语有解释?逻辑流畅?</item>
+        <item>元数据准备:YAML完整?分类合理?</item>
+      </items>
+    </category>
+  </quality_checklist>
+
+  <common_pitfalls>
+    <pitfall name="over_information_density">
+      <description>信息密度过高</description>
+      <problem>一段话包含过多概念,读者难以消化</problem>
+      <solution>拆分段落,每段一个核心概念</solution>
+      <example>
+        <bad>Transformer结合了自注意力机制和多头注意力,通过位置编码处理序列信息,在机器翻译等任务上表现优异。</bad>
+        <good>Transformer的核心创新是自注意力机制。它通过计算序列中每个位置与所有位置的关系,实现了全局信息获取。
+
+        多头注意力进一步扩展了这一能力,允许模型关注不同类型的信息。位置编码则解决了Transformer无法处理序列顺序的问题。</good>
+      </example>
+    </pitfall>
+
+    <pitfall name="insufficient_examples">
+      <description>示例不足</description>
+      <problem>只有理论描述,缺少实际代码或应用场景</problem>
+      <solution>每个核心概念至少配一个可运行的示例</solution>
+      <example>
+        <bad>自注意力机制通过Query、Key、Value矩阵计算注意力权重。</bad>
+        <good>自注意力机制通过Query、Key、Value矩阵计算注意力权重:
+
+        ```python
+        def self_attention(Q, K, V):
+            scores = torch.matmul(Q, K.transpose(-2, -1))
+            weights = F.softmax(scores / math.sqrt(Q.size(-1)))
+            return torch.matmul(weights, V)
+        ```</good>
+      </example>
+    </pitfall>
+
+    <pitfall name="unclear_structure">
+      <description>结构混乱</description>
+      <problem>标题层级跳跃,逻辑顺序不清</problem>
+      <solution>严格遵循H1→H2→H3的层级结构</solution>
+      <example>
+        <bad># Transformer
+        ## 注意力机制
+        #### 多头注意力
+        ### 位置编码</bad>
+        <good># Transformer
+        ## 注意力机制
+        ### 自注意力
+        ### 多头注意力
+        ## 位置编码</good>
+      </example>
+    </pitfall>
+
+    <pitfall name="missing_context">
+      <description>缺少上下文</description>
+      <problem>术语首次出现未解释,读者需要额外背景知识</problem>
+      <solution>首次出现的专业术语必须解释</solution>
+      <example>
+        <bad>使用WordPiece分词可以有效处理OOV问题。</bad>
+        <good>使用WordPiece分词可以有效处理OOV(Out-of-Vocabulary,未登录词)问题。</good>
+      </example>
+    </pitfall>
+  </common_pitfalls>
+
+  <tool_usage_guidelines>
+    <tool name="web_search">
+      <purpose>查证事实、获取权威定义</purpose>
+      <when_to_use>
+        <scenario>需要验证概念定义的准确性</scenario>
+        <scenario>查找官方文档或权威来源</scenario>
+        <scenario>获取最新的技术发展信息</scenario>
+      </when_to_use>
+      <best_practices>
+        <practice>优先搜索官方文档、权威技术网站</practice>
+        <practice>交叉验证多个来源的一致性</practice>
+        <practice>记录搜索关键词和来源链接</practice>
+      </best_practices>
+    </tool>
+
+    <tool name="code_search">
+      <purpose>查找代码示例、验证实现逻辑</purpose>
+      <when_to_use>
+        <scenario>需要提供可运行的代码示例</scenario>
+        <scenario>验证算法实现的正确性</scenario>
+        <scenario>寻找最佳实践代码</scenario>
+      </when_to_use>
+      <best_practices>
+        <practice>优先查找官方示例或知名项目</practice>
+        <practice>确保代码逻辑清晰,有适当注释</practice>
+        <practice>测试代码的可运行性</practice>
+      </best_practices>
+    </tool>
+
+    <tool name="local_search">
+      <purpose>利用已有知识库,避免重复创建</purpose>
+      <when_to_use>
+        <scenario>检查是否已有相关文档</scenario>
+        <scenario>引用或扩展现有内容</scenario>
+        <scenario>建立知识关联</scenario>
+      </when_to_use>
+      <best_practices>
+        <practice>搜索相关主题的现有文档</practice>
+        <practice>引用时保持内容一致性</practice>
+        <practice>建立适当的交叉引用</practice>
+      </best_practices>
+    </tool>
+
+    <tool name="academic_search">
+      <purpose>查找学术论文、理论依据</purpose>
+      <when_to_use>
+        <scenario>需要理论支撑或历史背景</scenario>
+        <scenario>引用原创性研究</scenario>
+        <scenario>验证学术观点的准确性</scenario>
+      </when_to_use>
+      <best_practices>
+        <practice>优先查找顶级会议/期刊论文</practice>
+        <practice>引用时标注完整的论文信息</practice>
+        <practice>避免过度依赖单一论文观点</practice>
+      </best_practices>
+    </tool>
+  </tool_usage_guidelines>
+</kg_writer_best_practices>

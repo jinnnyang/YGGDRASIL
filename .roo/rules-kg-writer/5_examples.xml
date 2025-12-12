@@ -1,0 +1,388 @@
+<kg_writer_examples>
+  <overview>
+    KG-Writer的完整工作流示例，展示从接收任务到完成交接的全过程，
+    包括不同类型输入的处理方法和质量控制。
+  </overview>
+
+  <complete_workflow_examples>
+    <example name="qa_to_document_transformation">
+      <description>问答对话转知识文档示例</description>
+      <input_type>Ask智能体的多轮问答</input_type>
+      <scenario>
+        用户询问："我想了解Transformer的注意力机制，但网上的解释都太复杂了"
+        Ask智能体进行了详细解答，包含了多个技术细节
+      </scenario>
+      
+      <workflow_steps>
+        <step number="1" phase="input_analysis">
+          <action>分析输入类型和内容</action>
+          <details>
+            <input_type>多轮问答对话</input_type>
+            <content>包含注意力机制的定义、计算过程、优势等</content>
+            <quality>信息分散，需要整合</quality>
+            <complexity>中等复杂，需要结构化</complexity>
+          </details>
+          <decision>直接撰写（基于已有知识+工具验证）</decision>
+        </step>
+
+        <step number="2" phase="structure_building">
+          <action>设计文档结构</action>
+          <document_type>概念说明型</document_type>
+          <outline>
+            <h1>Transformer注意力机制详解</h1>
+            <h2>定义与背景</h2>
+            <h2>自注意力原理</h2>
+            <h3>基本原理</h3>
+            <h3>数学公式</h3>
+            <h2>多头注意力机制</h2>
+            <h2>实际应用</h2>
+            <h2>常见问题</h2>
+            <h2>参考资源</h2>
+          </outline>
+          <element_targets>
+            <target>段落: 55%</target>
+            <target>代码/公式: 25%</target>
+            <target>列表: 15%</target>
+            <target>表格: 5%</target>
+          </element_targets>
+        </step>
+
+        <step number="3" phase="content_research">
+          <action>收集和验证信息</action>
+          <tools_used>
+            <tool>search_files</tool>
+            <purpose>查找现有相关文档</purpose>
+            <result>发现ai-ml/deep-learning/目录下有相关文档</result>
+          </tools_used>
+          <tools_used>
+            <tool>tavily_search</tool>
+            <purpose>验证注意力机制定义</purpose>
+            <query>transformer attention mechanism official definition</query>
+            <result>确认了核心概念和公式</result>
+          </tools_used>
+          <tools_used>
+            <tool>tavily_search</tool>
+            <purpose>查找代码示例</purpose>
+            <query>self attention mechanism python code example</query>
+            <result>找到PyTorch官方实现</result>
+          </tools_used>
+        </step>
+
+        <step number="4" phase="content_writing">
+          <action>逐章节撰写</action>
+          <approach>先写核心段落，再补充代码和公式</approach>
+          <writing_notes>
+            <note>第1节：定义部分需要通俗化表达</note>
+            <note>第2节：公式推导要详细但易懂</note>
+            <note>第3节：多头注意力需要类比说明</note>
+            <note>第4节：应用场景要具体</note>
+          </writing_notes>
+          <uncertainty_markers>
+            <marker>【待确认】注意力权重的具体计算细节</marker>
+            <marker>【推测】多头数量对性能的影响</marker>
+          </uncertainty_markers>
+        </step>
+
+        <step number="5" phase="verification">
+          <action>知识验证和质量检查</action>
+          <fact_checks>
+            <check>注意力机制定义与官方文档一致</check>
+            <check>数学公式经过推导验证</check>
+            <check>代码示例逻辑正确</check>
+            <check>多源信息交叉验证</check>
+          </fact_checks>
+          <completeness_checks>
+            <check>定义清晰 ✓</check>
+            <check>原理完整 ✓</check>
+            <check>示例充分 ✓</check>
+            <check>应用场景 ✓</check>
+          </completeness_checks>
+        </step>
+
+        <step number="6" phase="metadata_preparation">
+          <action>生成元数据</action>
+          <yaml_frontmatter>
+            <field>title: Transformer注意力机制详解</field>
+            <field>slug: transformer-attention-mechanism</field>
+            <field>description: 深入解析Transformer中的自注意力机制，包括数学原理、实现代码和实际应用</field>
+            <field>date: 2025-12-12</field>
+            <field>categories: ["ai-ml", "deep-learning"]</field>
+            <field>tags: ["transformer", "attention", "deep-learning", "nlp", "machine-learning"]</field>
+            <field>status: draft</field>
+          </yaml_frontmatter>
+          <classification_suggestion>
+            <primary_path>ai-ml/deep-learning/transformer-attention-mechanism.md</primary_path>
+            <reason>属于深度学习中的具体技术实现</reason>
+            <alternatives>
+              <alt>ai-ml/nlp/transformer-attention-mechanism.md</alt>
+              <reason>如果侧重NLP应用</reason>
+            </alternatives>
+          </classification_suggestion>
+        </step>
+
+        <step number="7" phase="user_confirmation">
+          <action>用户确认和反馈</action>
+          <confirmation_message>
+            ## 📄 文档初稿已完成
+
+            **主题**: Transformer注意力机制详解
+            **字数**: 约2500字
+            **预计阅读**: 8分钟
+
+            ### 📊 内容概要
+            从基本概念到数学原理，再到实际应用，全面解析Transformer注意力机制。
+
+            ### ✅ 已完成部分
+            - 定义与背景：什么是注意力机制
+            - 自注意力原理：数学公式和计算过程
+            - 多头注意力：并行计算的优势
+            - 实际应用：机器翻译和文本生成
+            - 常见问题：技术细节解答
+
+            ### ⚠️ 需要你确认的问题
+            1. **【待确认】** 注意力权重的具体计算细节，我查到两种实现方式，你认为哪种更准确？
+            2. **【推测】** 多头数量对性能的影响，这部分基于理论分析，是否需要实验验证？
+            3. 文档深度是否合适？当前包含数学推导，是否需要简化？
+
+            ### 📂 分类建议
+            **主推荐**: `ai-ml/deep-learning/transformer-attention-mechanism.md`
+            **理由**: 属于深度学习中的具体技术实现
+
+            ### 🔄 下一步
+            确认上述问题后，我将交给Editor审核和优化格式。
+          </confirmation_message>
+        </step>
+
+        <step number="8" phase="handoff">
+          <action>转交Editor</action>
+          <handoff_package>
+            <component>完整Markdown文档</component>
+            <component>撰写说明（来源、难点、待确认项）</component>
+            <component>分类建议</component>
+            <component>自查报告</component>
+          </handoff_package>
+        </step>
+      </workflow_steps>
+
+      <final_output>
+        <document_quality>
+          <authenticity>所有技术细节经过验证，标注了不确定性</authenticity>
+          <completeness>覆盖定义、原理、代码、应用四个维度</completeness>
+          <readability>从简单概念到复杂公式，层次清晰</readability>
+          <structure>严格遵循H1-H2-H3层级，元素平衡</structure>
+        </document_quality>
+        <user_feedback>
+          <feedback>内容深度合适，数学推导清晰，代码示例很有帮助</feedback>
+          <feedback>建议将【推测】部分标记为需要实验验证</feedback>
+          <feedback>分类建议合理，同意归档到deep-learning目录</feedback>
+        </user_feedback>
+      </final_output>
+    </example>
+
+    <example name="simple_topic_direct_writing">
+      <description>简单主题直接撰写示例</description>
+      <input_type>用户直接指定主题</input_type>
+      <scenario>
+        用户要求："写一个关于Python装饰器的文档，要包含基本用法和实际例子"
+      </scenario>
+
+      <workflow_steps>
+        <step number="1" phase="difficulty_assessment">
+          <action>评估主题难度</action>
+          <assessment>
+            <is_basic_concept>是（Python基础语法特性）</is_basic_concept>
+            <local_knowledge>无相关文档</local_knowledge>
+            <research_needed>不需要（基础知识点）</research_needed>
+            <estimated_length>1500字（简单主题）</estimated_length>
+          </assessment>
+          <decision>直接撰写</decision>
+        </step>
+
+        <step number="2" phase="quick_verification">
+          <action>快速验证关键信息</action>
+          <tools>
+            <tool>tavily_search</tool>
+            <query>python decorator official documentation</query>
+            <purpose>确认装饰器定义和基本语法</purpose>
+          </tools>
+          <tools>
+            <tool>search_files</tool>
+            <query>python decorator</query>
+            <purpose>检查是否有相关本地文档</purpose>
+          </tools>
+        </step>
+
+        <step number="3" phase="rapid_writing">
+          <action>快速撰写</action>
+          <structure>
+            <section>定义与作用（20%）</section>
+            <section>基本语法（30%）</section>
+            <section>实际例子（30%）</section>
+            <section>常见用法（15%）</section>
+            <section>注意事项（5%）</section>
+          </structure>
+          <writing_speed>30分钟完成</writing_speed>
+        </step>
+
+        <step number="4" phase="basic_validation">
+          <action>基本验证</action>
+          <checks>
+            <check>代码示例可运行</check>
+            <check>语法解释准确</check>
+            <check>例子覆盖典型场景</check>
+          </checks>
+        </step>
+      </workflow_steps>
+
+      <final_output>
+        <document>
+          <title>Python装饰器详解</title>
+          <length>约1500字</length>
+          <quality>基础概念清晰，例子实用</quality>
+        </document>
+        <efficiency>
+          <time>30分钟</time>
+          <quality>满足用户需求</quality>
+        </efficiency>
+      </final_output>
+    </example>
+  </complete_workflow_examples>
+
+  <special_scenario_examples>
+    <scenario name="external_material_rewrite">
+      <description>外部材料改写示例</description>
+      <input>用户提供的书籍段落："Transformer架构使用自注意力机制..."</input>
+      <approach>
+        <step>提取核心观点：Transformer、自注意力机制</step>
+        <step>完全重写表达：用自己语言重新组织</step>
+        <step>补充背景知识：什么是注意力机制</step>
+        <step>添加示例：具体的注意力计算过程</step>
+        <step>标注来源：基于《深度学习》书籍第X章</step>
+      </approach>
+      <result>
+        从50字段落扩展为800字的完整解释，
+        包含定义、原理、示例、应用四个部分
+      </result>
+    </scenario>
+
+    <scenario name="complex_topic_routing">
+      <description>复杂主题路由示例</description>
+      <input>用户要求："写一个关于量子计算在机器学习中应用的文档"</input>
+      <analysis>
+        <complexity>高（需要量子计算+机器学习双重背景）</complexity>
+        <research_needed>是（前沿技术，需要大量调研）</research_needed>
+        <length>预计>5000字</length>
+      </analysis>
+      <decision>路由Research</decision>
+      <message>
+        此主题涉及量子计算和机器学习的交叉领域，
+        需要深入调研最新研究进展，建议启动Research模式进行系统调研。
+      </message>
+    </scenario>
+  </special_scenario_examples>
+
+  <quality_control_examples>
+    <example name="authenticity_verification">
+      <description>真实性验证示例</description>
+      <claim>Transformer由Google于2017年提出</claim>
+      <verification_process>
+        <step>搜索官方论文</step>
+        <step>查找多个技术来源确认</step>
+        <step>交叉验证时间线</step>
+      </verification_process>
+      <result>
+        确认：Vaswani等人2017年发表"Attention is All You Need"
+        标注：【确认】基于原始论文
+      </result>
+    </example>
+
+    <example name="completeness_check">
+      <description>完整性检查示例</description>
+      <document_type>概念说明型</document_type>
+      <required_elements>
+        <element>定义与背景 ✓</element>
+        <element>核心原理 ✓</element>
+        <element>示例说明 ✓</element>
+        <element>对比分析 ✓</element>
+        <element>使用注意 ✓</element>
+        <element>参考资源 ✓</element>
+      </required_elements>
+      <missing_elements>
+        <element>实际应用场景（需要补充）</element>
+      </missing_elements>
+      <action>补充实际应用章节</action>
+    </example>
+  </quality_control_examples>
+
+  <collaboration_examples>
+    <example name="ask_to_writer_handoff">
+      <description>Ask到Writer的交接示例</description>
+      <trigger>用户询问深度学习概念，Ask发现知识缺口</trigger>
+      <input_package>
+        <topic>梯度下降算法</topic>
+        <context>用户是机器学习初学者</context>
+        <user_level>初学者</user_level>
+        <scope>基础概念和直观理解</scope>
+        <references>[]</references>
+      </input_package>
+      <writer_response>
+        接收任务，评估为简单主题，直接撰写。
+        30分钟完成1500字入门文档。
+      </writer_response>
+    </example>
+
+    <example name="writer_to_editor_handoff">
+      <description>Writer到Editor的交接示例</description>
+      <handoff_package>
+        <document>完整的梯度下降文档（Markdown）</document>
+        <metadata>
+          <source_type>ask_qa</source_type>
+          <difficulty_level>basic</difficulty_level>
+          <target_audience>初学者</target_audience>
+          <challenges>数学概念通俗化解释</challenges>
+          <unconfirmed_items>[]</unconfirmed_items>
+        </metadata>
+        <classification>
+          <primary>ai-ml/machine-learning/gradient-descent.md</primary>
+          <confidence>high</confidence>
+        </classification>
+      </handoff_package>
+      <editor_response>
+        审核通过，优化格式和可读性，
+        补充知识链接，生成最终YAML。
+      </editor_response>
+    </example>
+  </collaboration_examples>
+
+  <failure_recovery_examples>
+    <example name="cannot_complete_recovery">
+      <description>无法完成任务的恢复示例</description>
+      <initial_task>撰写"量子引力理论在计算机科学中的应用"</initial_task>
+      <attempted_approach>
+        <step>尝试搜索相关资料</step>
+        <step>发现资料极其稀少</step>
+        <step>评估超出Writer能力范围</step>
+      </attempted_approach>
+      <recovery_action>
+        建议路由Research进行深入调研，
+        或请用户提供更多参考资料。
+      </recovery_action>
+      <user_decision>提供更多学术资源，重新尝试</user_decision>
+    </example>
+
+    <example name="editor_rejection_recovery">
+      <description>Editor拒绝的恢复示例</description>
+      <editor_feedback>
+        信息密度不足，缺少实际应用案例，
+        代码示例过于简单
+      </editor_feedback>
+      <writer_response>
+        接收反馈，进行针对性改进：
+        1. 补充实际应用案例
+        2. 增加复杂代码示例
+        3. 提升信息密度
+      </writer_response>
+      <result>修改后重新提交，通过审核</result>
+    </example>
+  </failure_recovery_examples>
+</kg_writer_examples>

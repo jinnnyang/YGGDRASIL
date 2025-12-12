@@ -1,0 +1,486 @@
+<kg_writer_common_patterns>
+  <overview>
+    KG-Writer的常见模式和可复用代码片段，包括文档结构模式、
+    元素组合模式、验证模式等，帮助Writer快速应用最佳实践。
+  </overview>
+
+  <document_structure_patterns>
+    <pattern name="progressive_disclosure">
+      <description>渐进式披露模式 - 从简单到复杂逐步深入</description>
+      <use_case>复杂技术概念的讲解</use_case>
+      <structure>
+        <level name="overview">
+          <content>1-2段概述，定义+核心价值</content>
+          <target_length>100-200字</target_length>
+        </level>
+        <level name="basic_concept">
+          <content>基本原理，用类比或简单例子说明</content>
+          <target_length>200-300字</target_length>
+        </level>
+        <level name="detailed_mechanism">
+          <content>详细机制，公式+代码示例</content>
+          <target_length>400-600字</target_length>
+        </level>
+        <level name="advanced_applications">
+          <content>高级应用，实际案例+最佳实践</content>
+          <target_length>300-400字</target_length>
+        </level>
+      </structure>
+      <example>
+        # 机器学习中的梯度下降
+        
+        ## 概述
+        梯度下降是机器学习中最重要的优化算法之一，它通过迭代调整参数来最小化损失函数。
+        
+        ## 基本概念
+        想象你在山顶上，想要以最快的速度下山。梯度下降就像是一个指南针，告诉你要往哪个方向走。
+        
+        ## 详细机制
+        梯度下降的数学公式为: θ = θ - α∇J(θ)
+        其中α是学习率，∇J(θ)是损失函数的梯度。
+        
+        ```python
+        def gradient_descent(X, y, learning_rate=0.01, iterations=1000):
+            m = len(X)
+            theta = np.zeros(X.shape[1])
+            for i in range(iterations):
+                predictions = X.dot(theta)
+                cost = (1/(2*m)) * np.sum((predictions - y)**2)
+                gradient = (1/m) * X.T.dot(predictions - y)
+                theta = theta - learning_rate * gradient
+            return theta
+        ```
+        
+        ## 高级应用
+        在深度学习中，我们使用Adam、RMSprop等自适应学习率变体...
+      </example>
+    </pattern>
+
+    <pattern name="problem_solution_framework">
+      <description>问题-解决方案框架 - 明确问题背景和解决过程</description>
+      <use_case>技术方案介绍、工具使用指南</use_case>
+      <structure>
+        <section name="problem_statement">
+          <content>问题描述、现状分析、为什么需要解决</content>
+        </section>
+        <section name="solution_overview">
+          <content>解决方案概述、核心思路、优势</content>
+        </section>
+        <section name="implementation">
+          <content>具体实现步骤、代码示例</content>
+        </section>
+        <section name="results_benefits">
+          <content>效果展示、带来的改进</content>
+        </section>
+        <section name="considerations">
+          <content>使用注意事项、局限性</content>
+        </section>
+      </structure>
+    </pattern>
+
+    <pattern name="comparison_matrix">
+      <description>对比矩阵模式 - 系统性比较多个方案</description>
+      <use_case>技术选型、工具对比、方案评估</use_case>
+      <structure>
+        <intro>对比的背景和目的</intro>
+        <comparison_dimensions>
+          <dimension>性能表现</dimension>
+          <dimension>易用性</dimension>
+          <dimension>生态支持</dimension>
+          <dimension>成本考虑</dimension>
+        </comparison_dimensions>
+        <detailed_analysis>
+          <item>每个维度的详细分析</item>
+          <item>具体数据和案例支撑</item>
+        </detailed_analysis>
+        <decision_matrix>
+          <content>综合对比表格</content>
+        </decision_matrix>
+        <recommendations>
+          <content>基于不同场景的选择建议</content>
+        </recommendations>
+      </structure>
+    </pattern>
+
+    <pattern name="step_by_step_tutorial">
+      <description>分步教程模式 - 详细的操作指导</description>
+      <use_case>工具使用、技能学习、配置指南</use_case>
+      <structure>
+        <prerequisites>
+          <content>前置条件、所需知识/工具</content>
+        </prerequisites>
+        <steps>
+          <step>
+            <title>步骤名称</title>
+            <description>详细说明</description>
+            <code>相关代码或命令</code>
+            <tips>注意事项和技巧</tips>
+          </step>
+        </steps>
+        <verification>
+          <content>如何验证步骤是否成功</content>
+        </verification>
+        <troubleshooting>
+          <content>常见问题和解决方案</content>
+        </troubleshooting>
+      </structure>
+    </pattern>
+  </document_structure_patterns>
+
+  <element_combination_patterns>
+    <pattern name="concept_code_triple">
+      <description>概念-代码-应用三元组 - 每个核心概念配代码和应用</description>
+      <structure>
+        <concept>
+          <content>概念定义和原理说明</content>
+          <target>150-250字段落</target>
+        </concept>
+        <code>
+          <content>实现代码或示例</content>
+          <target>20-40行，注释完整</target>
+        </code>
+        <application>
+          <content>实际应用场景或效果展示</content>
+          <target>100-200字</target>
+        </application>
+      </structure>
+      <example>
+        ## 自注意力机制
+        
+        自注意力机制允许序列中的每个位置都关注序列中的所有位置，计算出加权的表示。
+        
+        ```python
+        import torch
+        import torch.nn.functional as F
+        
+        def self_attention(query, key, value, mask=None):
+            # 计算注意力分数
+            scores = torch.matmul(query, key.transpose(-2, -1))
+            
+            # 缩放
+            scores = scores / math.sqrt(query.size(-1))
+            
+            # 应用mask（如果存在）
+            if mask is not None:
+                scores = scores.masked_fill(mask == 0, -1e9)
+            
+            # Softmax获取注意力权重
+            attention_weights = F.softmax(scores, dim=-1)
+            
+            # 加权求和
+            return torch.matmul(attention_weights, value)
+        ```
+        
+        在机器翻译中，自注意力机制让模型能够同时关注源语言的所有位置，
+        更好地捕捉长距离依赖关系。
+      </example>
+    </pattern>
+
+    <pattern name="theory_practice_balance">
+      <description>理论-实践平衡模式 - 理论解释与实践应用并重</description>
+      <balance_ratio>
+        <theory>40%</theory>
+        <practice>60%</practice>
+      </balance_ratio>
+      <structure>
+        <theory_section>
+          <content>核心概念、数学原理、理论基础</content>
+        </theory_section>
+        <practice_section>
+          <content>代码实现、实验验证、实际应用</content>
+        </practice_section>
+        <integration>
+          <content>理论与实践的结合点、为什么这样设计</content>
+        </integration>
+      </structure>
+    </pattern>
+
+    <pattern name="progressive_complexity">
+      <description>渐进复杂度模式 - 从简单到复杂逐步深入</description>
+      <levels>
+        <level name="basic">
+          <complexity>简单概念+基础代码</complexity>
+          <target_audience>初学者</target_audience>
+        </level>
+        <level name="intermediate">
+          <complexity>详细机制+完整实现</complexity>
+          <target_audience>有基础的用户</target_audience>
+        </level>
+        <level name="advanced">
+          <complexity>优化技巧+高级应用</complexity>
+          <target_audience>专家用户</target_audience>
+        </level>
+      </levels>
+    </pattern>
+  </element_combination_patterns>
+
+  <verification_patterns>
+    <pattern name="fact_checking_workflow">
+      <description>事实核查工作流 - 确保信息准确性</description>
+      <steps>
+        <step name="initial_claim">
+          <action>提出主张或声明</action>
+          <verification>标记需要验证的内容</verification>
+        </step>
+        <step name="source_identification">
+          <action>确定权威来源</action>
+          <tools>Web搜索、学术搜索</tools>
+        </step>
+        <step name="cross_validation">
+          <action>从多个独立来源验证</action>
+          <criteria>至少2个来源确认</criteria>
+        </step>
+        <step name="confidence_labeling">
+          <action>根据验证结果标注置信度</action>
+          <labels>【确认】【推测】【待确认】【存疑】</labels>
+        </step>
+      </steps>
+    </pattern>
+
+    <pattern name="code_validation_checklist">
+      <description>代码验证检查清单 - 确保代码示例质量</description>
+      <checklist>
+        <item name="syntax_check">
+          <description>语法正确性</description>
+          <method>逻辑检查+工具验证</method>
+        </item>
+        <item name="logic_verification">
+          <description>逻辑正确性</description>
+          <method>逐步分析算法流程</method>
+        </item>
+        <item name="completeness">
+          <description>示例完整性</description>
+          <method>包含必要的导入和设置</method>
+        </item>
+        <item name="clarity">
+          <description>代码清晰度</description>
+          <method>变量命名、注释、格式</method>
+        </item>
+        <item name="practicality">
+          <description>实际可运行性</description>
+          <method>测试关键路径</method>
+        </item>
+      </checklist>
+    </pattern>
+
+    <pattern name="completeness_audit">
+      <description>完整性审计 - 确保文档覆盖所有必要方面</description>
+      <audit_dimensions>
+        <dimension name="definition_completeness">
+          <checks>
+            <check>核心概念有明确定义</check>
+            <check>术语首次出现有解释</check>
+            <check>缩写有全称说明</check>
+          </checks>
+        </dimension>
+        <dimension name="explanation_depth">
+          <checks>
+            <check>原理机制已阐述</check>
+            <check>设计动机已说明</check>
+            <check>优缺点已分析</check>
+          </checks>
+        </dimension>
+        <dimension name="practical_coverage">
+          <checks>
+            <check>有可运行示例</check>
+            <check>覆盖典型场景</check>
+            <check>包含最佳实践</check>
+          </checks>
+        </dimension>
+        <dimension name="knowledge_connections">
+          <checks>
+            <check>前置知识已标注</check>
+            <check>相关概念已链接</check>
+            <check>延伸阅读已推荐</check>
+          </checks>
+        </dimension>
+      </audit_dimensions>
+    </pattern>
+  </verification_patterns>
+
+  <content_generation_patterns>
+    <pattern name="analogy_explanation">
+      <description>类比解释模式 - 用熟悉事物解释复杂概念</description>
+      <structure>
+        <target_concept>要解释的目标概念</target_concept>
+        <analogy_source>选择合适的类比源</analogy_source>
+        <mapping>概念与类比的对应关系</mapping>
+        <limitations>类比的局限性说明</limitations>
+      </structure>
+      <examples>
+        <example>
+          <concept>Transformer的自注意力机制</concept>
+          <analogy>图书馆的阅读理解过程</analogy>
+          <mapping>
+            <map>查询(Query) = 你正在思考的问题</map>
+            <map>键(Key) = 图书馆每本书的目录</map>
+            <map>值(Value) = 书籍的实际内容</map>
+            <map>注意力权重 = 你对不同书籍的关注度</map>
+          </mapping>
+        </example>
+      </examples>
+    </pattern>
+
+    <pattern name="historical_context">
+      <description>历史背景模式 - 解释技术发展的来龙去脉</description>
+      <structure>
+        <problem_background>当时面临的问题</problem_background>
+        <existing_limitations>现有方法的局限性</existing_limitations>
+        <innovation_moment>关键创新点</innovation_moment>
+        <impact_consequences>带来的影响和后果</impact_consequences>
+        <current_status>当前的发展状态</current_status>
+      </structure>
+    </pattern>
+
+    <pattern name="use_case_driven">
+      <description>用例驱动模式 - 从实际应用场景出发</description>
+      <structure>
+        <real_scenario>真实的应用场景描述</real_scenario>
+        <specific_problem>该场景下的具体问题</specific_problem>
+        <solution_approach>解决方案的思路</solution_approach>
+        <implementation_details>具体实现细节</implementation_details>
+        <results_benefits>取得的效果和收益</results_benefits>
+      </structure>
+    </pattern>
+  </content_generation_patterns>
+
+  <quality_assurance_patterns>
+    <pattern name="peer_review_simulation">
+      <description>同行评议模拟 - 从不同角度审视内容</description>
+      <perspectives>
+        <perspective name="domain_expert">
+          <focus>技术准确性和深度</focus>
+          <questions>
+            <q>技术描述是否准确?</q>
+            <q>是否有遗漏的重要细节?</q>
+            <q>深度是否适合目标读者?</q>
+          </questions>
+        </perspective>
+        <perspective name="beginner_user">
+          <focus>可读性和理解难度</focus>
+          <questions>
+            <q>术语是否都有解释?</q>
+            <q>逻辑是否清晰?</q>
+            <q>是否有足够的示例?</q>
+          </questions>
+        </perspective>
+        <perspective name="practitioner">
+          <focus>实用性和可操作性</focus>
+          <questions>
+            <q>代码是否可运行?</q>
+            <q>步骤是否详细?</q>
+            <q>是否包含最佳实践?</q>
+          </questions>
+        </perspective>
+      </perspectives>
+    </pattern>
+
+    <pattern name="readability_test">
+      <description>可读性测试 - 确保内容易于理解</description>
+      <tests>
+        <test name="skim_test">
+          <description>快速浏览测试</description>
+          <method>只看标题和首段，能否理解核心内容</method>
+        </test>
+        <test name="comprehension_test">
+          <description>理解深度测试</description>
+          <method>读者能否独立理解并应用</method>
+        </test>
+        <test name="engagement_test">
+          <description>参与度测试</description>
+          <method>是否有足够的示例和互动元素</method>
+        </test>
+      </tests>
+    </pattern>
+  </quality_assurance_patterns>
+
+  <metadata_patterns>
+    <pattern name="frontmatter_generation">
+      <description>YAML frontmatter生成模式</description>
+      <template>
+        <field name="title">
+          <source>基于H1标题生成</source>
+          <rules>简洁、描述性强、包含关键词</rules>
+        </field>
+        <field name="slug">
+          <source>从title转换</source>
+          <rules>kebab-case, 1-3个词, 自解释</rules>
+        </field>
+        <field name="description">
+          <source>文档核心内容摘要</source>
+          <rules>2-3句话, 包含主要概念和价值</rules>
+        </field>
+        <field name="categories">
+          <source>基于内容主题推断</source>
+          <rules>2-3个分类, 层次化组织</rules>
+        </field>
+        <field name="tags">
+          <source>提取关键词</source>
+          <rules>5-8个标签, 具体且相关</rules>
+        </field>
+        <field name="date">
+          <source>当前日期</source>
+          <format>YYYY-MM-DD</format>
+        </field>
+        <field name="status">
+          <value>draft</value>
+          <note>Writer阶段固定为draft</note>
+        </field>
+      </template>
+    </pattern>
+
+    <pattern name="classification_suggestion">
+      <description>分类建议生成模式</description>
+      <process>
+        <step name="content_analysis">
+          <action>分析文档的核心主题和领域</action>
+        </step>
+        <step name="hierarchy_mapping">
+          <action>映射到现有的目录层次结构</action>
+        </step>
+        <step name="alternative_paths">
+          <action>提供1-2个备选路径</action>
+        </step>
+        <step name="confidence_scoring">
+          <action>为每个建议打分并说明理由</action>
+        </step>
+      </process>
+    </pattern>
+  </metadata_patterns>
+
+  <handoff_patterns>
+    <pattern name="writer_to_editor_package">
+      <description>Writer到Editor的交接包格式</description>
+      <components>
+        <component name="main_document">
+          <content>完整的Markdown文档，包含YAML frontmatter</content>
+          <format>单个.md文件</format>
+        </component>
+        <component name="writing_metadata">
+          <content>撰写说明和元数据</content>
+          <format>YAML格式</format>
+        </component>
+        <component name="classification_suggestion">
+          <content>分类建议和路径推荐</content>
+          <format>结构化文本</format>
+        </component>
+        <component name="quality_report">
+          <content>自查报告和质量评估</content>
+          <format>检查清单形式</format>
+        </component>
+      </components>
+    </pattern>
+
+    <pattern name="user_confirmation_format">
+      <description>用户确认请求格式</description>
+      <structure>
+        <header>文档初稿完成通知</header>
+        <summary>文档概要和核心内容</summary>
+        <completed_sections>已完成的部分列表</completed_sections>
+        <pending_issues>需要确认的问题列表</pending_issues>
+        <next_steps>下一步计划</next_steps>
+        <call_to_action>明确的行动请求</call_to_action>
+      </structure>
+    </pattern>
+  </handoff_patterns>
+</kg_writer_common_patterns>
