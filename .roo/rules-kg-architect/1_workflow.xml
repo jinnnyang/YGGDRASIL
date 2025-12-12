@@ -136,7 +136,10 @@ knowledge-repo/
           <checks>
             <check category="元数据">
               <item>YAML frontmatter 缺失或不完整</item>
-              <item>必填字段（title, slug, description）缺失</item>
+              <item>必填字段（title, slug, description, tags）缺失</item>
+              <item>tags 数组为空或标签数量不足（<3个）</item>
+              <item>tags 与 categories 重复</item>
+              <item>tags 格式不符合 kebab-case</item>
               <item>categories 与实际路径不一致</item>
               <item>date 格式不符合 ISO 8601</item>
             </check>

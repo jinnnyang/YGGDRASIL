@@ -336,6 +336,8 @@ purpose/             # 一级：用途
         <practice>tags 使用一致的术语（建立术语表）</practice>
         <practice>categories 准确反映物理路径</practice>
         <practice>定期审查和标准化 tags</practice>
+        <practice>tags 必须包含不同维度，避免单一类型</practice>
+        <practice>每个文档至少 3 个有意义的 tags</practice>
       </best_practices>
       <tag_management>
         <principle>建立并维护标准标签集</principle>
@@ -345,6 +347,34 @@ purpose/             # 一级：用途
           <step>标准化为统一术语</step>
           <step>提供推荐标签列表供用户参考</step>
         </process>
+        <tag_quality_criteria>
+          <criterion>区分度：标签应该能够区分不同类型的内容</criterion>
+          <criterion>一致性：相同概念使用相同标签</criterion>
+          <criterion>覆盖度：标签应该覆盖文档的主要维度</criterion>
+          <criterion>简洁性：避免过于具体或过于宽泛的标签</criterion>
+        </tag_quality_criteria>
+        <tag_dimension_guidance>
+          <dimension name="技术栈">
+            <description>使用的编程语言、框架、工具</description>
+            <examples>python, pytorch, react, nodejs, docker</examples>
+          </dimension>
+          <dimension name="算法模型">
+            <description>核心算法、模型架构</description>
+            <examples>transformer, lstm, cnn, random-forest</examples>
+          </dimension>
+          <dimension name="概念理论">
+            <description>基础概念、理论方法</description>
+            <examples>attention-mechanism, gradient-descent, bayesian-inference</examples>
+          </dimension>
+          <dimension name="应用领域">
+            <description>应用场景、行业领域</description>
+            <examples>nlp, computer-vision, quant-trading, recommendation</examples>
+          </dimension>
+          <dimension name="方法论">
+            <description>工作方法、最佳实践</description>
+            <examples>best-practices, optimization, debugging, testing</examples>
+          </dimension>
+        </tag_dimension_guidance>
       </tag_management>
     </guideline>
 

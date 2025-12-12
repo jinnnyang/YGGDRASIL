@@ -223,13 +223,68 @@ categories:
 
       <field name="tags">
         <type>array of strings</type>
-        <description>细粒度标签，跨类别标注</description>
+        <description>细粒度标签，跨类别标注（必填字段）</description>
+        <importance>tags是知识图谱连接的关键，必须提供</importance>
         <rules>
-          <rule>用于跨类别的内容关联</rule>
-          <rule>使用 kebab-case</rule>
-          <rule>3-8 个标签为宜</rule>
+          <rule>用于跨类别的内容关联和知识发现</rule>
+          <rule>使用 kebab-case，小写字母</rule>
+          <rule>必须提供 3-8 个有意义的标签</rule>
           <rule>避免与 categories 重复</rule>
+          <rule>标签应反映文档的核心概念、技术、工具、应用等</rule>
+          <rule>优先使用通用术语，便于跨领域发现</rule>
+          <rule>包含不同维度：技术栈、算法模型、概念理论、应用领域、方法论等</rule>
         </rules>
+        <excellent_examples>
+          <example name="技术文档">
+            <content><![CDATA[
+tags:
+  - transformer
+  - attention-mechanism
+  - deep-learning
+  - pytorch
+  - nlp
+  - neural-networks
+  - python
+            ]]></content>
+            <dimensions>算法模型 + 技术栈 + 应用领域 + 编程语言</dimensions>
+          </example>
+          <example name="量化交易">
+            <content><![CDATA[
+tags:
+  - bollinger-bands
+  - technical-analysis
+  - quant-trading
+  - python
+  - pandas
+  - backtrading
+  - financial-markets
+            ]]></content>
+            <dimensions>技术指标 + 方法论 + 应用领域 + 工具 + 编程语言</dimensions>
+          </example>
+          <example name="政府公文">
+            <content><![CDATA[
+tags:
+  - government-documents
+  - policy-writing
+  - official-format
+  - administrative-procedures
+  - legal-framework
+  - public-administration
+            ]]></content>
+            <dimensions>文档类型 + 写作方法 + 应用领域 + 规范标准</dimensions>
+          </example>
+        </excellent_examples>
+        <common_patterns>
+          <pattern name="技术文档">
+            <formula>[算法/模型] + [技术栈] + [应用领域] + [编程语言] + [核心概念]</formula>
+          </pattern>
+          <pattern name="方法论文档">
+            <formula>[方法类型] + [应用场景] + [工具/框架] + [最佳实践] + [相关概念]</formula>
+          </pattern>
+          <pattern name="案例文档">
+            <formula>[案例类型] + [涉及技术] + [应用领域] + [解决方案] + [经验总结]</formula>
+          </pattern>
+        </common_patterns>
         <examples>
           <good><![CDATA[
 tags:
@@ -237,13 +292,27 @@ tags:
   - attention-mechanism
   - deep-learning
   - pytorch
+  - nlp
+  - neural-networks
           ]]></good>
           <bad><![CDATA[
 tags:
   - ai-ml  # 与 categories 重复
   - NLP    # 格式不统一（应该小写）
+  - note   # 太泛泛，没有意义
+          ]]></bad>
+          <bad><![CDATA[
+tags: []  # 空标签列表，不允许
           ]]></bad>
         </examples>
+        <validation>
+          <check>tags数组不能为空</check>
+          <check>每个标签长度 2-30 字符</check>
+          <check>所有标签使用 kebab-case</check>
+          <check>标签与 categories 不重复</check>
+          <check>标签具有区分度和意义</check>
+          <check>标签覆盖不同维度，避免单一类型</check>
+        </validation>
       </field>
     </required_fields>
 
