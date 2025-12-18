@@ -363,6 +363,7 @@ author:
         <description>标识是否为 index.md 文件</description>
         <usage>仅在 index.md 中使用</usage>
         <example>true</example>
+        <important_note>所有 index.md 文件必须包含 tags 字段。tags 应反映该目录的核心主题和知识领域。</important_note>
       </field>
     </optional_fields>
 
@@ -402,6 +403,13 @@ author: "System"
 date: 2024-12-11
 categories:
   - ai-ml
+tags:
+  - artificial-intelligence
+  - machine-learning
+  - neural-networks
+  - deep-learning
+  - nlp
+  - computer-vision
 is_index: true
 ---
 
@@ -479,6 +487,24 @@ ai-ml/
         - 说明目录定位和包含内容
       </purpose>
       <exception>特殊目录（_archive, _drafts）可以省略</exception>
+      <tags_requirement>
+        <rule>所有 index.md 文件必须包含 tags 字段（必填）</rule>
+        <rationale>tags 是知识图谱连接的关键，index.md 的 tags 应反映该目录的核心主题和知识领域</rationale>
+        <examples>
+          <example>
+            <path>ai-ml/index.md</path>
+            <tags>artificial-intelligence, machine-learning, neural-networks, deep-learning, nlp, computer-vision</tags>
+          </example>
+          <example>
+            <path>finance-quant/index.md</path>
+            <tags>quantitative-trading, financial-markets, technical-analysis, risk-management, portfolio-optimization</tags>
+          </example>
+          <example>
+            <path>development-tools/index.md</path>
+            <tags>software-development, devops, programming-tools, version-control, automation</tags>
+          </example>
+        </examples>
+      </tags_requirement>
     </index_file_requirement>
 
     <special_directories>

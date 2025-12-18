@@ -128,20 +128,118 @@ knowledge-repo/
     </mode>
 
     <mode name="maintain" trigger="用户要求优化结构，或定期审查">
-      <description>优化和重构现有知识仓库结构</description>
+      <description>优化和重构现有知识仓库结构，支持git增量检查以提高效率</description>
       
       <workflow>
-        <phase number="1" name="健康检查">
-          <description>全面扫描仓库，识别潜在问题</description>
+        <phase number="1" name="增量检查决策">
+          <description>检查是否为git仓库，并提供增量处理选项</description>
+          <actions>
+            <action>执行 `git rev-parse --is-inside-work-tree` 检查是否为git仓库</action>
+            <action>如果是git仓库，执行 `git log --name-status --pretty=format: -n 100` 获取最近修改的文件</action>
+            <action>筛选其中的 .md 文件（A=新增，M=修改，D=删除）</action>
+            <action>统计增量文件数量</action>
+            <action>向用户展示发现的增量文件数量和预估处理时间</action>
+            <action>让用户选择处理模式</action>
+          </actions>
+          <tools>
+            <tool>execute_command - 运行 git 命令</tool>
+          </tools>
+          <git_commands><![CDATA[
+# 检查是否为git仓库
+git rev-parse --is-inside-work-tree
+
+# 获取最近100次提交中修改过的文件（使用name-status格式）
+git log --name-status --pretty=format: -n 100
+
+# 输出示例：
+# A       ai-ml/nlp/new-document.md
+# M       finance-quant/indicators/index.md
+# D       _archive/old-content.md
+# M       development-tools/bash-short-circuit-operators.md
+          ]]></git_commands>
+          <user_options>
+            <option name="增量模式">
+              <description>仅处理最近修改的文件（高效，适合日常维护）</description>
+              <benefits>
+                <benefit>快速识别最近变更</benefit>
+                <benefit>减少扫描时间，优先处理热点文件</benefit>
+                <benefit>适合持续集成/持续维护工作流</benefit>
+              </benefits>
+              <next_phase>增量文件分类</next_phase>
+            </option>
+            <option name="全量模式">
+              <description>扫描整个仓库（完整，适合定期审查）</description>
+              <benefits>
+                <benefit>发现所有潜在问题</benefit>
+                <benefit>确保全局一致性</benefit>
+                <benefit>适合仓库健康评估</benefit>
+              </benefits>
+              <next_phase>全量健康检查</next_phase>
+            </option>
+            <option name="混合模式">
+              <description>先处理增量文件问题，再标注全量检查项</description>
+              <benefits>
+                <benefit>兼顾效率和完整性</benefit>
+                <benefit>可以分阶段处理</benefit>
+                <benefit>适合大型仓库的渐进式优化</benefit>
+              </benefits>
+              <next_phase>增量文件分类</next_phase>
+            </option>
+          </user_options>
+          <fallback>
+            如果不是git仓库或git命令失败，自动转向全量模式
+          </fallback>
+        </phase>
+
+        <phase number="2" name="增量文件分类">
+          <description>对git增量文件进行分类和优先级评分（增量模式）</description>
+          <precondition>用户选择了增量模式或混合模式</precondition>
+          <actions>
+            <action>分类增量文件为：新增(A)、修改(M)、删除(D)</action>
+            <action>对每个增量文件读取其YAML元数据</action>
+            <action>检查新增文件是否缺少元数据（优先级最高）</action>
+            <action>检查修改文件的元数据变化</action>
+            <action>列出删除文件对应的清理任务</action>
+            <action>生成优先级清单：新增>修改>删除</action>
+          </actions>
+          <tools>
+            <tool>read_file - 批量读取增量文件的YAML frontmatter</tool>
+            <tool>search_files - 查找引用被删除文件的链接</tool>
+          </tools>
+          <output_format><![CDATA[
+**增量文件分析结果**
+
+新增文件 (3个) - 优先级: ⚠️ 高
+- [ ] ai-ml/nlp/new-document.md （缺少YAML元数据）
+- [ ] development-tools/new-tool.md （元数据不完整）
+
+修改文件 (5个) - 优先级: 🔧 中
+- [ ] finance-quant/indicators/index.md （tags字段更新）
+- [ ] development-tools/bash-short-circuit-operators.md （分类调整）
+
+删除文件 (2个) - 优先级: 🗑️ 低
+- [ ] _archive/old-content.md （检查是否有反向链接）
+
+**建议操作**：
+1. 首先补充新增文件的元数据（约5-10分钟）
+2. 然后验证修改文件的分类（约10-15分钟）
+3. 最后清理删除文件的链接引用（约5分钟）
+          ]]></output_format>
+        </phase>
+
+        <phase number="3" name="全量健康检查">
+          <description>全面扫描仓库，识别潜在问题（全量模式或混合模式的第二阶段）</description>
+          <precondition>用户选择了全量模式或混合模式</precondition>
           <checks>
             <check category="元数据">
               <item>YAML frontmatter 缺失或不完整</item>
               <item>必填字段（title, slug, description, tags）缺失</item>
-              <item>tags 数组为空或标签数量不足（<3个）</item>
+              <item>tags 数组为空或标签数量不足（&lt;3个）</item>
               <item>tags 与 categories 重复</item>
               <item>tags 格式不符合 kebab-case</item>
               <item>categories 与实际路径不一致</item>
               <item>date 格式不符合 ISO 8601</item>
+              <item>index.md 文件是否包含tags字段（新增检查）</item>
             </check>
             <check category="分类">
               <item>文档位置与内容主题不匹配</item>
@@ -154,8 +252,8 @@ knowledge-repo/
               <item>目录名使用缩写或晦涩词汇</item>
             </check>
             <check category="结构">
-              <item>目录层级过深（>3层）</item>
-              <item>某目录下文件过多（>20个）</item>
+              <item>目录层级过深（&gt;3层）</item>
+              <item>某目录下文件过多（&gt;20个）</item>
               <item>缺少 index.md 的目录</item>
               <item>孤立或空目录</item>
             </check>
@@ -167,7 +265,7 @@ knowledge-repo/
           </tools>
         </phase>
 
-        <phase number="2" name="问题诊断">
+        <phase number="4" name="问题诊断">
           <description>深入分析问题根源</description>
           <analyses>
             <analysis type="分类不当">
@@ -185,10 +283,15 @@ knowledge-repo/
               <diagnosis>缺乏命名规范约束</diagnosis>
               <example>mix_of_snake_case.md, kebab-case.md, CamelCase.md</example>
             </analysis>
+            <analysis type="index.md缺失tags">
+              <symptom>所有目录下的index.md都应包含tags字段</symptom>
+              <diagnosis>index.md的tags应反映该目录的核心概念和主题标签</diagnosis>
+              <example>ai-ml/index.md应包含tags如：ai, machine-learning, neural-networks等</example>
+            </analysis>
           </analyses>
         </phase>
 
-        <phase number="3" name="优化建议">
+        <phase number="5" name="优化建议">
           <description>提出具体的改进方案</description>
           <actions>
             <action>列出所有发现的问题，按优先级排序</action>
@@ -207,13 +310,19 @@ knowledge-repo/
 
 **建议**：批量补充元数据，我可以根据文件内容生成合理的 description
 
-**2. 分类不当（优先级：高）**
+**2. index.md缺失tags字段（优先级：高）**
+- 8个目录的index.md未包含tags字段
+- 这些标签对于知识图谱的连接至关重要
+
+**建议**：为所有index.md添加适当的tags，反映该目录的核心主题
+
+**3. 分类不当（优先级：高）**
 - `quant-trading-basics.md` 在 finance/ 下，建议移至 ai-ml/quant-trading/
 - `lstm-stock-pred.md` 同时在 ai-ml/ 和 finance/，存在重复
 
 **建议**：创建统一的 `ai-ml/quant-trading/` 目录，整合相关内容
 
-**3. 命名不一致（优先级：中）**
+**4. 命名不一致（优先级：中）**
 - 7个文件使用下划线：nlp_basics.md → 应改为 nlp-basics.md
 
 **建议**：批量重命名，同步更新 slug 字段
@@ -225,12 +334,12 @@ knowledge-repo/
           ]]></example>
         </phase>
 
-        <phase number="4" name="执行重构">
+        <phase number="6" name="执行重构">
           <description>实施结构调整</description>
           <actions>
             <action>按用户确认的方案逐步执行</action>
             <action>每次执行前再次确认高风险操作</action>
-            <action>更新所有受影响的 index.md</action>
+            <action>更新所有受影响的 index.md（包括添加tags）</action>
             <action>检查并修复文档间的链接</action>
             <action>生成变更日志记录所有调整</action>
           </actions>
@@ -390,6 +499,7 @@ tags:
       - 用户对结果表示满意
     </criterion>
     <criterion mode="maintain">
+      - 增量或全量检查完成
       - 所有问题已列出并分析
       - 优化方案已提供
       - 用户确认执行后，变更已完成
@@ -402,4 +512,18 @@ tags:
       - 用户清楚下一步该做什么
     </criterion>
   </completion_criteria>
+
+  <optimization_notes>
+    <note type="performance">
+      增量检查模式通过git log大幅提高维护效率，避免全量扫描导致的性能问题。
+      建议日常维护使用增量模式，定期审查使用全量模式。
+    </note>
+    <note type="metadata">
+      所有index.md文件现在要求必须包含tags字段，这是知识图谱连接的关键。
+      tags应反映该目录/知识领域的核心概念和主题标签。
+    </note>
+    <note type="workflow">
+      混合模式提供了平衡效率和完整性的方案，适合大型知识库的渐进式维护。
+    </note>
+  </optimization_notes>
 </workflow_instructions>

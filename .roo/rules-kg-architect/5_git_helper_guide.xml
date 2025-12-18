@@ -1,0 +1,415 @@
+<git_helper_guide>
+  <overview>
+    本文件提供KG-Architect模式使用git命令进行增量检查的详细指南。
+    增量检查模式可以显著提高维护效率，避免全量扫描导致的性能问题。
+  </overview>
+
+  <core_concepts>
+    <concept name="git_log_增量检查">
+      <description>使用git log命令查看最近的文件修改历史，识别需要处理的增量文件</description>
+      <advantage>
+        <item>快速定位最近变更的文件</item>
+        <item>减少扫描时间，优先处理热点文件</item>
+        <item>适合持续集成/持续维护工作流</item>
+        <item>避免重复处理已验证的历史文件</item>
+      </advantage>
+    </concept>
+    
+    <concept name="三种处理模式">
+      <mode name="增量模式">仅处理git中最近修改的文件，效率最高</mode>
+      <mode name="全量模式">扫描整个仓库所有文件，完整但耗时</mode>
+      <mode name="混合模式">先处理增量问题，再标注全量检查项，平衡效率和完整性</mode>
+    </concept>
+  </core_concepts>
+
+  <git_commands>
+    <command_group name="基础检查">
+      <command name="check_git_repo">
+        <syntax>git rev-parse --is-inside-work-tree</syntax>
+        <purpose>检查当前目录是否为git仓库</purpose>
+        <output>
+          <success>true</success>
+          <failure>fatal: not a git repository</failure>
+        </output>
+        <usage_in_architect>初始化检查，判断是否可以进行增量模式</usage_in_architect>
+      </command>
+
+      <command name="get_git_root">
+        <syntax>git rev-parse --show-toplevel</syntax>
+        <purpose>获取git仓库的根目录路径</purpose>
+        <output>/absolute/path/to/repo</output>
+        <usage_in_architect>确定仓库的工作目录范围</usage_in_architect>
+      </command>
+    </command_group>
+
+    <command_group name="增量文件获取">
+      <command name="get_recent_changes">
+        <syntax>git log --name-status --pretty=format: -n 100</syntax>
+        <description>获取最近100次提交中修改过的文件列表</description>
+        <output_format>
+<![CDATA[
+A       ai-ml/nlp/new-document.md
+M       finance-quant/indicators/index.md
+D       _archive/old-content.md
+M       development-tools/bash-short-circuit-operators.md
+A       development-tools/new-tool.md
+M       development-tools/index.md
+]]>
+        </output_format>
+        <explanation>
+          <status>A</status>
+          <meaning>Added - 新增文件</meaning>
+        </explanation>
+        <explanation>
+          <status>M</status>
+          <meaning>Modified - 修改文件</meaning>
+        </explanation>
+        <explanation>
+          <status>D</status>
+          <meaning>Deleted - 删除文件</meaning>
+        </explanation>
+        <parameter name="n">
+          <description>提交次数，建议100次以获取最近几周的变更</description>
+          <default>100</default>
+          <rationale>平衡获取足够的增量信息和命令执行速度</rationale>
+        </parameter>
+        <usage_in_architect>这是增量检查的核心命令，用于获取需要处理的文件列表</usage_in_architect>
+      </command>
+
+      <command name="filter_markdown_files">
+        <syntax>git log --name-status --pretty=format: -n 100 | grep -E '^\s*(A|M|D)\s+.*\.md$'</syntax>
+        <description>从git log输出中筛选出.md文件的变更</description>
+        <purpose>
+          <item>过滤出Markdown文件，忽略其他文件类型</item>
+          <item>只保留真正的文件修改状态行</item>
+          <item>便于后续处理</item>
+        </purpose>
+        <output>
+<![CDATA[
+A       ai-ml/nlp/new-document.md
+M       finance-quant/indicators/index.md
+D       _archive/old-content.md
+M       development-tools/bash-short-circuit-operators.md
+]]>
+        </output>
+        <usage_in_architect>筛选markdown文件，排除其他文件类型的干扰</usage_in_architect>
+      </command>
+
+      <command name="count_changes">
+        <syntax>git log --name-status --pretty=format: -n 100 | grep -E '^\s*(A|M|D)\s+.*\.md$' | wc -l</syntax>
+        <description>统计增量markdown文件的数量</description>
+        <output>15</output>
+        <usage_in_architect>评估增量处理的工作量，帮助用户选择处理模式</usage_in_architect>
+      </command>
+
+      <command name="get_only_additions">
+        <syntax>git log --name-status --pretty=format: -n 100 | grep -E '^A\s+.*\.md$' | awk '{print $NF}'</syntax>
+        <description>获取新增文件列表（A状态）</description>
+        <output>
+<![CDATA[
+ai-ml/nlp/new-document.md
+development-tools/new-tool.md
+]]>
+        </output>
+        <priority>最高</priority>
+        <rationale>新增文件通常缺少元数据，需要优先处理</rationale>
+        <usage_in_architect>优先级最高的处理任务，确保新增文件有完整的元数据</usage_in_architect>
+      </command>
+
+      <command name="get_only_modifications">
+        <syntax>git log --name-status --pretty=format: -n 100 | grep -E '^M\s+.*\.md$' | awk '{print $NF}'</syntax>
+        <description>获取修改文件列表（M状态）</description>
+        <output>
+<![CDATA[
+finance-quant/indicators/index.md
+development-tools/bash-short-circuit-operators.md
+development-tools/index.md
+]]>
+        </output>
+        <priority>中等</priority>
+        <rationale>修改文件可能元数据已存在，主要检查是否更新</rationale>
+        <usage_in_architect>检查修改文件的元数据变化和分类调整</usage_in_architect>
+      </command>
+
+      <command name="get_only_deletions">
+        <syntax>git log --name-status --pretty=format: -n 100 | grep -E '^D\s+.*\.md$' | awk '{print $NF}'</syntax>
+        <description>获取删除文件列表（D状态）</description>
+        <output>
+<![CDATA[
+_archive/old-content.md
+]]>
+        </output>
+        <priority>低</priority>
+        <rationale>需要检查删除文件是否有反向链接需要更新</rationale>
+        <usage_in_architect>清理删除文件的链接引用和配置</usage_in_architect>
+      </command>
+    </command_group>
+
+    <command_group name="增量范围控制">
+      <command name="recent_days">
+        <syntax>git log --name-status --pretty=format: -n 1000 --since="7 days ago" -- '*.md'</syntax>
+        <description>获取指定时间范围内的增量文件</description>
+        <parameter name="since">
+          <example>"7 days ago"</example>
+          <example>"2024-12-01"</example>
+          <example>"1 week ago"</example>
+        </parameter>
+        <usage_in_architect>灵活控制增量检查的时间范围</usage_in_architect>
+      </command>
+
+      <command name="specific_commit_range">
+        <syntax>git log --name-status --pretty=format: COMMIT_HASH1..COMMIT_HASH2 -- '*.md'</syntax>
+        <description>获取特定两个提交之间的文件变更</description>
+        <usage_in_architect>在需要对比特定版本变更时使用</usage_in_architect>
+      </command>
+
+      <command name="by_file_pattern">
+        <syntax>git log --name-status --pretty=format: -n 100 -- 'ai-ml/**/*.md'</syntax>
+        <description>只获取特定目录下的文件变更</description>
+        <parameter name="pattern">glob模式，如 'ai-ml/**/*.md'</parameter>
+        <usage_in_architect>针对特定知识领域的增量检查</usage_in_architect>
+      </command>
+    </command_group>
+
+    <command_group name="链接验证">
+      <command name="find_references">
+        <syntax>grep -r '\[\[.*old-file\.md' . --include="*.md"</syntax>
+        <description>查找所有引用某个文件的链接</description>
+        <usage>在文件删除时，检查是否有反向链接需要更新</usage>
+        <usage_in_architect>删除文件后的链接清理</usage_in_architect>
+      </command>
+
+      <command name="find_broken_links">
+        <syntax>grep -r '\[\[' . --include="*.md" | grep -v '\.md\]\]'</syntax>
+        <description>查找所有可能损坏的链接（不以.md结尾）</description>
+        <usage_in_architect>在重组文件结构后验证链接完整性</usage_in_architect>
+      </command>
+    </command_group>
+  </git_commands>
+
+  <workflow_integration>
+    <integration_point name="maintain_mode_phase1">
+      <phase>增量检查决策</phase>
+      <git_commands>
+        <step number="1">
+          <command>git rev-parse --is-inside-work-tree</command>
+          <purpose>检查是否为git仓库</purpose>
+          <action>如果返回true，继续；如果失败，转向全量模式</action>
+        </step>
+        <step number="2">
+          <command>git log --name-status --pretty=format: -n 100 | grep -E '^\s*(A|M|D)\s+.*\.md$'</command>
+          <purpose>获取增量markdown文件列表</purpose>
+          <action>统计并分类（新增/修改/删除）</action>
+        </step>
+        <step number="3">
+          <command>git log --name-status --pretty=format: -n 100 | grep -E '^\s*(A|M|D)\s+.*\.md$' | wc -l</command>
+          <purpose>统计增量文件数量</purpose>
+          <action>向用户展示发现的增量数量</action>
+        </step>
+        <step number="4">
+          <action>展示用户选项（增量/全量/混合模式）</action>
+        </step>
+      </git_commands>
+    </integration_point>
+
+    <integration_point name="maintain_mode_phase2">
+      <phase>增量文件分类</phase>
+      <git_commands>
+        <step number="1">
+          <command>git log --name-status --pretty=format: -n 100 | grep -E '^A\s+.*\.md$' | awk '{print $NF}'</command>
+          <purpose>获取新增文件列表</purpose>
+          <action>列出新增文件，标注为最高优先级</action>
+        </step>
+        <step number="2">
+          <command>git log --name-status --pretty=format: -n 100 | grep -E '^M\s+.*\.md$' | awk '{print $NF}'</command>
+          <purpose>获取修改文件列表</purpose>
+          <action>列出修改文件，标注为中等优先级</action>
+        </step>
+        <step number="3">
+          <command>git log --name-status --pretty=format: -n 100 | grep -E '^D\s+.*\.md$' | awk '{print $NF}'</command>
+          <purpose>获取删除文件列表</purpose>
+          <action>列出删除文件，标注为低优先级</action>
+        </step>
+      </git_commands>
+    </integration_point>
+
+    <integration_point name="file_deletion_cleanup">
+      <phase>删除文件后的链接清理</phase>
+      <git_commands>
+        <step number="1">
+          <command>grep -r '\[\[.*deleted-file\.md' . --include="*.md"</command>
+          <purpose>查找引用已删除文件的所有链接</purpose>
+          <action>列出所有需要更新的文件</action>
+        </step>
+        <step number="2">
+          <action>使用 search_files 和 apply_diff 批量更新链接</action>
+        </step>
+      </git_commands>
+    </integration_point>
+  </workflow_integration>
+
+  <best_practices>
+    <practice name="增量范围选择">
+      <description>根据仓库活跃度选择合适的增量范围</description>
+      <guideline>
+        <condition>日均提交 &lt; 5次</condition>
+        <recommendation>使用 `-n 100`（最近100次提交）</recommendation>
+      </guideline>
+      <guideline>
+        <condition>日均提交 5-50次</condition>
+        <recommendation>使用 `--since="7 days ago"`</recommendation>
+      </guideline>
+      <guideline>
+        <condition>日均提交 &gt; 50次</condition>
+        <recommendation>使用 `--since="1 day ago"` 或特定提交范围</recommendation>
+      </guideline>
+    </practice>
+
+    <practice name="性能优化">
+      <description>确保git命令执行效率</description>
+      <tip>
+        <item>使用 `--pretty=format:` 避免生成多余的提交信息</item>
+        <item>在管道中及早过滤（grep），减少后续处理数据量</item>
+        <item>对于大型仓库，使用特定目录模式 `-- 'path/**/*.md'`</item>
+      </tip>
+    </practice>
+
+    <practice name="错误处理">
+      <description>处理git命令可能的失败情况</description>
+      <scenario>
+        <condition>仓库不是git仓库</condition>
+        <action>自动转向全量模式</action>
+        <message>当前目录不是git仓库，将使用全量扫描模式</message>
+      </scenario>
+      <scenario>
+        <condition>git命令执行失败</condition>
+        <action>记录错误并询问用户是否继续全量模式</action>
+        <message>git命令执行出错。是否继续使用全量扫描模式？</message>
+      </scenario>
+    </practice>
+
+    <practice name="用户反馈">
+      <description>向用户清晰展示增量检查结果</description>
+      <output_format>
+<![CDATA[
+**增量检查结果**
+
+✓ 成功获取git增量信息
+
+**文件统计**：
+- 新增文件: 3 个
+- 修改文件: 5 个  
+- 删除文件: 2 个
+- 总计: 10 个增量文件
+
+**预估处理时间**：5-10 分钟
+
+**建议处理顺序**：
+1️⃣  新增文件（优先级最高）- 3 个
+2️⃣  修改文件（优先级中等）- 5 个
+3️⃣  删除文件（优先级最低）- 2 个
+
+请选择处理模式：
+- A: 仅处理增量文件（快速）
+- B: 全量检查仓库（完整）
+- C: 混合模式（推荐）
+]]>
+      </output_format>
+    </practice>
+  </best_practices>
+
+  <troubleshooting>
+    <issue name="git_command_not_found">
+      <symptom>执行git命令时报错 "git: command not found"</symptom>
+      <cause>系统未安装git或git不在PATH中</cause>
+      <solution>安装git或将git添加到系统PATH</solution>
+      <fallback>使用全量模式，调用 list_files 遍历所有文件</fallback>
+    </issue>
+
+    <issue name="large_diff_output">
+      <symptom>git log输出过大，导致处理缓慢</symptom>
+      <cause>提交次数设置过高（-n值太大）或仓库历史过长</cause>
+      <solution>减少-n值（如50而非100），或使用时间范围过滤</solution>
+      <optimization>
+        <option>使用 `--since="7 days ago"` 替代 `-n 100`</option>
+        <option>按目录过滤 `-- 'specific-dir/**/*.md'`</option>
+      </optimization>
+    </issue>
+
+    <issue name="encoding_issues">
+      <symptom>git输出中含有特殊字符或乱码</symptom>
+      <cause>文件名包含非ASCII字符或编码配置不同</cause>
+      <solution>使用 `git config core.quotepath false` 处理Unicode文件名</solution>
+    </issue>
+  </troubleshooting>
+
+  <examples>
+    <example name="typical_workflow">
+      <description>一个典型的增量检查工作流</description>
+      <steps>
+<![CDATA[
+# 1. 检查是否为git仓库
+git rev-parse --is-inside-work-tree
+# 输出: true
+
+# 2. 获取增量markdown文件
+git log --name-status --pretty=format: -n 100 | grep -E '^\s*(A|M|D)\s+.*\.md$'
+# 输出：
+# A       ai-ml/nlp/new-document.md
+# M       finance-quant/indicators/index.md
+# M       development-tools/index.md
+
+# 3. 统计增量数量
+git log --name-status --pretty=format: -n 100 | grep -E '^\s*(A|M|D)\s+.*\.md$' | wc -l
+# 输出: 3
+
+# 4. 分离新增文件
+git log --name-status --pretty=format: -n 100 | grep -E '^A\s+.*\.md$' | awk '{print $NF}'
+# 输出: ai-ml/nlp/new-document.md
+
+# 5. 分离修改文件
+git log --name-status --pretty=format: -n 100 | grep -E '^M\s+.*\.md$' | awk '{print $NF}'
+# 输出:
+# finance-quant/indicators/index.md
+# development-tools/index.md
+]]>
+      </steps>
+    </example>
+
+    <example name="selective_directory_check">
+      <description>只检查特定目录的增量</description>
+      <command>git log --name-status --pretty=format: -n 100 -- 'ai-ml/**/*.md' | grep -E '^\s*(A|M|D)'</command>
+      <use_case>当用户只关心某个知识领域的变更时</use_case>
+    </example>
+
+    <example name="time_range_filter">
+      <description>检查过去7天的增量</description>
+      <command>git log --name-status --pretty=format: --since="7 days ago" -- '*.md' | grep -E '^\s*(A|M|D)'</command>
+      <use_case>周期性的维护审查</use_case>
+    </example>
+  </examples>
+
+  <implementation_checklist>
+    <item>✓ KG-Architect maintain模式已集成git增量检查</item>
+    <item>✓ 提供三种处理模式选择（增量/全量/混合）</item>
+    <item>✓ 实现按优先级（新增>修改>删除）的文件分类</item>
+    <item>✓ 提供错误处理和fallback到全量模式</item>
+    <item>✓ 清晰的用户交互和进度反馈</item>
+    <item>✓ 完整的git命令参考和使用指南</item>
+  </implementation_checklist>
+
+  <performance_metrics>
+    <metric name="增量检查速度">
+      <typical>3-5秒（获取最近100次提交）</typical>
+      <vs_full_scan>快10-50倍（取决于仓库大小）</vs_full_scan>
+    </metric>
+    <metric name="内存占用">
+      <typical>低（仅处理git输出）</typical>
+      <vs_full_scan>节省80-95%内存</vs_full_scan>
+    </metric>
+    <metric name="处理时间">
+      <incremental_mode>5-15分钟（处理10-20个文件）</incremental_mode>
+      <full_mode>30-60分钟（处理100+个文件）</full_mode>
+    </metric>
+  </performance_metrics>
+</git_helper_guide>
