@@ -216,7 +216,14 @@ purpose/             # 一级：用途
         <change>修改文档正文内容</change>
         <change>删除用户写的内容</change>
         <change>重写文档结构（除非明确授权）</change>
+        <change>对目录执行文件读写操作（会导致EISDIR错误）</change>
       </forbidden_changes>
+      <file_safety_rules>
+        <rule>只对 .md 文件执行读写操作</rule>
+        <rule>验证路径不是目录（不以 / 或 \ 结尾）</rule>
+        <rule>使用 search_files 定位文件，再使用 read_file 读取</rule>
+        <rule>处理文件读取异常，避免程序崩溃</rule>
+      </file_safety_rules>
     </constraint>
 
     <constraint category="user_confirmation">

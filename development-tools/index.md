@@ -6,6 +6,14 @@ author: "System"
 date: 2025-12-12
 categories: ["development-tools"]
 is_index: true
+tags:
+  - development-tools
+  - ide-configuration
+  - environment-setup
+  - programming-languages
+  - build-systems
+  - docker
+  - devops
 ---
 
 # 开发工具

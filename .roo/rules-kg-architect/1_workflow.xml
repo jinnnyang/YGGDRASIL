@@ -46,6 +46,7 @@
           <description>分析现有文件结构和内容</description>
           <actions>
             <action>使用 list_files 递归遍历所有 .md 文件</action>
+            <action>过滤出实际文件，排除目录路径</action>
             <action>使用 read_file 提取现有 YAML 元数据</action>
             <action>分析文件名和路径模式，识别隐含的分类逻辑</action>
             <action>识别孤立文件（无明确归属）和命名不规范的文件</action>
@@ -53,9 +54,14 @@
           </actions>
           <tools>
             <tool>list_files - 获取文件树结构</tool>
-            <tool>read_file - 读取 YAML frontmatter</tool>
+            <tool>read_file - 读取 YAML frontmatter（仅限文件）</tool>
             <tool>search_files - 查找特定模式的文件</tool>
           </tools>
+          <safety_check>
+            <check>在执行 read_file 前验证路径是否为文件（以 .md 结尾且不是目录）</check>
+            <check>使用文件扩展名过滤确保只处理 .md 文件</check>
+            <check>排除目录路径，防止 EISDIR 错误</check>
+          </safety_check>
         </phase>
 
         <phase number="3" name="结构生成">
@@ -196,6 +202,7 @@ git log --name-status --pretty=format: -n 100
           <precondition>用户选择了增量模式或混合模式</precondition>
           <actions>
             <action>分类增量文件为：新增(A)、修改(M)、删除(D)</action>
+            <action>验证增量文件路径有效性（确保是文件而非目录）</action>
             <action>对每个增量文件读取其YAML元数据</action>
             <action>检查新增文件是否缺少元数据（优先级最高）</action>
             <action>检查修改文件的元数据变化</action>
@@ -203,9 +210,15 @@ git log --name-status --pretty=format: -n 100
             <action>生成优先级清单：新增>修改>删除</action>
           </actions>
           <tools>
-            <tool>read_file - 批量读取增量文件的YAML frontmatter</tool>
+            <tool>read_file - 批量读取增量文件的YAML frontmatter（仅限文件）</tool>
             <tool>search_files - 查找引用被删除文件的链接</tool>
           </tools>
+          <file_validation>
+            <check>过滤出有效的 .md 文件路径</check>
+            <check>排除目录路径（以 / 或 \ 结尾的路径）</check>
+            <check>验证文件存在性后再读取</check>
+            <check>处理文件读取异常，跳过无法访问的文件</check>
+          </file_validation>
           <output_format><![CDATA[
 **增量文件分析结果**
 
@@ -234,7 +247,7 @@ git log --name-status --pretty=format: -n 100
             <check category="元数据">
               <item>YAML frontmatter 缺失或不完整</item>
               <item>必填字段（title, slug, description, tags）缺失</item>
-              <item>tags 数组为空或标签数量不足（&lt;3个）</item>
+              <item>tags 数组为空或标签数量不足（<3个）</item>
               <item>tags 与 categories 重复</item>
               <item>tags 格式不符合 kebab-case</item>
               <item>categories 与实际路径不一致</item>
@@ -252,17 +265,23 @@ git log --name-status --pretty=format: -n 100
               <item>目录名使用缩写或晦涩词汇</item>
             </check>
             <check category="结构">
-              <item>目录层级过深（&gt;3层）</item>
-              <item>某目录下文件过多（&gt;20个）</item>
+              <item>目录层级过深（>3层）</item>
+              <item>某目录下文件过多（>20个）</item>
               <item>缺少 index.md 的目录</item>
               <item>孤立或空目录</item>
             </check>
           </checks>
           <tools>
             <tool>list_files - 遍历所有文件</tool>
-            <tool>read_file - 批量读取元数据</tool>
+            <tool>read_file - 批量读取元数据（仅限 .md 文件）</tool>
             <tool>search_files - 查找特定模式问题</tool>
           </tools>
+          <safety_measures>
+            <measure>文件过滤：只处理以 .md 结尾的文件</measure>
+            <measure>路径验证：确保路径不是目录（检查是否以 / 或 \ 结尾）</measure>
+            <measure>批量处理：使用 search_files 先定位文件，再 read_file 读取内容</measure>
+            <measure>错误处理：捕获并跳过无法读取的文件，继续处理其他文件</measure>
+          </safety_measures>
         </phase>
 
         <phase number="4" name="问题诊断">
@@ -339,6 +358,7 @@ git log --name-status --pretty=format: -n 100
           <actions>
             <action>按用户确认的方案逐步执行</action>
             <action>每次执行前再次确认高风险操作</action>
+            <action>验证目标路径为文件而非目录</action>
             <action>更新所有受影响的 index.md（包括添加tags）</action>
             <action>检查并修复文档间的链接</action>
             <action>生成变更日志记录所有调整</action>
@@ -347,7 +367,15 @@ git log --name-status --pretty=format: -n 100
             <measure>分批执行：先试点1-2个调整，验证无误后再批量处理</measure>
             <measure>备份提示：建议用户先提交 Git commit</measure>
             <measure>可逆性：记录所有变更，便于回滚</measure>
+            <measure>路径验证：确保所有文件操作针对的是文件而非目录</measure>
+            <measure>错误处理：捕获文件操作异常，提供详细错误信息</measure>
           </safety_measures>
+          <file_operation_rules>
+            <rule>只对 .md 文件执行读写操作</rule>
+            <rule>排除目录路径（以 / 或 \ 结尾）</rule>
+            <rule>使用 search_files 定位文件，再使用 read_file 读取</rule>
+            <rule>批量操作前先验证文件存在性</rule>
+          </file_operation_rules>
         </phase>
       </workflow>
     </mode>
@@ -359,15 +387,21 @@ git log --name-status --pretty=format: -n 100
         <phase number="1" name="内容分析">
           <description>理解文档主题和性质</description>
           <actions>
+            <action>验证文档路径是否为有效文件（以 .md 结尾）</action>
             <action>读取文档的 YAML frontmatter（如果已有）</action>
             <action>分析正文内容，提取关键词和核心主题</action>
             <action>识别知识领域（工程/AI/艺术/方法论等）</action>
             <action>判断文档类型（教程/参考/案例/理论）</action>
           </actions>
           <tools>
-            <tool>read_file - 读取文档内容</tool>
+            <tool>read_file - 读取文档内容（仅限文件）</tool>
             <tool>根据内容推断合适分类</tool>
           </tools>
+          <validation>
+            <check>确认文件存在且为 .md 文件</check>
+            <check>排除目录路径，防止 EISDIR 错误</check>
+            <check>处理文件读取异常，提供友好错误信息</check>
+          </validation>
         </phase>
 
         <phase number="2" name="匹配评估">

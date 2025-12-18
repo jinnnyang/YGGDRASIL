@@ -65,8 +65,8 @@ customModes:
     groups:
       - read
       - - edit
-        - fileRegex: (index\.md$|README\.md$|\.roomodes$|\.yaml$|^_.*\.md$|CHANGELOG\.md$)
-          description: Index files, READMEs, configuration files, CHANGELOG, and special markdown files (prefixed with _)
+        - fileRegex: (index\.md$|README\.md$|\.roomodes$|\.yaml$|^_.*\.md$|CHANGELOG\.md|(^[^._][^/]*/.*\.md$))
+          description: Index files, READMEs, configuration files, CHANGELOG, special markdown files (prefixed with _), and content documents under top-level knowledge directories (e.g. ai-ml/, development-tools/, inputs/)
       - command
       - mcp
     source: project

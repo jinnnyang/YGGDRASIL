@@ -7,6 +7,15 @@ date: 2025-12-12
 categories:
   - ai-ml
 is_index: true
+tags:
+  - artificial-intelligence
+  - machine-learning
+  - deep-learning
+  - nlp
+  - computer-vision
+  - neural-networks
+  - python
+  - pytorch
 ---
 
 # AI & Machine Learning
