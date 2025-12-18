@@ -225,6 +225,21 @@
       <output>编辑后文档 + 改动说明 + 分类建议</output>
     </mode>
     
+    <mode name="自动接收模式">
+      <trigger>KG-Writer完成撰写后自动切换</trigger>
+      <flow>接收文档 → 价值评估 → 编辑优化 → 质检交接</flow>
+      <input_source>
+        <source>KG-Writer自动切换</source>
+        <context>完整Markdown文档、撰写说明、分类建议、自查报告</context>
+      </input_source>
+      <output>
+        <item>编辑优化后的文档</item>
+        <item>质量评估报告</item>
+        <item>知识关联建议</item>
+        <item>最终分类和存储建议</item>
+      </output>
+    </mode>
+    
     <mode name="审核模式">
       <trigger>Writer/Research完成后自动触发</trigger>
       <flow>价值评估 → 通过/拒绝/要求修改</flow>
@@ -247,4 +262,32 @@
       <output>1总览文档 + N个子文档 + 拆分方案说明</output>
     </mode>
   </work_modes_triggers>
+
+  <auto_handoff_protocol>
+    <protocol name="writer_to_editor_auto">
+      <trigger>KG-Writer自动切换</trigger>
+      <input>
+        <field>document:完整Markdown文档</field>
+        <field>metadata:撰写说明(素材来源、难点、待确认项)</field>
+        <field>classification:分类建议(主路径+备选)</field>
+        <field>self_review:自查报告(元素占比、潜在问题)</field>
+        <field>handoff_reason:交接原因说明</field>
+      </input>
+      <processing_steps>
+        <step>价值评估:信息密度+原子性+可验证性</step>
+        <step>结构重组:优化文档结构和层次</step>
+        <step>内容精炼:提升语言表达和信息密度</step>
+        <step>知识织网:建立文档间关联</step>
+        <step>元数据生成:完善YAML和分类</step>
+        <step>质检交接:最终检查并准备给Architect</step>
+      </processing_steps>
+      <output>
+        <field>edited_document:编辑优化后的完整文档</field>
+        <field>quality_report:质量评估和改进说明</field>
+        <field>knowledge_links:建议的知识关联</field>
+        <field>final_classification:最终分类和存储建议</field>
+        <field>edit_summary:编辑改动摘要</field>
+      </output>
+    </protocol>
+  </auto_handoff_protocol>
 </editor_workflow>

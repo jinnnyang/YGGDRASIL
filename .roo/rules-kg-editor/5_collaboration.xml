@@ -7,32 +7,74 @@
   <writer_collaboration>
     <workflow>
       <title>Writer → Editor 交接流程</title>
-      <steps>
-        <step>
-          <action>Writer输出初稿Markdown</action>
-          <details>Writer完成内容创作，生成初稿</details>
-        </step>
-        <step>
-          <action>Editor接收评估</action>
-          <details>
-            <item>评估信息密度</item>
-            <item>检查是否为原子知识点</item>
-            <item>决定: 通过/拒绝/要求修改</item>
-          </details>
-        </step>
-        <step>
-          <action>反馈给Writer</action>
-          <details>
-            <item>通过: 进入编辑流程</item>
-            <item>拒绝: "信息密度不足，请补充..."</item>
-            <item>修改: "建议拆分为2个文档: A主题, B主题"</item>
-          </details>
-        </step>
-        <step>
-          <action>编辑完成</action>
-          <details>编辑完成后不再返回Writer，而是交给Architect</details>
-        </step>
-      </steps>
+      <variants>
+        <variant name="手动交接">
+          <steps>
+            <step>
+              <action>Writer输出初稿Markdown</action>
+              <details>Writer完成内容创作，生成初稿</details>
+            </step>
+            <step>
+              <action>Editor接收评估</action>
+              <details>
+                <item>评估信息密度</item>
+                <item>检查是否为原子知识点</item>
+                <item>决定: 通过/拒绝/要求修改</item>
+              </details>
+            </step>
+            <step>
+              <action>反馈给Writer</action>
+              <details>
+                <item>通过: 进入编辑流程</item>
+                <item>拒绝: "信息密度不足，请补充..."</item>
+                <item>修改: "建议拆分为2个文档: A主题, B主题"</item>
+              </details>
+            </step>
+            <step>
+              <action>编辑完成</action>
+              <details>编辑完成后不再返回Writer，而是交给Architect</details>
+            </step>
+          </steps>
+        </variant>
+        
+        <variant name="自动切换">
+          <trigger>KG-Writer完成撰写后自动切换</trigger>
+          <steps>
+            <step>
+              <action>接收自动切换</action>
+              <details>
+                <item>接收完整Markdown文档</item>
+                <item>接收撰写说明和分类建议</item>
+                <item>接收自查报告</item>
+                <item>理解交接原因</item>
+              </details>
+            </step>
+            <step>
+              <action>自动价值评估</action>
+              <details>
+                <item>信息密度评分</item>
+                <item>原子性检查</item>
+                <item>可验证性评估</item>
+                <item>决定是否进入编辑流程</item>
+              </details>
+            </step>
+            <step>
+              <action>执行编辑流程</action>
+              <details>
+                <item>结构重组</item>
+                <item>内容精炼</item>
+                <item>知识织网</item>
+                <item>元数据生成</item>
+                <item>质检交接</item>
+              </details>
+            </step>
+            <step>
+              <action>完成编辑</action>
+              <details>编辑完成后交给Architect确定最终存储位置</details>
+            </step>
+          </steps>
+        </variant>
+      </variants>
     </workflow>
 
     <communication_templates>
@@ -79,6 +121,28 @@
 2. {topic_2}: {brief_description_2}
 
 请确认是否按此建议拆分，或指定优先保留的主题。
+        ]]>
+      </template>
+      
+      <template name="自动切换接收">
+        <![CDATA[
+收到KG-Writer自动切换请求:
+
+### 文档信息
+- 标题: {title}
+- 撰写说明: {writing_notes}
+- 分类建议: {classification_suggestion}
+- 自查报告: {self_review_report}
+
+### 自动评估
+- 信息密度: {density_score}/10
+- 原子性: {atomicity_score}/10
+- 可验证性: {verifiability_score}/10
+
+### 处理方案
+{decision}: {action_details}
+
+{processing_plan}
         ]]>
       </template>
     </communication_templates>

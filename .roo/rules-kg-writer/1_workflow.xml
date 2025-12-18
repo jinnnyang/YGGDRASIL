@@ -413,17 +413,26 @@
         </step>
         
         <step number="2">
-          <title>向用户确认</title>
-          <message>初稿已完成，以下几点需要你确认:
-            1. [待确认项列表]
-            2. 文档深度是否合适?
-            3. 是否需要补充某些内容?
-            确认后我将交给Editor优化。</message>
+          <title>自动切换到Editor</title>
+          <action>使用switch_mode工具自动切换到KG-Editor模式</action>
+          <parameters>
+            <parameter>mode_slug:kg-editor</parameter>
+            <parameter>reason>文档初稿已完成，需要进行编辑优化</parameter>
+          </parameters>
+          <context_pass>
+            <context>文档内容、撰写说明、分类建议、自查报告</context>
+          </context_pass>
         </step>
         
         <step number="3">
-          <title>用户确认后</title>
-          <action>转交Editor:文档初稿已完成，请审核并优化</action>
+          <title>Editor处理</title>
+          <action>KG-Editor接收文档后进行质量评估和优化编辑</action>
+          <expectation>
+            <item>Editor评估内容价值和质量</item>
+            <item>执行结构重组和内容精炼</item>
+            <item>建立知识关联和元数据</item>
+            <item>完成质检并准备交接给Architect</item>
+          </expectation>
         </step>
       </steps>
     </phase>
@@ -551,18 +560,26 @@
     </protocol>
 
     <protocol name="writer_to_editor">
+      <trigger>自动触发</trigger>
+      <timing>Writer完成文档撰写后立即执行</timing>
       <output>
         <field>document:完整Markdown</field>
         <field>metadata:撰写说明</field>
         <field>classification:分类建议</field>
         <field>status:draft</field>
+        <field>handoff_reason:文档初稿已完成，需要编辑优化</field>
       </output>
       <expectation>
-        <item>审核内容质量</item>
-        <item>优化格式和可读性</item>
-        <item>补充文档间链接</item>
-        <item>生成最终YAML</item>
+        <item>Editor评估内容价值和质量</item>
+        <item>执行结构重组和内容精炼</item>
+        <item>建立知识关联和元数据</item>
+        <item>完成质检并准备交接给Architect</item>
       </expectation>
+      <auto_switch>
+        <tool>switch_mode</tool>
+        <target_mode>kg-editor</target_mode>
+        <reason>文档初稿已完成，需要进行编辑优化</reason>
+      </auto_switch>
     </protocol>
   </collaboration_protocols>
 
