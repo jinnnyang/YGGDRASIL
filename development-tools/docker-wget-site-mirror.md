@@ -2,7 +2,7 @@
 title: "使用 Docker + wget 爬取整个站点目录"
 slug: "docker-wget-site-mirror"
 description: "演示如何在 Docker 容器中使用 wget 递归爬取并镜像整个网站到本地目录。"
-author: "Unknown"
+author: "System"
 date: 2023-11-22
 categories:
   - development-tools

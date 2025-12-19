@@ -2,9 +2,18 @@
 title: Bash Shell短路运算符详解
 slug: bash-short-circuit-operators
 description: 深入解析Bash Shell中的短路运算符，包括逻辑与(&&)、逻辑或(||)的工作原理、语法用法、实际应用场景和最佳实践
+author: "System"
 date: 2025-12-18
-categories: ["development-tools", "shell-scripting"]
-tags: ["bash", "shell", "short-circuit", "operators", "scripting", "linux"]
+categories:
+  - development-tools
+  - shell-scripting
+tags:
+  - bash
+  - shell
+  - short-circuit
+  - operators
+  - scripting
+  - linux
 status: draft
 ---
 

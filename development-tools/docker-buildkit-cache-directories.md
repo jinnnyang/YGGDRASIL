@@ -1,3 +1,21 @@
+---
+title: "BuildKit 缓存挂载：常用缓存目录完整指南"
+slug: "docker-buildkit-cache-directories"
+description: "Docker BuildKit 缓存挂载使用说明，涵盖各语言常见缓存目录、示例与 CI 集成建议"
+author: "System"
+date: 2025-12-19
+categories:
+  - development-tools
+  - docker
+tags:
+  - docker
+  - buildkit
+  - cache
+  - build-cache
+  - ci-cd
+status: published
+---
+
 # BuildKit缓存挂载：常用缓存目录完整指南
 
 ## 概述

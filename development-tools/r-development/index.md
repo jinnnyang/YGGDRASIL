@@ -4,7 +4,15 @@ slug: "r-development"
 description: "R语言在各种开发环境中的配置指南，包括VSCode、RStudio等IDE的配置"
 author: "System"
 date: 2025-12-12
-categories: ["development-tools", "r-development"]
+categories:
+  - development-tools
+  - r-development
+tags:
+  - r-language
+  - development-environment
+  - vscode
+  - rstudio
+  - languageserver
 is_index: true
 ---
 
@@ -43,3 +51,5 @@ is_index: true
 
 ---
 *最后更新: 2025-12-12 | 维护者: Architect*
+
+[./vscode-r-development-environment-setup.md|VSCode配置R语言开发环境]: vscode-r-development-environment-setup.md "VSCode配置R语言开发环境完整指南"
