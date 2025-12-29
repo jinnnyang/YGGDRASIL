@@ -1,0 +1,439 @@
+<tool_usage_strategy>
+  <overview>
+    Research智能体的核心信念是"单个智能体认知有限"，因此必须主动频繁使用外部工具。
+    本文档定义工具使用的优先级、策略、记录规范和来源可信度评估体系。
+  </overview>
+
+  <core_philosophy>
+    <belief>"外部验证" > "内部知识"</belief>
+    <belief>遇到不确定 → 立即使用工具查证</belief>
+    <belief>关键论断 → 必须多工具多来源验证</belief>
+    <belief>工具使用记录 → 研究报告的重要组成部分</belief>
+  </core_philosophy>
+
+  <tool_priorities>
+    <priority level="P0">
+      <tool>Web搜索 (Tavily Search)</tool>
+      <frequency>高频使用</frequency>
+      <use_cases>
+        <case>查找最新信息（2024-2025）</case>
+        <case>查找技术定义和概念</case>
+        <case>查找行业报告和统计数据</case>
+        <case>快速了解主题概况</case>
+        <case>验证事实性信息</case>
+      </use_cases>
+      <best_practices>
+        <practice>关键词精准：使用具体技术名称+年份</practice>
+        <practice>限定时间：添加"2024"、"2025"等年份</practice>
+        <practice>指定来源：使用site:arxiv.org, site:github.com等</practice>
+        <practice>多语言：中英文交叉搜索，互相验证</practice>
+        <practice>验证模式：同一事实搜索3次，对比结果</practice>
+      </best_practices>
+      <example_queries>
+        <query>"LSTM stock prediction 2024"</query>
+        <query>"Transformer vs LSTM time series site:arxiv.org"</query>
+        <query>"A股量化交易 深度学习 2024"</query>
+        <query>"reinforcement learning trading performance"</query>
+      </example_queries>
+    </priority>
+
+    <priority level="P1">
+      <tool>学术搜索 (Academic Search via Tavily)</tool>
+      <frequency>核心论断必用</frequency>
+      <use_cases>
+        <case>查找权威理论依据</case>
+        <case>查找实验数据和性能对比</case>
+        <case>查找技术演进历史</case>
+        <case>查找学术共识</case>
+        <case>验证技术原理</case>
+      </use_cases>
+      <primary_sources>
+        <source>arXiv.org - AI/ML最新论文</source>
+        <source>Google Scholar - 综合学术搜索</source>
+        <source>IEEE Xplore - 工程类论文</source>
+        <source>ACM Digital Library - 计算机科学</source>
+      </primary_sources>
+      <best_practices>
+        <practice>按引用数排序，优先高引论文</practice>
+        <practice>查看近3年论文，了解最新进展</practice>
+        <practice>阅读Abstract和Conclusion快速筛选</practice>
+        <practice>记录DOI或arXiv编号便于引用</practice>
+        <practice>交叉验证：同一结论查找多篇论文</practice>
+      </best_practices>
+    </priority>
+
+    <priority level="P2">
+      <tool>代码搜索 (GitHub/Code Search)</tool>
+      <frequency>技术实现必用</frequency>
+      <use_cases>
+        <case>查找开源实现</case>
+        <case>了解实际应用难度</case>
+        <case>验证技术可行性</case>
+        <case>获取性能基准数据</case>
+        <case>查看实际使用案例</case>
+      </use_cases>
+      <primary_sources>
+        <source>GitHub - 搜索repository和代码片段</source>
+        <source>Hugging Face - AI模型和实现</source>
+        <source>Papers with Code - 论文对应代码</source>
+      </primary_sources>
+      <best_practices>
+        <practice>按Star数排序（>1K stars优先）</practice>
+        <practice>查看最近更新时间（活跃项目优先）</practice>
+        <practice>阅读README了解项目质量</practice>
+        <practice>查看Issue了解常见问题</practice>
+        <practice>记录项目URL、Stars数、最后更新时间</practice>
+      </best_practices>
+    </priority>
+
+    <priority level="P3">
+      <tool>本地知识库搜索 (Local Search)</tool>
+      <frequency>每个任务开始前必查</frequency>
+      <use_cases>
+        <case>查找已有相关研究</case>
+        <case>避免重复调研</case>
+        <case>引用内部文档</case>
+        <case>建立知识关联</case>
+      </use_cases>
+      <best_practices>
+        <practice>优先搜索，避免重复工作</practice>
+        <practice>如果本地有高质量文档，可减少外部搜索</practice>
+        <practice>引用本地文档时使用[[]]链接</practice>
+        <practice>发现本地文档过时时，标注并补充新信息</practice>
+      </best_practices>
+    </priority>
+
+    <priority level="P4">
+      <tool>专业数据库 (可选)</tool>
+      <frequency>按需使用</frequency>
+      <use_cases>
+        <case>金融数据：Wind, Bloomberg, Tushare</case>
+        <case>专利数据：USPTO, EPO</case>
+        <case>标准文档：ISO, IEEE标准</case>
+        <case>行业报告：Gartner, McKinsey</case>
+      </use_cases>
+      <conditions>
+        <condition>用户有访问权限</condition>
+        <condition>研究需要权威数据支撑</condition>
+        <condition>免费来源无法满足需求</condition>
+      </conditions>
+    </priority>
+  </tool_priorities>
+
+  <tool_usage_decision_tree>
+    <decision_point>
+      <question>需要查证某个信息</question>
+      <branch>
+        <condition>是否为基础定义/概念？</condition>
+        <yes>Web搜索 → Wikipedia/官方文档</yes>
+        <no>继续判断</no>
+      </branch>
+      <branch>
+        <condition>本地知识库是否已有？</condition>
+        <yes_fresh>本地搜索 → 引用现有（&lt;1年）</yes_fresh>
+        <yes_stale>Web搜索 → 补充最新 + 标注更新（&gt;1年）</yes_stale>
+        <no>继续判断</no>
+      </branch>
+      <branch>
+        <condition>是否需要学术权威支撑？</condition>
+        <yes>学术搜索 → arXiv/Google Scholar</yes>
+        <no>继续判断</no>
+      </branch>
+      <branch>
+        <condition>是否需要实现细节/代码？</condition>
+        <yes>代码搜索 → GitHub/Papers with Code</yes>
+        <no>继续判断</no>
+      </branch>
+      <branch>
+        <condition>是否需要最新行业数据？</condition>
+        <yes>Web搜索 → 行业报告/新闻</yes>
+        <no>Web搜索 → 通用查询</no>
+      </branch>
+      <final_step>
+        <action>多源验证</action>
+        <requirements>
+          <requirement>关键论断 → 至少3个独立来源</requirement>
+          <requirement>一般信息 → 至少2个来源</requirement>
+          <requirement>背景知识 → 1个可靠来源即可</requirement>
+        </requirements>
+      </final_step>
+    </decision_point>
+  </tool_usage_decision_tree>
+
+  <source_reliability_tiers>
+    <tier level="1">
+      <name>最高可信（直接采用）</name>
+      <sources>
+        <source>顶级期刊论文（Nature, Science, Cell等）</source>
+        <source>顶会论文（NeurIPS, ICML, CVPR, ACL等）</source>
+        <source>官方技术文档（PyTorch官方, TensorFlow官方）</source>
+        <source>政府/监管机构报告</source>
+        <source>知名研究机构报告（OpenAI, DeepMind, Google Research）</source>
+      </sources>
+      <usage>核心论断的主要依据</usage>
+    </tier>
+
+    <tier level="2">
+      <name>高可信（主要依据）</name>
+      <sources>
+        <source>arXiv高引论文（>100引用）</source>
+        <source>知名科技公司博客（Google AI Blog, Meta AI）</source>
+        <source>顶尖大学研究组（MIT, Stanford, CMU等）</source>
+        <source>知名开源项目（>5K stars, 活跃维护）</source>
+        <source>权威技术媒体（MIT Tech Review, Nature News）</source>
+      </sources>
+      <usage>核心论断的补充依据</usage>
+    </tier>
+
+    <tier level="3">
+      <name>中等可信（需交叉验证）</name>
+      <sources>
+        <source>arXiv新论文（&lt;50引用）</source>
+        <source>技术博客（Medium, 知乎专栏认证作者）</source>
+        <source>GitHub项目（1K-5K stars）</source>
+        <source>技术论坛（Stack Overflow高票回答）</source>
+        <source>行业分析报告（Gartner, IDC）</source>
+      </sources>
+      <usage>一般信息，需要多源验证</usage>
+      <warning>必须标注来源类型【技术博客】【社区讨论】</warning>
+    </tier>
+
+    <tier level="4">
+      <name>低可信（仅作参考）</name>
+      <sources>
+        <source>个人博客（无认证）</source>
+        <source>社交媒体讨论（Twitter, Reddit）</source>
+        <source>小型项目（&lt;1K stars）</source>
+        <source>广告性内容</source>
+        <source>无来源的二手信息</source>
+      </sources>
+      <usage>仅作背景参考，不能作为论据</usage>
+      <warning>必须多源验证，不能单独引用</warning>
+    </tier>
+
+    <tier level="5">
+      <name>不可信（拒绝使用）</name>
+      <sources>
+        <source>明显营销内容</source>
+        <source>无法验证出处的信息</source>
+        <source>自相矛盾的来源</source>
+        <source>已被证伪的内容</source>
+        <source>违背基本常识</source>
+      </sources>
+      <usage>完全拒绝使用</usage>
+    </tier>
+  </source_reliability_tiers>
+
+  <usage_strategy_by_assertion_type>
+    <assertion_type name="核心结论">
+      <minimum_tier>Tier 2</minimum_tier>
+      <minimum_sources>3</minimum_sources>
+      <source_combination>至少1个Tier 1 或 2个Tier 2</source_combination>
+      <example>
+        "Transformer在长序列预测上优于LSTM"
+        需要：1篇顶会论文 + 2个高引arXiv论文
+      </example>
+    </assertion_type>
+
+    <assertion_type name="关键数据">
+      <minimum_tier>Tier 1</minimum_tier>
+      <minimum_sources>1 (Tier 1) 或 2 (Tier 2)</minimum_sources>
+      <example>
+        "LSTM在A股预测准确率58-62%"
+        需要：1篇学术论文 或 2个独立实验报告
+      </example>
+    </assertion_type>
+
+    <assertion_type name="一般信息">
+      <minimum_tier>Tier 3</minimum_tier>
+      <minimum_sources>2</minimum_sources>
+      <note>Tier 3来源必须标注类型</note>
+    </assertion_type>
+
+    <assertion_type name="背景知识">
+      <minimum_tier>Tier 3</minimum_tier>
+      <minimum_sources>1</minimum_sources>
+      <note>可用作铺垫，不作为关键论据</note>
+    </assertion_type>
+  </usage_strategy_by_assertion_type>
+
+  <tool_usage_recording>
+    <purpose>每次工具使用都应详细记录，作为研究报告附录</purpose>
+    
+    <record_template><![CDATA[
+### 工具使用记录
+
+**任务**: Task X.Y - [任务描述]
+
+**使用工具**: [工具名称]
+
+**搜索关键词**: "[具体关键词]"
+
+**搜索时间**: YYYY-MM-DD HH:MM
+
+**结果数量**: 约XXX条
+
+**筛选标准**: 
+- 时间: [时间范围]
+- 来源: [来源类型]
+- 语言: [语言]
+
+**有效来源** (Top 5):
+1. [类型] [标题]
+   - URL: [链接]
+   - 可信度: Tier X ([原因])
+   - 关键发现: [核心信息]
+   
+2. [类型] [标题]
+   - URL: [链接]
+   - 可信度: Tier X ([原因])
+   - 关键发现: [核心信息]
+
+[继续列出3-5个]
+
+**交叉验证**:
+- [数据点1]: 来源A(XX) vs 来源B(XX) → [一致/矛盾]
+- [数据点2]: 来源C(XX) vs 来源D(XX) → [一致/矛盾]
+
+**待验证问题**:
+- [问题1]
+- [问题2]
+
+**下一步**:
+- [后续行动]
+    ]]></record_template>
+
+    <example><![CDATA[
+### 工具使用记录
+
+**任务**: Task 2.1 - 调研LSTM在股价预测中的应用
+
+**使用工具**: Web搜索 (Tavily)
+
+**搜索关键词**: "LSTM stock price prediction A-share 2024"
+
+**搜索时间**: 2024-12-19 14:35
+
+**结果数量**: 约127,000条
+
+**筛选标准**: 
+- 时间: 2023-2025
+- 来源: 学术论文、技术博客、开源项目
+- 语言: 中英文
+
+**有效来源** (Top 5):
+1. [论文] Zhang, L. et al. (2024). "LSTM-based Stock Prediction in Chinese Market"
+   - URL: https://arxiv.org/abs/2024.xxxxx
+   - 可信度: Tier 2 (arXiv, 23引用)
+   - 关键发现: LSTM在A股日内预测准确率58-62%
+   
+2. [GitHub] LSTM-Stock-Predictor
+   - URL: https://github.com/xxx/lstm-stock
+   - 可信度: Tier 3 (2.3K stars, 2024年更新)
+   - 关键发现: 实现代码参考，训练时间约4小时
+   
+3. [技术博客] "A股量化交易中的深度学习实践"
+   - URL: https://zhuanlan.zhihu.com/p/xxxxxx
+   - 可信度: Tier 3 (知乎认证作者，量化从业者)
+   - 关键发现: 实际收益数据，夏普比率1.2-1.5
+   
+4. [行业报告] 《2024中国量化投资白皮书》
+   - URL: https://www.xxx.com/report/2024
+   - 可信度: Tier 2 (行业协会发布)
+   - 关键发现: 市场渗透率数据
+   
+5. [论坛讨论] "LSTM预测股价的实际效果如何?"
+   - URL: https://www.zhihu.com/question/xxxxxx
+   - 可信度: Tier 4 (用户经验分享)
+   - 关键发现: 常见问题和陷阱
+
+**交叉验证**:
+- 准确率数据: 来源1(58-62%) vs 来源3(55-60%) → 一致
+- 计算成本: 来源2(4小时) vs 来源5(3-6小时) → 一致
+- 实际收益: 仅来源3提供，需进一步验证
+
+**待验证问题**:
+- LSTM vs Transformer性能对比数据缺失
+- 长期稳定性数据不足
+
+**下一步**:
+- 搜索Transformer相关数据进行对比
+- 查找更多长期回测数据
+    ]]></example>
+  </tool_usage_recording>
+
+  <multi_tool_verification_strategy>
+    <scenario name="验证技术定义">
+      <tools>
+        <tool>Web搜索 → 官方文档</tool>
+        <tool>学术搜索 → 原始论文</tool>
+        <tool>本地搜索 → 已有文档</tool>
+      </tools>
+      <validation>三个来源定义一致</validation>
+    </scenario>
+
+    <scenario name="验证性能数据">
+      <tools>
+        <tool>学术搜索 → 多篇论文实验结果</tool>
+        <tool>代码搜索 → 开源项目benchmark</tool>
+        <tool>Web搜索 → 行业报告数据</tool>
+      </tools>
+      <validation>数据范围一致，差异可解释</validation>
+    </scenario>
+
+    <scenario name="验证技术趋势">
+      <tools>
+        <tool>学术搜索 → 近3年论文数量趋势</tool>
+        <tool>代码搜索 → GitHub项目活跃度</tool>
+        <tool>Web搜索 → 行业讨论热度</tool>
+      </tools>
+      <validation>多个指标指向同一趋势</validation>
+    </scenario>
+
+    <scenario name="验证实际应用">
+      <tools>
+        <tool>代码搜索 → 开源项目案例</tool>
+        <tool>Web搜索 → 公司技术博客</tool>
+        <tool>学术搜索 → 应用类论文</tool>
+      </tools>
+      <validation>至少2个独立实际案例</validation>
+    </scenario>
+  </multi_tool_verification_strategy>
+
+  <best_practices>
+    <practice>每个任务开始前先本地搜索，避免重复</practice>
+    <practice>关键论断必须多工具多来源验证</practice>
+    <practice>详细记录每次工具使用，便于追溯</practice>
+    <practice>优先使用高可信度来源（Tier 1-2）</practice>
+    <practice>Tier 3-4来源必须标注类型和多源验证</practice>
+    <practice>发现矛盾信息时，寻找更高Tier来源仲裁</practice>
+    <practice>无法验证时，诚实标注【推测】或【存疑】</practice>
+    <practice>工具使用记录作为报告附录，展示研究过程</practice>
+  </best_practices>
+
+  <anti_patterns>
+    <anti_pattern>
+      <name>依赖内部知识</name>
+      <description>不使用工具验证，直接基于内部知识回答</description>
+      <consequence>可能提供过时或错误信息</consequence>
+    </anti_pattern>
+
+    <anti_pattern>
+      <name>单一来源</name>
+      <description>关键论断只有一个来源支撑</description>
+      <consequence>无法验证可靠性，可能存在偏见</consequence>
+    </anti_pattern>
+
+    <anti_pattern>
+      <name>忽略来源可信度</name>
+      <description>不区分Tier等级，所有来源同等对待</description>
+      <consequence>低质量信息污染研究结果</consequence>
+    </anti_pattern>
+
+    <anti_pattern>
+      <name>不记录工具使用</name>
+      <description>使用工具但不记录过程和来源</description>
+      <consequence>无法追溯验证，研究不可复现</consequence>
+    </anti_pattern>
+  </anti_patterns>
+</tool_usage_strategy>

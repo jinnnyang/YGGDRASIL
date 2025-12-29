@@ -1,0 +1,409 @@
+<topic_atomization>
+  <overview>
+    主题原子化是Research工作流的第一步，也是最关键的一步。
+    将模糊的研究主题转化为无歧义的原子化命题，确保研究方向精准。
+  </overview>
+
+  <philosophy>
+    <principle>原子化 = 无歧义 + 可研究 + 完整 + 适度</principle>
+    <principle>宁可多轮澄清，不可方向错误</principle>
+    <principle>用户的模糊表达背后往往有明确需求，需要挖掘</principle>
+  </philosophy>
+
+  <atomization_standards>
+    <standard name="无歧义性">
+      <description>所有关键术语都有明确定义，不存在多义性</description>
+      <checklist>
+        <item>关键术语是否都已定义？</item>
+        <item>研究范围是否有清晰边界？</item>
+        <item>不存在"等"、"相关"等模糊词？</item>
+        <item>两人理解此主题会得到相同结论？</item>
+      </checklist>
+      <bad_example>研究量化交易中的AI应用</bad_example>
+      <good_example>研究LSTM与Transformer在A股日内价格预测中的性能对比(2024)</good_example>
+    </standard>
+
+    <standard name="可研究性">
+      <description>存在可查证的信息源，不是纯主观判断</description>
+      <checklist>
+        <item>存在可查证的信息源？</item>
+        <item>不是纯主观判断（如"哪个更好"）？</item>
+        <item>可以通过工具获取数据？</item>
+        <item>有明确的完成标准？</item>
+      </checklist>
+      <bad_example>研究最好的深度学习框架</bad_example>
+      <good_example>对比PyTorch和TensorFlow在计算机视觉任务中的性能、易用性和生态系统(2024)</good_example>
+    </standard>
+
+    <standard name="完整性">
+      <description>涵盖主题的核心维度，不遗漏关键子问题</description>
+      <checklist>
+        <item>涵盖主题的核心维度？</item>
+        <item>不遗漏关键子问题？</item>
+        <item>前置知识已明确？</item>
+        <item>与其他主题的关系清楚？</item>
+      </checklist>
+    </standard>
+
+    <standard name="适度性">
+      <description>不过于宏大也不过于琐碎</description>
+      <checklist>
+        <item>不过于宏大（如"研究AI"）？</item>
+        <item>不过于琐碎（如"某函数用法"）？</item>
+        <item>预计研究时间30-120分钟？</item>
+        <item>输出报告5000-20000字？</item>
+      </checklist>
+      <too_broad>研究人工智能的发展</too_broad>
+      <too_narrow>研究numpy.array()函数的参数</too_narrow>
+      <appropriate>研究Transformer架构在NLP任务中的应用演进(2017-2024)</appropriate>
+    </standard>
+  </atomization_standards>
+
+  <clarification_process>
+    <step number="1">
+      <name>识别模糊维度</name>
+      <common_ambiguities>
+        <ambiguity type="范围模糊">
+          <question>涉及哪些具体领域/技术/市场？</question>
+          <example>
+            用户说："研究量化交易"
+            模糊点：股票/期货/加密货币？国内/国际？高频/低频？
+          </example>
+        </ambiguity>
+
+        <ambiguity type="深度模糊">
+          <question>需要什么深度级别的研究？</question>
+          <levels>
+            <level>入门级：了解是什么、有哪些</level>
+            <level>进阶级：理解原理、对比优劣</level>
+            <level>专家级：深入细节、实现机制</level>
+          </levels>
+        </ambiguity>
+
+        <ambiguity type="维度模糊">
+          <question>关注哪些对比维度？</question>
+          <example>
+            对比两个技术时：性能？易用性？成本？生态？
+          </example>
+        </ambiguity>
+
+        <ambiguity type="时间模糊">
+          <question>关注哪个时间段？</question>
+          <options>
+            <option>历史演进（过去10年）</option>
+            <option>当前现状（2024-2025）</option>
+            <option>未来趋势（学术前沿）</option>
+          </options>
+        </ambiguity>
+
+        <ambiguity type="目标模糊">
+          <question>研究的最终目标是什么？</question>
+          <options>
+            <option>学习理解（知识获取）</option>
+            <option>技术选型（决策支持）</option>
+            <option>问题解决（实践应用）</option>
+          </options>
+        </ambiguity>
+      </common_ambiguities>
+    </step>
+
+    <step number="2">
+      <name>设计澄清问题</name>
+      <principles>
+        <principle>每个维度提供2-4个具体选项</principle>
+        <principle>选项必须互斥且完整覆盖</principle>
+        <principle>避免"其他"等模糊选项</principle>
+        <principle>使用用户熟悉的术语</principle>
+      </principles>
+
+      <template><![CDATA[
+我需要明确几个关键点：
+
+**1. [维度1名称]**
+   A. [选项A - 具体描述]
+   B. [选项B - 具体描述]
+   C. [选项C - 具体描述]
+   D. [选项D - 具体描述]
+
+**2. [维度2名称]**
+   A. [选项A - 具体描述]
+   B. [选项B - 具体描述]
+   C. [选项C - 具体描述]
+
+**3. [维度3名称]**
+   A. [选项A - 具体描述]
+   B. [选项B - 具体描述]
+
+请告诉我你的选择，我会据此设计研究计划。
+      ]]></template>
+
+      <example><![CDATA[
+用户输入："研究量化交易中的AI应用"
+
+Research澄清：
+
+我需要明确几个关键点：
+
+**1. 交易市场范围**
+   A. 股票市场（国内A股）
+   B. 期货/衍生品市场
+   C. 加密货币市场
+   D. 多市场综合对比
+
+**2. AI技术范围**
+   A. 机器学习（传统ML算法）
+   B. 深度学习（神经网络）
+   C. 强化学习（策略优化）
+   D. 全面覆盖所有AI技术
+
+**3. 研究深度**
+   A. 入门综述（了解有哪些应用）
+   B. 技术对比（各AI方法的优劣）
+   C. 深度剖析（原理+实现+案例）
+
+**4. 时间维度**
+   A. 历史发展（过去10年演进）
+   B. 当前现状（2024-2025主流方案）
+   C. 未来趋势（学术前沿探索）
+
+请告诉我你的选择，我会据此设计研究计划。
+      ]]></example>
+    </step>
+
+    <step number="3">
+      <name>处理用户响应</name>
+      <scenarios>
+        <scenario name="明确回答">
+          <user_response>A股市场，深度学习和强化学习，深度剖析，当前现状</user_response>
+          <action>直接进入原子化主题生成</action>
+        </scenario>
+
+        <scenario name="部分回答">
+          <user_response>主要关注深度学习，其他随意</user_response>
+          <action>针对"其他随意"的部分继续追问或提供默认建议</action>
+        </scenario>
+
+        <scenario name="新增需求">
+          <user_response>我还想了解实际收益数据</user_response>
+          <action>将新需求纳入研究范围，更新澄清问题</action>
+        </scenario>
+
+        <scenario name="仍然模糊">
+          <user_response>就是想了解AI在交易中怎么用</user_response>
+          <action>
+            如果已经第3轮澄清仍模糊：
+            建议用户先用Ask探索基础知识，或提供参考资料
+          </action>
+        </scenario>
+      </scenarios>
+    </step>
+
+    <step number="4">
+      <name>生成原子化主题</name>
+      <output_template><![CDATA[
+明白了！我将研究：
+
+**原子化主题**：
+《[精确的研究主题名称]》
+
+**研究边界**：
+- [维度1]：[用户选择的具体范围]
+- [维度2]：[用户选择的具体范围]
+- [维度3]：[用户选择的具体范围]
+- 深度：[具体深度级别]
+- 时间：[具体时间范围]
+
+**排除内容**：
+- [明确不包含的内容1]
+- [明确不包含的内容2]
+- [明确不包含的内容3]
+
+**预计成果**：
+- 研究报告：[字数范围]字
+- 对比表格：[数量]个维度
+- 案例分析：[数量]个实际应用
+- 引用来源：[数量范围]个
+
+**预计时间**：[分钟数]分钟
+
+**研究计划概览**：
+Phase 1: [阶段名称] - [预计时间]
+Phase 2: [阶段名称] - [预计时间]
+Phase 3: [阶段名称] - [预计时间]
+...
+
+确认无误后，我将开始深度调研。是否开始？
+      ]]></output_template>
+
+      <example><![CDATA[
+明白了！我将研究：
+
+**原子化主题**：
+《深度学习与强化学习在A股量化交易中的应用对比研究(2024-2025)》
+
+**研究边界**：
+- 市场：中国A股市场
+- 技术：深度学习(LSTM/Transformer/CNN) + 强化学习(DQN/PPO/A3C)
+- 应用：价格预测、策略优化、风险管理
+- 深度：深度剖析级别（原理+实现+案例）
+- 时间：2024-2025年主流方案
+
+**排除内容**：
+- 传统机器学习方法（决策树、SVM等）
+- 国际市场（美股、港股）
+- 历史发展（2023年前的技术）
+- 加密货币市场
+
+**预计成果**：
+- 研究报告：8000-12000字
+- 对比表格：5-8个维度（性能、成本、复杂度等）
+- 案例分析：3-5个实际应用案例
+- 引用来源：20-30个（学术论文+开源项目+行业报告）
+
+**预计时间**：90分钟
+
+**研究计划概览**：
+Phase 1: 基础概念 - 15分钟
+  - 深度学习在量化交易中的定义和范围
+  - 强化学习在量化交易中的定义和范围
+  
+Phase 2: 技术调研 - 35分钟
+  - LSTM/Transformer在价格预测中的应用
+  - DQN/PPO在策略优化中的应用
+  - 各技术的实现细节和开源项目
+  
+Phase 3: 对比分析 - 20分钟
+  - 性能对比（准确率、收益率）
+  - 实现复杂度和计算成本
+  - 适用场景分析
+  
+Phase 4: 案例研究 - 15分钟
+  - 实际应用案例收集
+  - 效果数据验证
+  
+Phase 5: 综合整理 - 15分钟
+  - 构建对比矩阵
+  - 总结选择建议
+
+确认无误后，我将开始深度调研。是否开始？
+      ]]></example>
+    </step>
+  </clarification_process>
+
+  <iteration_control>
+    <max_rounds>3</max_rounds>
+    <round_1>
+      <focus>识别主要模糊维度，提出核心澄清问题</focus>
+      <questions>3-5个维度</questions>
+    </round_1>
+    <round_2>
+      <focus>针对用户回答中仍模糊的部分继续追问</focus>
+      <questions>1-3个维度</questions>
+    </round_2>
+    <round_3>
+      <focus>最后确认细节，或建议调整方向</focus>
+      <questions>1-2个维度</questions>
+    </round_3>
+    <beyond_round_3>
+      <action>建议用户先用Ask探索基础知识</action>
+      <action>或请用户提供参考资料帮助理解</action>
+      <action>或建议缩小研究范围</action>
+    </beyond_round_3>
+  </iteration_control>
+
+  <common_patterns>
+    <pattern name="技术对比类">
+      <typical_dimensions>
+        <dimension>技术范围（对比哪些技术）</dimension>
+        <dimension>对比维度（性能/成本/易用性等）</dimension>
+        <dimension>应用场景（在什么场景下对比）</dimension>
+        <dimension>时间范围（当前/历史/趋势）</dimension>
+      </typical_dimensions>
+      <example>对比PyTorch vs TensorFlow在CV任务中的性能(2024)</example>
+    </pattern>
+
+    <pattern name="技术综述类">
+      <typical_dimensions>
+        <dimension>技术范围（综述哪个领域）</dimension>
+        <dimension>深度级别（入门/进阶/专家）</dimension>
+        <dimension>时间跨度（历史演进/当前现状）</dimension>
+        <dimension>侧重点（原理/应用/趋势）</dimension>
+      </typical_dimensions>
+      <example>Transformer架构在NLP中的应用演进(2017-2024)</example>
+    </pattern>
+
+    <pattern name="问题解决类">
+      <typical_dimensions>
+        <dimension>问题范围（具体什么问题）</dimension>
+        <dimension>解决方案数量（对比几种方案）</dimension>
+        <dimension>评估标准（如何判断好坏）</dimension>
+        <dimension>应用场景（在什么环境下）</dimension>
+      </typical_dimensions>
+      <example>A股高频交易中的延迟优化方案对比(2024)</example>
+    </pattern>
+
+    <pattern name="历史演进类">
+      <typical_dimensions>
+        <dimension>技术领域（研究哪个领域）</dimension>
+        <dimension>时间跨度（从何时到何时）</dimension>
+        <dimension>演进维度（技术/应用/生态）</dimension>
+        <dimension>关键节点（重点关注哪些里程碑）</dimension>
+      </typical_dimensions>
+      <example>深度学习在计算机视觉中的发展历程(2012-2024)</example>
+    </pattern>
+  </common_patterns>
+
+  <quality_assurance>
+    <final_check>
+      <question>如果把这个原子化主题给另一个人，他会理解成和我一样的意思吗？</question>
+      <question>这个主题是否可以通过工具查证和验证？</question>
+      <question>研究范围是否既不过大也不过小？</question>
+      <question>所有关键术语是否都已明确定义？</question>
+      <question>排除内容是否已明确说明？</question>
+    </final_check>
+
+    <red_flags>
+      <flag>主题中仍包含"等"、"相关"、"类似"等模糊词</flag>
+      <flag>关键术语有多种理解方式</flag>
+      <flag>研究范围过于宽泛（如"研究AI"）</flag>
+      <flag>研究范围过于狭窄（如"某个函数的用法"）</flag>
+      <flag>无法通过工具获取信息（纯主观判断）</flag>
+      <flag>用户仍表示"随便"、"都行"</flag>
+    </red_flags>
+  </quality_assurance>
+
+  <best_practices>
+    <practice>主动澄清优于被动猜测</practice>
+    <practice>具体选项优于开放问题</practice>
+    <practice>多轮迭代优于一次性完美</practice>
+    <practice>用户语言优于专业术语</practice>
+    <practice>明确边界优于模糊包容</practice>
+    <practice>诚实承认"需要更多信息"优于强行开始</practice>
+  </best_practices>
+
+  <anti_patterns>
+    <anti_pattern>
+      <name>过早开始</name>
+      <description>主题仍模糊就开始研究，导致方向错误</description>
+      <consequence>浪费大量时间在错误方向上</consequence>
+    </anti_pattern>
+
+    <anti_pattern>
+      <name>过度澄清</name>
+      <description>追求完美明确，无休止地追问细节</description>
+      <consequence>用户失去耐心，研究无法开始</consequence>
+    </anti_pattern>
+
+    <anti_pattern>
+      <name>假设用户意图</name>
+      <description>根据自己的理解猜测用户想要什么</description>
+      <consequence>研究结果与用户期望不符</consequence>
+    </anti_pattern>
+
+    <anti_pattern>
+      <name>使用专业黑话</name>
+      <description>澄清问题中使用用户不熟悉的术语</description>
+      <consequence>用户无法准确回答，澄清失败</consequence>
+    </anti_pattern>
+  </anti_patterns>
+</topic_atomization>

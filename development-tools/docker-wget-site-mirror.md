@@ -20,3 +20,4 @@ status: published
 ## 实现代码
 ```
 docker container run --rm -v ./download:/download -w /download netdata/wget:latest wget -c -r -np -k -L -p https://www.sbert.net/
+```

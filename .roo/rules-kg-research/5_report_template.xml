@@ -1,0 +1,590 @@
+<report_generation_standards>
+  <overview>
+    Research智能体的最终输出是一份5000-20000字的深度研究报告。
+    本文档定义报告的标准结构、引用规范、质量指标和生成流程。
+  </overview>
+
+  <report_structure>
+    <section number="1">
+      <name>执行摘要 (Executive Summary)</name>
+      <purpose>快速传达研究核心内容</purpose>
+      <length>200-400字</length>
+      <components>
+        <component>
+          <name>研究目的</name>
+          <content>一段话说明为什么要研究这个主题</content>
+        </component>
+        <component>
+          <name>核心发现</name>
+          <content>3-5条，每条一句话的关键发现</content>
+          <format>编号列表，突出重点</format>
+        </component>
+        <component>
+          <name>主要结论</name>
+          <content>2-3句话总结最终结论</content>
+        </component>
+      </components>
+      <template><![CDATA[
+## 执行摘要 (Executive Summary)
+
+**研究目的**  
+[一段话说明为什么要研究这个主题]
+
+**核心发现** (3-5条，每条一句话)
+1. [发现1]
+2. [发现2]
+3. [发现3]
+
+**主要结论**  
+[2-3句话总结最终结论]
+      ]]></template>
+    </section>
+
+    <section number="2">
+      <name>目录 (Table of Contents)</name>
+      <purpose>提供报告导航</purpose>
+      <auto_generate>使用Markdown标题自动生成</auto_generate>
+    </section>
+
+    <section number="3">
+      <name>研究方法 (Methodology)</name>
+      <purpose>说明研究过程的透明度和可复现性</purpose>
+      <length>300-500字</length>
+      <subsections>
+        <subsection>
+          <name>研究范围与边界</name>
+          <content>
+            - 包含内容：明确列出研究范围
+            - 排除内容：明确列出不包含的内容
+            - 研究深度：入门/进阶/专家级别
+          </content>
+        </subsection>
+        <subsection>
+          <name>信息来源</name>
+          <content>
+            表格形式展示：
+            - 来源类型（学术论文/技术文档/行业报告等）
+            - 数量
+            - 主要平台
+          </content>
+        </subsection>
+        <subsection>
+          <name>研究时间线</name>
+          <content>
+            - 任务分解：日期
+            - 信息收集：日期范围
+            - 交叉验证：日期范围
+            - 报告撰写：日期范围
+            - 总计耗时：XX小时
+          </content>
+        </subsection>
+        <subsection>
+          <name>质量保障</name>
+          <content>
+            - 多源验证率：XX%
+            - 核心论断验证级别：L3（三源验证）
+            - Tier 1-2来源占比：XX%
+          </content>
+        </subsection>
+      </subsections>
+    </section>
+
+    <section number="4">
+      <name>背景与动机 (Background)</name>
+      <purpose>为读者提供必要的上下文</purpose>
+      <length>500-800字</length>
+      <subsections>
+        <subsection>
+          <name>研究背景</name>
+          <content>2-3段，说明主题的大背景</content>
+        </subsection>
+        <subsection>
+          <name>研究动机</name>
+          <content>为什么需要研究这个主题</content>
+        </subsection>
+        <subsection>
+          <name>前置知识</name>
+          <content>
+            阅读本报告需要了解的概念，使用[[]]链接
+          </content>
+        </subsection>
+      </subsections>
+    </section>
+
+    <section number="5">
+      <name>详细发现 (Detailed Findings)</name>
+      <purpose>报告的核心内容，深度阐述研究发现</purpose>
+      <length>3000-10000字</length>
+      <structure>
+        按子主题组织，每个子主题包含：
+        - 核心概念（定义+来源）
+        - 关键特性（列表+引用）
+        - 技术原理（深入解释+公式/图表）
+        - 实际应用（应用场景+案例）
+      </structure>
+      <subsection_template><![CDATA[
+### 3.1 [子主题1]
+
+#### 3.1.1 核心概念
+[段落阐述 + 定义]
+
+> **定义**: [精确定义]  
+> **来源**: [1][2]
+
+#### 3.1.2 关键特性
+- **特性A**: [描述] [3]
+- **特性B**: [描述] [4]
+
+#### 3.1.3 技术原理
+[深入解释，配公式/图表]
+
+$$
+[关键公式]
+$$
+
+**说明**: [公式含义] [5]
+
+#### 3.1.4 实际应用
+[应用场景 + 案例] [6][7]
+      ]]></subsection_template>
+    </section>
+
+    <section number="6">
+      <name>对比分析 (Comparative Analysis)</name>
+      <purpose>多维度对比不同方案/技术</purpose>
+      <length>1000-2000字</length>
+      <components>
+        <component>
+          <name>多维度对比表格</name>
+          <format>Markdown表格，包含数据来源列</format>
+          <dimensions>性能、成本、复杂度、适用场景等</dimensions>
+        </component>
+        <component>
+          <name>优劣势分析</name>
+          <format>每个方案的✅优势、❌劣势、🎯适用场景</format>
+        </component>
+        <component>
+          <name>选择矩阵</name>
+          <format>决策树或流程图（可选）</format>
+        </component>
+      </components>
+      <table_template><![CDATA[
+| 对比维度 | 方案A | 方案B | 方案C | 数据来源 |
+|---------|-------|-------|-------|---------|
+| 性能指标1 | XX | XX | XX | [8][9] |
+| 性能指标2 | XX | XX | XX | [10] |
+| 实现复杂度 | 高 | 中 | 低 | [11] |
+| 计算成本 | $$$ | $$ | $ | [12] |
+| 适用场景 | [描述] | [描述] | [描述] | [13] |
+      ]]></table_template>
+    </section>
+
+    <section number="7">
+      <name>案例研究 (Case Studies)</name>
+      <purpose>通过实际案例验证理论分析</purpose>
+      <length>800-1500字</length>
+      <case_count>3-5个案例</case_count>
+      <case_template><![CDATA[
+### 5.1 案例一: [案例名称]
+
+**背景**: [案例背景] [14]
+
+**技术方案**: [使用的技术]
+
+**关键数据**:
+- 数据量: XX
+- 训练时间: XX
+- 性能指标: XX
+
+**结果**: [实际效果] [15]
+
+**启示**: [从案例中学到什么]
+      ]]></case_template>
+    </section>
+
+    <section number="8">
+      <name>综合讨论 (Discussion)</name>
+      <purpose>深度分析和批判性思考</purpose>
+      <length>1000-2000字</length>
+      <subsections>
+        <subsection>
+          <name>关键洞察</name>
+          <content>
+            深度分析，每个洞察包含：
+            - 支撑证据
+            - 实践意义
+          </content>
+        </subsection>
+        <subsection>
+          <name>不同观点对比</name>
+          <content>
+            - 学术界观点
+            - 工业界观点
+            - 差异分析
+          </content>
+        </subsection>
+        <subsection>
+          <name>未解决的问题</name>
+          <content>列出研究中发现但无法解答的问题</content>
+        </subsection>
+        <subsection>
+          <name>研究局限性</name>
+          <content>诚实说明本研究的局限性</content>
+        </subsection>
+      </subsections>
+    </section>
+
+    <section number="9">
+      <name>结论与建议 (Conclusions & Recommendations)</name>
+      <purpose>提供可操作的结论和建议</purpose>
+      <length>500-800字</length>
+      <subsections>
+        <subsection>
+          <name>核心结论</name>
+          <content>
+            3-5条核心结论，每条都标注验证级别
+            【多源验证】【学术共识】等
+          </content>
+        </subsection>
+        <subsection>
+          <name>实践建议</name>
+          <content>
+            分类建议：
+            - 对于初学者
+            - 对于实践者
+            - 对于研究者
+          </content>
+        </subsection>
+        <subsection>
+          <name>未来研究方向</name>
+          <content>建议的后续研究方向</content>
+        </subsection>
+      </subsections>
+    </section>
+
+    <section number="10">
+      <name>参考文献 (References)</name>
+      <purpose>提供所有引用来源的完整信息</purpose>
+      <organization>按类别分组</organization>
+      <categories>
+        <category>学术论文</category>
+        <category>技术文档</category>
+        <category>行业报告</category>
+        <category>技术博客</category>
+        <category>开源项目</category>
+      </categories>
+    </section>
+
+    <section number="11">
+      <name>附录 (Appendix)</name>
+      <purpose>补充详细数据和说明</purpose>
+      <optional>true</optional>
+      <components>
+        <component>附录A: 详细数据表</component>
+        <component>附录B: 工具使用记录</component>
+        <component>附录C: 术语表</component>
+      </components>
+    </section>
+  </report_structure>
+
+  <citation_standards>
+    <inline_citation>
+      <format>行内引用</format>
+      <rules>
+        <rule>单一来源: "根据研究[1]，深度学习..."</rule>
+        <rule>多个来源: "多项研究表明[1][2][3]..."</rule>
+        <rule>页码引用: "如Smith所述[1, p.15]..."</rule>
+      </rules>
+    </inline_citation>
+
+    <reference_formats>
+      <format type="学术论文">
+        <template>
+          [N] Last, F., Last, F., &amp; Last, F. (Year). Title of paper. *Journal Name*, Volume(Issue), pages. DOI or URL
+        </template>
+        <example>
+          [1] Vaswani, A., Shazeer, N., Parmar, N., et al. (2017). Attention is all you need. *Advances in Neural Information Processing Systems*, 30, 5998-6008. [arXiv:1706.03762](https://arxiv.org/abs/1706.03762)
+        </example>
+      </format>
+
+      <format type="技术文档">
+        <template>
+          [N] Organization. (Year). *Document Title*. Retrieved from URL
+        </template>
+        <example>
+          [2] PyTorch Team. (2024). *PyTorch Documentation*. Retrieved from [https://pytorch.org/docs](https://pytorch.org/docs)
+        </example>
+      </format>
+
+      <format type="开源项目">
+        <template>
+          [N] Author/Organization. (Year). *Project Name* [Software]. GitHub. URL
+        </template>
+        <example>
+          [3] Hugging Face. (2024). *Transformers* [Software]. GitHub. [https://github.com/huggingface/transformers](https://github.com/huggingface/transformers)
+        </example>
+      </format>
+
+      <format type="技术博客">
+        <template>
+          [N] Author, F. (Year, Month Day). *Blog Post Title*. Platform Name. URL
+        </template>
+        <example>
+          [4] Zhang, L. (2024, Dec 15). *A股量化交易实践总结*. 知乎专栏. [https://zhuanlan.zhihu.com/p/xxxxxx](https://zhuanlan.zhihu.com/p/xxxxxx)
+        </example>
+      </format>
+
+      <format type="行业报告">
+        <template>
+          [N] Organization. (Year). *Report Title*. Retrieved from URL
+        </template>
+        <example>
+          [5] 中国证券投资基金业协会. (2024). *2024中国量化投资白皮书*. Retrieved from [http://www.amac.org.cn/xxx](http://www.amac.org.cn/xxx)
+        </example>
+      </format>
+    </reference_formats>
+
+    <citation_density>
+      <requirement>核心段落：每100字至少1个引用</requirement>
+      <requirement>一般段落：每200-300字至少1个引用</requirement>
+      <requirement>背景铺垫：可适当放宽</requirement>
+      <requirement>数据/结论：必须有引用</requirement>
+    </citation_density>
+
+    <citation_quality>
+      <requirement>优先引用Tier 1-2来源</requirement>
+      <requirement>关键论断必须引用≥Tier 2</requirement>
+      <requirement>Tier 3来源需标注【技术博客】【社区讨论】等</requirement>
+      <requirement>避免循环引用（A引用B，B又引用A）</requirement>
+    </citation_quality>
+  </citation_standards>
+
+  <quality_metrics>
+    <metric name="字数">
+      <minimum>5000</minimum>
+      <maximum>20000</maximum>
+      <optimal>8000-12000</optimal>
+    </metric>
+
+    <metric name="引用数">
+      <minimum>20</minimum>
+      <maximum>50</maximum>
+      <optimal>25-35</optimal>
+    </metric>
+
+    <metric name="多源验证率">
+      <minimum>80%</minimum>
+      <calculation>核心论断中L2+验证的比例</calculation>
+    </metric>
+
+    <metric name="Tier 1-2来源占比">
+      <minimum>60%</minimum>
+      <calculation>Tier 1-2来源数量 / 总引用数</calculation>
+    </metric>
+
+    <metric name="逻辑完整性">
+      <evaluation>自评通过闭环检查清单</evaluation>
+    </metric>
+
+    <metric name="可读性">
+      <evaluation>
+        - 段落长度适中（3-8句）
+        - 使用小标题分隔
+        - 关键信息使用列表
+        - 复杂概念配图表
+      </evaluation>
+    </metric>
+  </quality_metrics>
+
+  <generation_process>
+    <step number="1">
+      <name>收集整理素材</name>
+      <actions>
+        <action>汇总所有研究发现</action>
+        <action>整理引用来源清单</action>
+        <action>准备对比表格数据</action>
+        <action>筛选案例研究</action>
+      </actions>
+    </step>
+
+    <step number="2">
+      <name>构建报告框架</name>
+      <actions>
+        <action>确定章节结构</action>
+        <action>分配内容到各章节</action>
+        <action>规划字数分配</action>
+      </actions>
+    </step>
+
+    <step number="3">
+      <name>撰写核心内容</name>
+      <priority>
+        1. 详细发现（最重要）
+        2. 对比分析
+        3. 案例研究
+        4. 综合讨论
+      </priority>
+      <principle>先写核心，再写辅助</principle>
+    </step>
+
+    <step number="4">
+      <name>完善引用和标注</name>
+      <actions>
+        <action>为每个论断添加引用</action>
+        <action>标注验证级别</action>
+        <action>检查引用格式</action>
+        <action>生成参考文献列表</action>
+      </actions>
+    </step>
+
+    <step number="5">
+      <name>撰写摘要和结论</name>
+      <principle>最后写，因为需要全局视角</principle>
+      <actions>
+        <action>提炼核心发现</action>
+        <action>总结主要结论</action>
+        <action>提出实践建议</action>
+      </actions>
+    </step>
+
+    <step number="6">
+      <name>质量自检</name>
+      <checklist>
+        <item>字数是否在5000-20000范围？</item>
+        <item>引用数是否在20-50范围？</item>
+        <item>多源验证率是否>80%？</item>
+        <item>Tier 1-2占比是否>60%？</item>
+        <item>所有核心论断都有验证标签？</item>
+        <item>逻辑闭环检查通过？</item>
+        <item>研究局限性已说明？</item>
+        <item>参考文献格式统一？</item>
+      </checklist>
+    </step>
+
+    <step number="7">
+      <name>格式优化</name>
+      <actions>
+        <action>检查Markdown格式</action>
+        <action>优化表格呈现</action>
+        <action>添加必要的强调（粗体/引用块）</action>
+        <action>生成目录</action>
+      </actions>
+    </step>
+  </generation_process>
+
+  <writing_guidelines>
+    <guideline name="客观性">
+      <description>保持客观中立，避免主观判断</description>
+      <good>"实验数据显示准确率为60%【来源】"</good>
+      <bad>"这个方法非常好"</bad>
+    </guideline>
+
+    <guideline name="精确性">
+      <description>使用精确的数据和术语</description>
+      <good>"准确率提升3-5个百分点"</good>
+      <bad>"准确率有所提升"</bad>
+    </guideline>
+
+    <guideline name="可验证性">
+      <description>所有论断都可追溯验证</description>
+      <requirement>每个关键论断都有引用</requirement>
+    </guideline>
+
+    <guideline name="完整性">
+      <description>涵盖主题的核心维度</description>
+      <requirement>不遗漏关键子问题</requirement>
+    </guideline>
+
+    <guideline name="可读性">
+      <description>清晰易懂，逻辑流畅</description>
+      <techniques>
+        <technique>使用小标题分隔</technique>
+        <technique>关键信息使用列表</technique>
+        <technique>复杂概念配例子</technique>
+        <technique>段落长度适中</technique>
+      </techniques>
+    </guideline>
+
+    <guideline name="诚实性">
+      <description>诚实承认不知道和局限性</description>
+      <requirement>明确标注【推测】【存疑】【未找到证据】</requirement>
+    </guideline>
+  </writing_guidelines>
+
+  <formatting_standards>
+    <standard name="标题层级">
+      <h1>报告标题</h1>
+      <h2>主要章节（1. 2. 3.）</h2>
+      <h3>子章节（1.1 1.2）</h3>
+      <h4>细分内容（1.1.1 1.1.2）</h4>
+      <limit>最多4层，避免过深嵌套</limit>
+    </standard>
+
+    <standard name="列表使用">
+      <unordered>用于无序项目</unordered>
+      <ordered>用于步骤或优先级</ordered>
+      <nested>最多2层嵌套</nested>
+    </standard>
+
+    <standard name="表格格式">
+      <requirement>使用Markdown表格</requirement>
+      <requirement>包含表头</requirement>
+      <requirement>对齐方式一致</requirement>
+      <requirement>复杂表格考虑拆分</requirement>
+    </standard>
+
+    <standard name="代码块">
+      <usage>展示代码、公式、配置</usage>
+      <requirement>指定语言类型</requirement>
+      <example>```python</example>
+    </standard>
+
+    <standard name="引用块">
+      <usage>重要定义、关键结论</usage>
+      <format>&gt; 引用内容</format>
+    </standard>
+
+    <standard name="强调">
+      <bold>**关键术语**、**重要结论**</bold>
+      <italic>*次要强调*</italic>
+      <avoid>避免过度使用</avoid>
+    </standard>
+  </formatting_standards>
+
+  <best_practices>
+    <practice>先写核心内容，最后写摘要和结论</practice>
+    <practice>每个论断都有引用支撑</practice>
+    <practice>使用表格呈现对比数据</practice>
+    <practice>复杂概念配例子或图表</practice>
+    <practice>明确标注验证级别和可信度</practice>
+    <practice>诚实说明研究局限性</practice>
+    <practice>参考文献按类别分组</practice>
+    <practice>质量自检通过后再提交</practice>
+  </best_practices>
+
+  <anti_patterns>
+    <anti_pattern>
+      <name>缺少引用</name>
+      <description>关键论断没有来源支撑</description>
+      <consequence>无法验证可靠性</consequence>
+    </anti_pattern>
+
+    <anti_pattern>
+      <name>结构混乱</name>
+      <description>章节组织不合理，逻辑跳跃</description>
+      <consequence>难以阅读理解</consequence>
+    </anti_pattern>
+
+    <anti_pattern>
+      <name>过度简化</name>
+      <description>复杂问题简单化，缺少深度</description>
+      <consequence>不符合深度研究要求</consequence>
+    </anti_pattern>
+
+    <anti_pattern>
+      <name>隐藏局限性</name>
+      <description>不说明研究的局限性</description>
+      <consequence>误导用户，降低可信度</consequence>
+    </anti_pattern>
+  </anti_patterns>
+</report_generation_standards>

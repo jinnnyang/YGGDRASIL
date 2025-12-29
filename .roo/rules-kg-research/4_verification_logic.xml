@@ -1,0 +1,508 @@
+<verification_and_logic_closure>
+  <overview>
+    多源验证与逻辑闭环是Research智能体确保研究质量的核心机制。
+    通过多个独立来源交叉验证，构建完整的论证链，确保每个结论都有坚实的证据支撑。
+  </overview>
+
+  <core_principles>
+    <principle>多源印证 > 单一来源</principle>
+    <principle>逻辑闭环 > 碎片信息</principle>
+    <principle>诚实承认不知道 > 模糊猜测</principle>
+    <principle>证据链可追溯 > 结论正确</principle>
+  </core_principles>
+
+  <verification_levels>
+    <level name="L1">
+      <name>单源引用</name>
+      <applicable_to>仅用于背景信息</applicable_to>
+      <requirements>
+        <requirement>来源可信度≥Tier 3</requirement>
+        <requirement>非核心论断</requirement>
+        <requirement>通用背景知识</requirement>
+      </requirements>
+      <example>
+        "深度学习是机器学习的一个分支【维基百科】"
+      </example>
+      <risk>可能存在偏见或错误</risk>
+      <label>【单一来源】</label>
+    </level>
+
+    <level name="L2">
+      <name>双源验证</name>
+      <applicable_to>用于一般性论断</applicable_to>
+      <requirements>
+        <requirement>两个来源独立</requirement>
+        <requirement>两个来源一致</requirement>
+        <requirement>至少一个≥Tier 3</requirement>
+      </requirements>
+      <example>
+        "LSTM常用于时间序列预测【来源A: PyTorch文档】【来源B: TensorFlow教程】"
+      </example>
+      <label>【双源验证】</label>
+    </level>
+
+    <level name="L3">
+      <name>三源验证</name>
+      <applicable_to>用于核心结论</applicable_to>
+      <requirements>
+        <requirement>三个来源独立</requirement>
+        <requirement>三个来源一致或可解释差异</requirement>
+        <requirement>来源类型多样（学术+工业+开源）</requirement>
+        <requirement>至少一个≥Tier 2</requirement>
+      </requirements>
+      <example>
+        "Transformer在长序列预测上优于LSTM【论文A: arXiv高引】【论文B: NeurIPS】【实践报告C: Google AI Blog】"
+      </example>
+      <label>【多源验证】</label>
+    </level>
+
+    <level name="L4">
+      <name>穷尽验证</name>
+      <applicable_to>用于争议性结论</applicable_to>
+      <requirements>
+        <requirement>尽可能多的来源</requirement>
+        <requirement>平衡呈现不同观点</requirement>
+        <requirement>分析观点差异原因</requirement>
+        <requirement>包含支持和反对观点</requirement>
+      </requirements>
+      <example>
+        "强化学习在实际交易中收益存疑【支持观点5篇】【反对观点3篇】【中立分析2篇】"
+      </example>
+      <label>【争议性，已全面调研】</label>
+    </level>
+  </verification_levels>
+
+  <verification_matrix>
+    <assertion_type name="核心结论">
+      <minimum_level>L3</minimum_level>
+      <recommended_sources>学术论文 + 行业实践 + 开源项目</recommended_sources>
+      <example>技术A优于技术B的结论</example>
+    </assertion_type>
+
+    <assertion_type name="性能数据">
+      <minimum_level>L3</minimum_level>
+      <recommended_sources>多篇论文 + 实际测试</recommended_sources>
+      <example>准确率、速度、资源消耗等数据</example>
+    </assertion_type>
+
+    <assertion_type name="技术定义">
+      <minimum_level>L2</minimum_level>
+      <recommended_sources>官方文档 + 权威教材</recommended_sources>
+      <example>技术术语的定义</example>
+    </assertion_type>
+
+    <assertion_type name="应用案例">
+      <minimum_level>L2</minimum_level>
+      <recommended_sources>项目文档 + 技术博客</recommended_sources>
+      <example>实际应用场景描述</example>
+    </assertion_type>
+
+    <assertion_type name="背景知识">
+      <minimum_level>L1</minimum_level>
+      <recommended_sources>可靠来源即可</recommended_sources>
+      <example>通用背景信息</example>
+    </assertion_type>
+
+    <assertion_type name="争议观点">
+      <minimum_level>L4</minimum_level>
+      <recommended_sources>尽可能多源，平衡呈现</recommended_sources>
+      <example>存在分歧的技术评价</example>
+    </assertion_type>
+  </verification_matrix>
+
+  <contradiction_handling>
+    <scenario name="数据矛盾">
+      <description>不同来源提供的数据不一致</description>
+      <example>
+        来源A称LSTM准确率60%，来源B称55%
+      </example>
+      <handling_steps>
+        <step number="1">
+          <action>检查测试条件</action>
+          <questions>
+            <question>数据集是否相同？</question>
+            <question>评估指标是否一致？</question>
+            <question>时间窗口是否相同？</question>
+            <question>参数设置是否相同？</question>
+          </questions>
+        </step>
+        <step number="2">
+          <action>评估来源可信度</action>
+          <comparison>
+            来源A: arXiv论文, Tier 2
+            来源B: 技术博客, Tier 3
+            → 优先采用Tier 2数据
+          </comparison>
+        </step>
+        <step number="3">
+          <action>寻找第三方验证</action>
+          <action_detail>搜索更多论文，看多数共识</action_detail>
+        </step>
+        <step number="4">
+          <action>报告中诚实呈现</action>
+          <template>
+            "不同研究报告的准确率在55%-60%之间【来源A】【来源B】，
+            差异可能源于数据集和参数设置不同。"
+          </template>
+        </step>
+      </handling_steps>
+    </scenario>
+
+    <scenario name="观点矛盾">
+      <description>不同来源持相反观点</description>
+      <example>
+        来源A认为方法X优于Y，来源B持相反观点
+      </example>
+      <handling_steps>
+        <step number="1">
+          <action>分析论证逻辑</action>
+          <questions>
+            <question>各自的论据是什么？</question>
+            <question>论据是否可靠？</question>
+            <question>逻辑是否严密？</question>
+          </questions>
+        </step>
+        <step number="2">
+          <action>识别适用场景</action>
+          <analysis>
+            X优于Y的场景: [具体条件]
+            Y优于X的场景: [具体条件]
+            → 可能两者都对，但适用条件不同
+          </analysis>
+        </step>
+        <step number="3">
+          <action>查找元分析</action>
+          <action_detail>搜索综述性论文，看学术共识</action_detail>
+        </step>
+        <step number="4">
+          <action>平衡呈现</action>
+          <template><![CDATA[
+"关于X vs Y存在不同观点:
+- 观点A【来源】: X在[场景]下更优，因为...
+- 观点B【来源】: Y在[场景]下更优，因为...
+- 建议: 根据实际需求选择"
+          ]]></template>
+        </step>
+      </handling_steps>
+    </scenario>
+
+    <scenario name="事实矛盾">
+      <description>基本事实信息不一致</description>
+      <example>
+        来源A称某技术2018年提出，来源B称2020年
+      </example>
+      <handling_steps>
+        <step number="1">
+          <action>追溯原始来源</action>
+          <action_detail>查找原始论文/官方公告</action_detail>
+        </step>
+        <step number="2">
+          <action>区分概念和实现</action>
+          <clarification>
+            可能概念提出是2018
+            但成熟实现是2020
+          </clarification>
+        </step>
+        <step number="3">
+          <action>采用最权威来源</action>
+          <priority>原始论文 > 官方文档 > 二手资料</priority>
+        </step>
+      </handling_steps>
+    </scenario>
+
+    <general_principles>
+      <principle>不隐藏矛盾，诚实报告</principle>
+      <principle>不强行选边，平衡呈现</principle>
+      <principle>分析矛盾原因（场景/时间/定义不同）</principle>
+      <principle>如果无法解决，明确标注【存疑】并说明</principle>
+    </general_principles>
+  </contradiction_handling>
+
+  <logic_closure_construction>
+    <overview>
+      构建完整的论证链，确保从前提到结论的每一步都有证据支撑
+    </overview>
+
+    <closure_layers>
+      <layer number="1">
+        <name>定义清晰</name>
+        <requirements>
+          <requirement>所有关键术语都已定义</requirement>
+          <requirement>定义有权威来源支撑</requirement>
+          <requirement>定义在上下文中一致使用</requirement>
+        </requirements>
+        <checklist>
+          <item>Transformer是什么？【定义+来源】</item>
+          <item>LSTM是什么？【定义+来源】</item>
+          <item>"优于"的标准是什么？（准确率/速度/资源）</item>
+          <item>"股价预测"的具体任务？（日内/日间/长期）</item>
+        </checklist>
+      </layer>
+
+      <layer number="2">
+        <name>证据收集</name>
+        <requirements>
+          <requirement>每个关键论断都有证据</requirement>
+          <requirement>证据来自多个独立来源</requirement>
+          <requirement>证据可信度≥要求的Tier</requirement>
+        </requirements>
+        <example>
+          Transformer的性能数据【论文A】【论文B】【项目C】
+          LSTM的性能数据【论文D】【论文E】【项目F】
+          直接对比研究【论文G】
+          实际应用案例【行业报告H】
+        </example>
+      </layer>
+
+      <layer number="3">
+        <name>逻辑推理</name>
+        <structure>
+          前提1: [已验证的事实]
+          前提2: [已验证的事实]
+          推理: [逻辑推导过程]
+          结论: [推导出的结论]
+          验证: [实验数据是否支持]
+        </structure>
+        <example>
+          前提1: Transformer在长序列建模上有优势【已验证】
+          前提2: 股价预测需要捕获长期依赖【已验证】
+          推理: 因此Transformer理论上应该更优
+          验证: 实验数据是否支持？【检查证据】
+        </example>
+        <checks>
+          <check>推理是否有逻辑跳跃？</check>
+          <check>是否存在隐含假设？</check>
+          <check>假设是否已验证？</check>
+        </checks>
+      </layer>
+
+      <layer number="4">
+        <name>反面论证</name>
+        <purpose>主动寻找反对观点，避免确认偏误</purpose>
+        <questions>
+          <question>LSTM的优势在哪？</question>
+          <question>在什么场景下LSTM可能更优？</question>
+          <question>Transformer的劣势是什么？</question>
+          <question>是否存在反例？</question>
+        </questions>
+        <balance>
+          不是绝对优劣，而是场景适配
+        </balance>
+      </layer>
+
+      <layer number="5">
+        <name>结论形成</name>
+        <requirements>
+          <requirement>结论不超出证据支持范围</requirement>
+          <requirement>明确适用条件和局限性</requirement>
+          <requirement>提供可操作的建议</requirement>
+        </requirements>
+        <template><![CDATA[
+"在A股日内价格预测任务中，Transformer在准确率上
+优于LSTM约3-5个百分点【多源验证】，但训练时间长2-3倍，
+计算资源需求高50%。【多源验证】
+
+**选择建议**:
+- 如果追求最高准确率且资源充足 → Transformer
+- 如果需要快速迭代且资源有限 → LSTM
+- 实际应用中需要权衡性能和成本【行业共识】"
+        ]]></template>
+      </layer>
+    </closure_layers>
+
+    <closure_checklist>
+      <check>所有关键术语都已定义</check>
+      <check>所有论断都有证据支撑</check>
+      <check>所有证据都已验证可信度</check>
+      <check>推理逻辑严密无跳跃</check>
+      <check>考虑了反面论证</check>
+      <check>结论没有超出证据范围</check>
+      <check>适用条件和局限性已说明</check>
+    </closure_checklist>
+  </logic_closure_construction>
+
+  <knowledge_boundary_labeling>
+    <purpose>
+      明确区分已验证事实、合理推测和存疑内容，
+      诚实承认知识边界
+    </purpose>
+
+    <labels>
+      <label name="【确认】">
+        <meaning>单一权威来源确认的事实</meaning>
+        <criteria>Tier 1来源，或官方文档</criteria>
+        <example>【确认】PyTorch 2.0于2023年3月发布</example>
+      </label>
+
+      <label name="【多源验证】">
+        <meaning>3+来源一致确认</meaning>
+        <criteria>至少3个独立来源，至少1个≥Tier 2</criteria>
+        <example>【多源验证】Transformer在长序列任务上优于LSTM</example>
+      </label>
+
+      <label name="【学术共识】">
+        <meaning>多篇论文相同结论</meaning>
+        <criteria>至少3篇学术论文，包括综述</criteria>
+        <example>【学术共识】注意力机制是Transformer的核心</example>
+      </label>
+
+      <label name="【行业实践】">
+        <meaning>实际应用案例支持</meaning>
+        <criteria>至少2个独立实际案例</criteria>
+        <example>【行业实践】BERT在NLP任务中广泛应用</example>
+      </label>
+
+      <label name="【理论推测】">
+        <meaning>基于原理推导但未验证</meaning>
+        <criteria>逻辑推理合理，但缺乏实验验证</criteria>
+        <example>【理论推测】更大的模型可能带来更好性能</example>
+      </label>
+
+      <label name="【存疑】">
+        <meaning>信息矛盾或来源不足</meaning>
+        <criteria>来源矛盾，或仅有低可信度来源</criteria>
+        <example>【存疑】某新技术的实际效果，缺乏充分验证</example>
+      </label>
+
+      <label name="【未找到证据】">
+        <meaning>诚实承认无法验证</meaning>
+        <criteria>经过充分搜索仍无可靠来源</criteria>
+        <example>【未找到证据】该技术在特定场景下的性能数据</example>
+      </label>
+    </labels>
+
+    <usage_principles>
+      <principle>核心论断必须有明确标签</principle>
+      <principle>优先使用【多源验证】【学术共识】</principle>
+      <principle>【理论推测】【存疑】需要明确说明原因</principle>
+      <principle>【未找到证据】优于模糊猜测</principle>
+      <principle>标签应该在论断附近，便于识别</principle>
+    </usage_principles>
+  </knowledge_boundary_labeling>
+
+  <evidence_chain_construction>
+    <purpose>
+      为每个核心结论建立完整的证据链，
+      从原始来源到最终结论可追溯
+    </purpose>
+
+    <chain_structure>
+      <level>结论：[最终结论]</level>
+      <level>↑ 支撑论据：[具体论据]</level>
+      <level>↑ 证据来源：[来源A][来源B][来源C]</level>
+      <level>↑ 来源可信度：Tier X, Tier Y, Tier Z</level>
+      <level>↑ 验证级别：L3（三源验证）</level>
+    </chain_structure>
+
+    <example><![CDATA[
+结论：Transformer在长序列预测上优于LSTM
+
+↑ 支撑论据：
+  - 论据1：Transformer可以并行处理长序列
+  - 论据2：注意力机制可以捕获长距离依赖
+  - 论据3：实验数据显示准确率提升3-5%
+
+↑ 证据来源：
+  - 论据1来源：[Vaswani et al., 2017, NeurIPS]
+  - 论据2来源：[Bahdanau et al., 2015, ICLR]
+  - 论据3来源：[Zhang et al., 2024, arXiv] + [GitHub项目X]
+
+↑ 来源可信度：
+  - Vaswani et al.: Tier 1（顶会论文，>10000引用）
+  - Bahdanau et al.: Tier 1（顶会论文，>5000引用）
+  - Zhang et al.: Tier 2（arXiv，120引用）
+  - GitHub项目X: Tier 3（3.2K stars，活跃维护）
+
+↑ 验证级别：L3（三源验证，包含Tier 1来源）
+
+↑ 可信度标签：【多源验证】
+    ]]></example>
+
+    <traceability_requirements>
+      <requirement>每个证据链都可以独立验证</requirement>
+      <requirement>来源URL/DOI都已记录</requirement>
+      <requirement>引用格式规范统一</requirement>
+      <requirement>证据链在报告中清晰呈现</requirement>
+    </traceability_requirements>
+  </evidence_chain_construction>
+
+  <bias_identification>
+    <purpose>识别和减轻研究中的各种偏见</purpose>
+
+    <bias_types>
+      <bias name="选择性偏见">
+        <description>只看支持自己观点的证据</description>
+        <mitigation>主动搜索反对观点</mitigation>
+      </bias>
+
+      <bias name="确认偏误">
+        <description>倾向于确认已有假设</description>
+        <mitigation>设计反面论证环节</mitigation>
+      </bias>
+
+      <bias name="时效性偏见">
+        <description>引用过时信息</description>
+        <mitigation>优先使用2024-2025年来源</mitigation>
+      </bias>
+
+      <bias name="地域性偏见">
+        <description>仅关注某一市场/地区</description>
+        <mitigation>明确研究范围，或扩展到多地区</mitigation>
+      </bias>
+
+      <bias name="幸存者偏差">
+        <description>只看成功案例</description>
+        <mitigation>主动搜索失败案例和局限性</mitigation>
+      </bias>
+
+      <bias name="权威偏见">
+        <description>过度依赖权威来源</description>
+        <mitigation>也考虑新兴研究和实践经验</mitigation>
+      </bias>
+    </bias_types>
+
+    <self_check_questions>
+      <question>我是否只看了支持某个观点的证据？</question>
+      <question>我是否主动寻找了反对观点？</question>
+      <question>我引用的信息是否都是最新的？</question>
+      <question>我是否只关注了成功案例？</question>
+      <question>我的结论是否受到个人偏好影响？</question>
+    </self_check_questions>
+  </bias_identification>
+
+  <best_practices>
+    <practice>核心结论必须L3以上验证</practice>
+    <practice>发现矛盾立即处理，不隐藏</practice>
+    <practice>构建完整证据链，可追溯</practice>
+    <practice>明确标注知识边界</practice>
+    <practice>主动寻找反面论证</practice>
+    <practice>识别和减轻各种偏见</practice>
+    <practice>诚实承认不知道优于模糊猜测</practice>
+  </best_practices>
+
+  <anti_patterns>
+    <anti_pattern>
+      <name>单一来源核心结论</name>
+      <description>关键结论只有一个来源</description>
+      <consequence>无法验证可靠性</consequence>
+    </anti_pattern>
+
+    <anti_pattern>
+      <name>隐藏矛盾信息</name>
+      <description>发现矛盾但不报告</description>
+      <consequence>误导用户，降低可信度</consequence>
+    </anti_pattern>
+
+    <anti_pattern>
+      <name>逻辑跳跃</name>
+      <description>推理过程有缺失环节</description>
+      <consequence>结论不可靠</consequence>
+    </anti_pattern>
+
+    <anti_pattern>
+      <name>模糊不确定性</name>
+      <description>不明确标注推测和存疑</description>
+      <consequence>用户无法判断可信度</consequence>
+    </anti_pattern>
+  </anti_patterns>
+</verification_and_logic_closure>
