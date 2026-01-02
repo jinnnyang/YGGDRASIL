@@ -10,3 +10,11 @@
 - Some notes don't end up making sense the next day
 - That's ok, you can just delete them!
   - You can always find them in your git history, if you really need it!
+
+广东省能源集团，2000万-3000万，印染厂；
+嘉兴，10年5.5成，100万~irr8%；
+不拉合资公司，能源集团投资额比较少，碳效码大概率没金刚钻，要价！
+20~30
+
+
+[todo]: todo.md "Todo"
