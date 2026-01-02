@@ -143,31 +143,36 @@
         </step>
       </steps>
     </phase>
-
-    <phase name="质检与交接" id="QAHandoff">
-      <description>最终质量检查和交接给Architect</description>
-      <steps>
-        <step>
-          自查清单:
-          - [ ] 所有标题层级正确
-          - [ ] 无拼写/语法错误
-          - [ ] 段落&lt;150字
-          - [ ] 列表/表格占比&lt;50%
-          - [ ] 关键实体已链接
-          - [ ] YAML字段完整
-          - [ ] 信息密度≥6/10
-        </step>
-        <step>
-          输出成果:
-          - 编辑后的Markdown完整内容
-          - 分类建议与命名方案
-          - 编辑说明 (改动内容摘要)
-        </step>
-        <step>
-          交接Architect:
-          - "内容已完成编辑，建议存放至[path]，请Architect审核"
-        </step>
-      </steps>
+<phase name="质检与交接" id="QAHandoff">
+  <description>最终质量检查和自动交接给Architect</description>
+  <steps>
+    <step>
+      自查清单:
+      - [ ] 所有标题层级正确
+      - [ ] 无拼写/语法错误
+      - [ ] 段落<![CDATA[< 150 ]]>
+      - [ ] 列表/表格占比<50%
+      - [ ] 关键实体已链接
+      - [ ] YAML字段完整
+      - [ ] 信息密度≥6/10
+    </step>
+    <step>
+      输出成果:
+      - 编辑后的Markdown完整内容
+      - 分类建议与命名方案
+      - 编辑说明 (改动内容摘要)
+    </step>
+    <step>
+      自动切换Architect:
+      - 生成完整的交接信息包（文档内容+质量评分+分类建议+命名建议+链接关系+编辑摘要）
+      - 使用标准化交接模板输出所有信息
+      - 执行switch_mode命令自动切换到KG-Architect模式
+      - 切换理由："KG-Editor已完成文档编辑优化，需要KG-Architect进行最终分类存储和结构整合"
+      - KG-Architect自动接收交接信息并进入consult模式处理
+      - 如自动切换失败，输出完整交接信息并提示用户手动切换
+    </step>
+  </steps>
+</phase>
     </phase>
   </standard_edit_workflow>
 

@@ -1,0 +1,276 @@
+<workflow_examples>
+  <overview>
+    提供KG-Editor自动切换到KG-Architect的完整工作流程示例，展示优化后的无缝协作过程。
+  </overview>
+
+  <example name="标准编辑到存储的完整流程">
+    <scenario>用户通过KG-Writer创建了一篇关于Transformer的技术文档，现在需要KG-Editor进行质量优化，然后自动交给KG-Architect分类存储</scenario>
+    
+    <workflow_steps>
+      <step phase="KG-Writer完成">
+        <action>KG-Writer完成文档撰写</action>
+        <output>
+          <document_title>Transformer注意力机制详解</document_title>
+          <content_length>2500字</content_length>
+          <classification_suggestion>ai-ml/nlp/</classification_suggestion>
+          <self_assessment>信息密度8/10，原子性良好</self_assessment>
+        </output>
+        <auto_trigger>自动切换到KG-Editor</auto_trigger>
+      </step>
+      
+      <step phase="KG-Editor接收评估">
+        <action>自动接收并评估文档质量</action>
+        <evaluation_result>
+          <information_density>8.5/10</information_density>
+          <atomicity>9/10</atomicity>
+          <verifiability>8/10</verifiability>
+          <decision>通过评估，进入编辑流程</decision>
+        </evaluation_result>
+      </step>
+      
+      <step phase="编辑优化">
+        <action>执行6阶段编辑流程</action>
+        <modifications>
+          <modification>优化标题层级结构</modification>
+          <modification>精炼语言表达，提升信息密度</modification>
+          <modification>添加知识链接到相关文档</modification>
+          <modification>完善YAML元数据</modification>
+          <modification>检查格式规范性</modification>
+        </modifications>
+      </step>
+      
+      <step phase="质检与交接准备">
+        <action>完成最终质量检查</action>
+        <final_scores>
+          <information_density>9/10</information_density>
+          <atomicity>9/10</atomicity>
+          <verifiability>8.5/10</verifiability>
+        </final_scores>
+        <classification_recommendation>
+          <primary_path>ai-ml/nlp/transformer-attention.md</primary_path>
+          <alternative_path>ai-ml/deep-learning/attention-mechanisms.md</alternative_path>
+          <rationale>内容专注Transformer的注意力机制，属于NLP核心技术</rationale>
+        </classification_recommendation>
+      </step>
+      
+      <step phase="自动切换执行">
+        <action>执行自动切换协议</action>
+        <execution_details>
+          <output_template>使用标准化交接模板</output_template>
+          <switch_command>
+            <switch_mode>
+              <mode_slug>kg-architect</mode_slug>
+              <reason>KG-Editor已完成文档编辑优化，需要KG-Architect进行最终分类存储和结构整合</reason>
+            </switch_mode>
+          </switch_command>
+          <success_indicator>切换成功，KG-Architect模式激活</success_indicator>
+        </execution_details>
+      </step>
+      
+      <step phase="KG-Architect接收">
+        <action>KG-Architect自动接收交接信息</action>
+        <processing_mode>进入consult模式</processing_mode>
+        <received_information>
+          <document>编辑优化后的完整文档</document>
+          <quality_scores>最终质量评分</quality_scores>
+          <classification_suggestion>Editor的分类建议</classification_suggestion>
+          <naming_suggestions>3个候选文件名</naming_suggestions>
+          <knowledge_links>链接关系建议</knowledge_links>
+        </received_information>
+      </step>
+      
+      <step phase="最终分类存储">
+        <action>KG-Architect完成分类存储</action>
+        <final_decision>
+          <storage_path>ai-ml/nlp/transformer-attention.md</storage_path>
+          <filename>transformer-attention.md</filename>
+          <yaml_optimization>优化tags和categories</yaml_optimization>
+          <index_update>更新相关index.md文件</index_update>
+          <backlink_creation>创建必要的反向链接</backlink_creation>
+        </final_decision>
+        <completion_message>文档已成功分类存储至知识仓库</completion_message>
+      </step>
+    </workflow_steps>
+    
+    <expected_output>
+      <complete_workflow>从内容创作到编辑优化再到分类存储的完整自动化流程</complete_output>
+      <user_experience>用户只需启动流程，无需手动干预模式切换</user_experience>
+      <quality_assurance>每个环节都有质量检查和验证</quality_assurance>
+      <seamless_handoff>智能体间交接信息完整，流程无缝衔接</seamless_handoff>
+    </expected_output>
+  </example>
+
+  <example name="快速修正模式的自动切换">
+    <scenario>用户要求对现有文档进行快速格式修正，完成后自动交给Architect确认存储位置</scenario>
+    
+    <workflow_steps>
+      <step phase="快速修正触发">
+        <trigger>用户指令："快速检查这个文档的格式"</trigger>
+        <mode>KG-Editor快速修正模式</mode>
+        <scope>仅执行YAML补全、错别字修正、链接检查</scope>
+      </step>
+      
+      <step phase="快速修正执行">
+        <actions>
+          <action>检查并补全缺失的YAML字段</action>
+          <action>扫描并修正明显的错别字</action>
+          <action>验证内部链接的有效性</action>
+          <action>检查标题层级和代码块标注</action>
+        </actions>
+        <modifications_list>
+          <modification>补充了description字段</modification>
+          <modification>修正了3个错别字</modification>
+          <modification>修复了1个死链接</modification>
+          <modification>统一了标题格式</modification>
+        </modifications_list>
+      </step>
+      
+      <step phase="快速交接">
+        <action>生成简化版交接信息</action>
+        <information_included>
+          <modifications>仅列出实际修改项</modifications>
+          <quality_verification>确认修正后质量达标</quality_verification>
+          <storage_confirmation>请求Architect确认存储位置是否合适</storage_confirmation>
+        </information_included>
+        <auto_switch>
+          <switch_mode>
+            <mode_slug>kg-architect</mode_slug>
+            <reason>KG-Editor完成快速格式修正，需要KG-Architect确认存储位置并更新相关索引</reason>
+          </switch_mode>
+        </auto_switch>
+      </step>
+    </workflow_steps>
+    
+    <special_considerations>
+      <consideration>快速修正模式只进行表面层面的修正，不深入重构内容</consideration>
+      <consideration>交接信息相对简化，重点关注实际修改内容</consideration>
+      <consideration>Architect主要验证当前存储位置是否仍然合适</consideration>
+    </special_considerations>
+  </example>
+
+  <example name="切换失败的处理流程">
+    <scenario>由于系统限制或网络问题，自动切换失败时的处理方案</scenario>
+    
+    <error_scenario>switch_mode命令执行失败</error_scenario>
+    
+    <fallback_procedure>
+      <step phase="错误检测">
+        <action>检测到切换命令执行失败</action>
+        <error_type>模式切换失败</error_type>
+        <error_details>系统响应错误或模式不可用</error_details>
+      </step>
+      
+      <step phase="用户通知">
+        <action>输出用户友好的错误消息</action>
+        <message_format>
+          <![CDATA[
+自动切换失败，请手动切换到KG-Architect模式以继续分类存储流程。
+
+交接信息如下：
+[完整的交接信息模板内容]
+
+请复制上述信息，然后手动切换到KG-Architect模式。
+          ]]>
+        </message_format>
+      </step>
+      
+      <step phase="信息保留">
+        <action>确保所有交接信息完整输出</action>
+        <information_preservation>
+          <preserve>完整的文档内容</preserve>
+          <preserve>质量评分和建议</preserve>
+          <preserve>分类和命名建议</preserve>
+          <preserve>知识链接信息</preserve>
+          <preserve>编辑改动摘要</preserve>
+        </information_preservation>
+      </step>
+      
+      <step phase="手动切换指导">
+        <action>提供清晰的手动切换指导</action>
+        <instructions>
+          <instruction>复制完整的交接信息</instruction>
+          <instruction>使用模式切换功能选择KG-Architect</instruction>
+          <instruction>将交接信息粘贴给KG-Architect</instruction>
+          <instruction>继续正常的分类存储流程</instruction>
+        </instructions>
+      </step>
+    </fallback_procedure>
+    
+    <user_experience_optimization>
+      <optimization>即使自动切换失败，用户也能获得完整的交接信息</optimization>
+      <optimization>提供清晰的手动操作指导，降低用户困惑</optimization>
+      <optimization>确保工作流程可以继续进行，不会完全中断</optimization>
+    </user_experience_optimization>
+  </example>
+
+  <technical_implementation_notes>
+    <note name="switch_mode工具使用">
+      <description>正确使用switch_mode工具实现模式切换</description>
+      <syntax>
+        <switch_mode>
+          <mode_slug>kg-architect</mode_slug>
+          <reason>具体、明确的切换原因</reason>
+        </switch_mode>
+      </syntax>
+      <best_practices>
+        <practice>原因说明要具体，不能过于笼统</practice>
+        <practice>确保目标模式存在且可用</practice>
+        <practice>在切换前完成所有必要的准备工作</practice>
+      </best_practices>
+    </note>
+    
+    <note name="交接信息标准化">
+      <description>确保交接信息格式标准化，便于Architect接收处理</description>
+      <key_components>
+        <component>文档内容（完整Markdown）</component>
+        <component>质量评估（三个维度评分）</component>
+        <component>分类建议（路径+理由）</component>
+        <component>命名建议（多个选项）</component>
+        <component>链接关系（引用和反向链接）</component>
+        <component>编辑摘要（改动说明）</component>
+      </key_components>
+    </note>
+    
+    <note name="错误处理机制">
+      <description>完善的错误处理确保流程健壮性</description>
+      <error_types>
+        <error>切换命令执行失败</error>
+        <error>目标模式不可用</error>
+        <error>交接信息不完整</error>
+        <error>网络或系统异常</error>
+      </error_types>
+      <handling_strategy>
+        <strategy>输出完整交接信息</strategy>
+        <strategy>提供手动切换指导</strategy>
+        <strategy>记录错误详情便于调试</strategy>
+        <strategy>保持用户体验友好</strategy>
+      </handling_strategy>
+    </note>
+  </technical_implementation_notes>
+
+  <success_metrics>
+    <metric name="切换成功率">
+      <description>自动切换成功的比例</description>
+      <target>>95%</target>
+      <measurement>记录每次切换的执行结果</measurement>
+    </metric>
+    
+    <metric name="交接信息完整性">
+      <description>交接信息包含所有必要字段的比例</description>
+      <target>100%</target>
+      <measurement>验证每次交接的信息完整度</measurement>
+    </metric>
+    
+    <metric name="流程连续性">
+      <description>从编辑到存储的流程无缝衔接程度</description>
+      <target>无中断，用户体验流畅</target>
+      <measurement>用户反馈和流程分析</measurement>
+    </metric>
+    
+    <metric name="错误恢复能力">
+      <description>切换失败时的错误处理和恢复效果</description>
+      <target>用户能够轻松继续流程</target>
+      <measurement>失败场景下的用户行为分析</measurement>
+    </metric>
+  </success_metrics>
+</workflow_examples>

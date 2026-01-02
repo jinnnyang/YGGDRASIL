@@ -247,7 +247,7 @@
 
     <handoff_template>
       <![CDATA[
-## 编辑完成，请Architect审核
+## 编辑完成，自动切换至KG-Architect
 
 ### 文档信息
 - 标题: {title}
@@ -274,7 +274,12 @@
 ### 编辑说明
 {edit_notes}
 
-文档内容已完成编辑，请确认最终存储位置。
+文档内容已完成编辑，正在自动切换至KG-Architect进行最终分类存储...
+
+<switch_mode>
+<mode_slug>kg-architect</mode_slug>
+<reason>KG-Editor已完成文档编辑优化，需要KG-Architect进行最终分类存储和结构整合</reason>
+</switch_mode>
       ]]>
     </handoff_template>
 
@@ -473,4 +478,121 @@ Transformer相比RNN有显著的速度优势，主要原因在于其并行计算
       <editor_role>提供命名建议，但最终由Architect决定</editor_role>
     </decision_area>
   </decision_authority_matrix>
+
+  <auto_switch_protocol>
+    <protocol name="editor_to_architect_auto_switch">
+      <trigger>KG-Editor完成编辑流程后自动触发</trigger>
+      <purpose>实现无缝的知识工作流程，从内容编辑自动过渡到分类存储</purpose>
+      
+      <execution_steps>
+        <step number="1">
+          <action>完成编辑质检</action>
+          <details>确保所有编辑阶段已完成，文档质量符合标准</details>
+        </step>
+        
+        <step number="2">
+          <action>生成交接信息包</action>
+          <components>
+            <component>编辑后的完整Markdown文档</component>
+            <component>质量评估报告（信息密度、原子性、可验证性评分）</component>
+            <component>分类建议（主要路径+备选路径+理由）</component>
+            <component>命名建议（3个候选文件名+侧重说明）</component>
+            <component>知识链接建议（引用文档+反向链接建议）</component>
+            <component>编辑改动摘要</component>
+          </components>
+        </step>
+        
+        <step number="3">
+          <action>输出交接信息</action>
+          <format>使用标准化的交接模板，包含所有必要信息</format>
+        </step>
+        
+        <step number="4">
+          <action>执行自动切换</action>
+          <technical_implementation>
+            <switch_mode>
+              <mode_slug>kg-architect</mode_slug>
+              <reason>KG-Editor已完成文档编辑优化，需要KG-Architect进行最终分类存储和结构整合</reason>
+            </switch_mode>
+          </technical_implementation>
+        </step>
+        
+        <step number="5">
+          <action>Architect接收处理</action>
+          <expected_behavior>
+            <behavior>KG-Architect自动进入consult模式</behavior>
+            <behavior>接收Editor提供的交接信息包</behavior>
+            <behavior>分析文档内容并验证分类建议</behavior>
+            <behavior>确定最终存储位置和文件名</behavior>
+            <behavior>创建文件并更新相关索引</behavior>
+          </expected_behavior>
+        </step>
+      </execution_steps>
+      
+      <information_package_format>
+        <field name="document_content" type="required">
+          <description>编辑优化后的完整Markdown文档</description>
+          <format>标准Markdown格式，包含完整的YAML frontmatter</format>
+        </field>
+        
+        <field name="quality_scores" type="required">
+          <description>质量评估分数</description>
+          <structure>
+            <score name="information_density">0-10分，信息密度评分</score>
+            <score name="atomicity">0-10分，原子性评分</score>
+            <score name="verifiability">0-10分，可验证性评分</score>
+          </structure>
+        </field>
+        
+        <field name="classification_suggestion" type="required">
+          <description>分类建议</description>
+          <structure>
+            <path name="primary" type="required">主要推荐路径</path>
+            <rationale name="primary" type="required">主要路径推荐理由</rationale>
+            <path name="alternative" type="optional">备选路径</path>
+            <rationale name="alternative" type="optional">备选路径理由</rationale>
+          </structure>
+        </field>
+        
+        <field name="naming_suggestions" type="required">
+          <description>命名建议</description>
+          <format>3个候选文件名，每个包含文件名和侧重说明</format>
+        </field>
+        
+        <field name="knowledge_links" type="required">
+          <description>知识链接信息</description>
+          <structure>
+            <links name="outgoing">本文档引用的其他文档列表</links>
+            <links name="backlink_suggestions">建议添加反向链接的文档列表</links>
+          </structure>
+        </field>
+        
+        <field name="edit_summary" type="required">
+          <description>编辑改动摘要</description>
+          <format>简明扼要的编辑说明，概述主要改动内容</format>
+        </field>
+      </information_package_format>
+      
+      <error_handling>
+        <error type="switch_mode_failure">
+          <description>自动切换失败时的处理方案</description>
+          <fallback_action>输出完整的交接信息，提示用户手动切换到KG-Architect模式</fallback_action>
+          <user_message>"自动切换失败，请手动切换到KG-Architect模式以继续分类存储流程。交接信息如下："</user_message>
+        </error>
+        
+        <error type="missing_information">
+          <description>交接信息不完整时的处理</description>
+          <validation_requirement>确保所有必填字段都已填充</validation_requirement>
+          <completion_action>如有缺失信息，先补充完整再执行切换</completion_action>
+        </error>
+      </error_handling>
+      
+      <success_indicators>
+        <indicator>交接信息完整输出</indicator>
+        <indicator>switch_mode命令成功执行</indicator>
+        <indicator>KG-Architect成功接收并处理</indicator>
+        <indicator>文档最终被正确分类存储</indicator>
+      </success_indicators>
+    </protocol>
+  </auto_switch_protocol>
 </collaboration_guidelines>

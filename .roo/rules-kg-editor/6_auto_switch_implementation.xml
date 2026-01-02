@@ -1,0 +1,225 @@
+<auto_switch_implementation>
+  <overview>
+    本文档详细说明KG-Editor如何自动切换到KG-Architect模式，实现无缝的知识工作流程。
+    包含具体的实现步骤、工具使用方法和错误处理机制。
+  </overview>
+
+  <implementation_workflow>
+    <phase name="准备阶段">
+      <step number="1">
+        <action>确认编辑流程已完成</action>
+        <validation_checklist>
+          <item>所有标题层级正确</item>
+          <item>无拼写/语法错误</item>
+          <item>段落长度符合要求（<150字）</item>
+          <item>元素占比平衡（段落≥50%，其他<50%）</item>
+          <item>关键实体已创建链接</item>
+          <item>YAML元数据完整</item>
+          <item>信息密度评分≥6/10</item>
+        </validation_checklist>
+      </step>
+      
+      <step number="2">
+        <action>收集交接所需信息</action>
+        <information_collection>
+          <field name="document_content">编辑后的完整Markdown文档</field>
+          <field name="quality_scores">三个维度的评分（信息密度、原子性、可验证性）</field>
+          <field name="classification_suggestion">主要路径+备选路径+推荐理由</field>
+          <field name="naming_suggestions">3个候选文件名及侧重说明</field>
+          <field name="knowledge_links">引用文档和反向链接建议</field>
+          <field name="edit_summary">编辑改动摘要</field>
+        </information_collection>
+      </step>
+    </phase>
+
+    <phase name="交接信息生成">
+      <step number="3">
+        <action>格式化交接信息</action>
+        <template_usage>
+          <description>使用标准化的交接模板输出所有信息</description>
+          <template_name>handoff_template</template_name>
+          <output_format>
+            <![CDATA[
+## 编辑完成，自动切换至KG-Architect
+
+### 文档信息
+- 标题: [文档标题]
+- 内容类型: [教程/参考/概念解释等]
+- 信息密度评分: [0-10]/10
+- 原子性评分: [0-10]/10
+- 可验证性评分: [0-10]/10
+
+### 分类建议
+- 主要路径: `[推荐路径]`
+  - 理由: [详细推荐理由]
+- 备选路径: `[备选路径]`
+  - 理由: [备选理由]
+
+### 命名建议
+1. `[文件名1]` - [侧重说明]
+2. `[文件名2]` - [侧重说明]
+3. `[文件名3]` - [侧重说明]
+
+### 链接关系
+- 引用的文档: [引用列表]
+- 建议添加反向链接: [反向链接建议]
+
+### 编辑说明
+[编辑改动摘要]
+
+文档内容已完成编辑，正在自动切换至KG-Architect进行最终分类存储...
+            ]]>
+          </output_format>
+        </template_usage>
+      </step>
+      
+      <step number="4">
+        <action>验证交接信息完整性</action>
+        <validation_rules>
+          <rule>所有必填字段都已填充</rule>
+          <rule>评分在有效范围内（0-10）</rule>
+          <rule>路径建议使用有效的目录结构</rule>
+          <rule>文件名使用kebab-case格式</rule>
+          <rule>YAML元数据完整且格式正确</rule>
+        </validation_rules>
+      </step>
+    </phase>
+
+    <phase name="自动切换执行">
+      <step number="5">
+        <action>执行switch_mode命令</action>
+        <tool_usage>
+          <tool_name>switch_mode</tool_name>
+          <parameters>
+            <parameter name="mode_slug" required="true">
+              <value>kg-architect</value>
+              <description>目标模式标识</description>
+            </parameter>
+            <parameter name="reason" required="true">
+              <value>KG-Editor已完成文档编辑优化，需要KG-Architect进行最终分类存储和结构整合</value>
+              <description>切换原因说明</description>
+            </parameter>
+          </parameters>
+          <execution_format>
+            <switch_mode>
+              <mode_slug>kg-architect</mode_slug>
+              <reason>KG-Editor已完成文档编辑优化，需要KG-Architect进行最终分类存储和结构整合</reason>
+            </switch_mode>
+          </execution_format>
+        </tool_usage>
+      </step>
+      
+      <step number="6">
+        <action>确认切换成功</action>
+        <success_indicators>
+          <indicator>switch_mode命令成功执行</indicator>
+          <indicator>系统响应确认模式切换</indicator>
+          <indicator>KG-Architect模式已激活</indicator>
+        </success_indicators>
+      </step>
+    </phase>
+
+    <phase name="错误处理">
+      <step number="7" condition="切换失败时执行">
+        <action>执行失败回退方案</action>
+        <fallback_procedures>
+          <procedure>
+            <name>输出完整交接信息</name>
+            <action>确保所有交接信息已完整输出给用户</action>
+          </procedure>
+          <procedure>
+            <name>提示手动切换</name>
+            <action>显示用户友好的错误消息</action>
+            <message>自动切换失败，请手动切换到KG-Architect模式以继续分类存储流程。交接信息如上所示。</message>
+          </procedure>
+          <procedure>
+            <name>记录失败原因</name>
+            <action>在编辑摘要中记录切换失败的具体原因</action>
+          </procedure>
+        </fallback_procedures>
+      </step>
+    </phase>
+  </implementation_workflow>
+
+  <tool_integration_details>
+    <tool name="switch_mode">
+      <purpose>用于在不同智能体模式间切换</purpose>
+      <usage_context>在KG-Editor完成编辑后，自动切换到KG-Architect继续处理</usage_context>
+      <success_criteria>
+        <criterion>命令格式正确</criterion>
+        <criterion>目标模式存在且可用</criterion>
+        <criterion>切换原因清晰合理</criterion>
+      </success_criteria>
+      <common_errors>
+        <error>
+          <symptom>模式标识错误</symptom>
+          <solution>确认使用正确的模式slug：kg-architect</solution>
+        </error>
+        <error>
+          <symptom>原因说明不清晰</symptom>
+          <solution>提供具体、明确的切换原因</solution>
+        </error>
+      </common_errors>
+    </tool>
+  </tool_integration_details>
+
+  <quality_assurance>
+    <pre_switch_checklist>
+      <category name="内容质量">
+        <item>文档内容已完整编辑优化</item>
+        <item>信息密度评分≥6/10</item>
+        <item>原子性评估通过</item>
+        <item>可验证性评估通过</item>
+      </category>
+      <category name="格式规范">
+        <item>YAML frontmatter完整</item>
+        <item>标题层级正确</item>
+        <item>知识链接已创建</item>
+        <item>元素占比平衡</item>
+      </category>
+      <category name="交接信息">
+        <item>分类建议合理</item>
+        <item>命名建议规范</item>
+        <item>编辑摘要清晰</item>
+        <item>所有必填信息已准备</item>
+      </category>
+    </pre_switch_checklist>
+    
+    <post_switch_verification>
+      <verification_item>
+        <name>切换成功确认</name>
+        <check>确认系统响应模式切换成功</check>
+      </verification_item>
+      <verification_item>
+        <name>信息传递完整性</name>
+        <check>确认所有交接信息已传递给KG-Architect</check>
+      </verification_item>
+      <verification_item>
+        <name>工作流程连续性</name>
+        <check>确认KG-Architect能够继续处理流程</check>
+      </verification_item>
+    </post_switch_verification>
+  </quality_assurance>
+
+  <最佳实践>
+    <practice name="信息完整性优先">
+      <description>确保所有交接信息完整准确，避免因信息缺失导致Architect处理困难</description>
+      <implementation>在切换前进行完整的信息验证</implementation>
+    </practice>
+    
+    <practice name="错误处理完备">
+      <description>预设各种失败场景的处理方案</description>
+      <implementation>为每种可能的错误提供清晰的回退机制</implementation>
+    </practice>
+    
+    <practice name="用户体验友好">
+      <description>在自动切换过程中保持良好的用户体验</description>
+      <implementation>提供清晰的进度说明和状态反馈</implementation>
+    </practice>
+    
+    <practice name="流程可追溯">
+      <description>确保整个切换过程可追溯和调试</description>
+      <implementation>记录关键步骤和决策点</implementation>
+    </practice>
+  </最佳实践>
+</auto_switch_implementation>
